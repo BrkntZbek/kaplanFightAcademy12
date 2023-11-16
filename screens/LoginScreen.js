@@ -11,15 +11,29 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [Telefon, setTelefon] = useState(0);
   const navigation=useNavigation();
 
-  useEffect(()=>{
-    auth.onAuthStateChanged(user =>{
-        if(user){
-         navigation.navigate('Home');
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) {
+        // Kullanıcı oturum açtı
+        if (user.email === 'admin@kaplanfight.com') {
+          // Admin kontrolü
+          navigation.replace('Admin');
+          console.log('Admin kullanıcı kayıt oldu', user.email);
+        } else {
+          // Diğer kullanıcılar
+          navigation.replace('Home');
+          console.log('Normal kullanıcı kayıt oldu', user.email);
         }
-    })
-  },[])
+      }
+    });
+  
+    return () => {
+      unsubscribe(); // useEffect temizleme fonksiyonu
+    };
+  }, [navigation]);
 
 
   const handleSwitchToggle = (value) => {
@@ -27,10 +41,12 @@ export default function LoginScreen() {
     setShowNameInput(value); // Eğer register moddaysa, isim soyisim input'u göster
   };
 
+
   const handleButtonClick = async () => {
     try {
       if (isRegisterMode) {
         // Kayıt ol butonuna tıklanınca yapılacak işlemler
+        
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
         const usersCollection = firestore.collection('userss');
@@ -39,7 +55,8 @@ export default function LoginScreen() {
         await  setDoc(doc(usersCollection,userId),{
           email: user.email,
           id:userId,
-          name:name
+          name:name,
+          telefon:Telefon
         });
   
        
@@ -79,6 +96,7 @@ export default function LoginScreen() {
         <TextInput style={styles.input} placeholder='Email' value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/> 
         <TextInput style={styles.input} placeholder='Şifre' value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
         {showNameInput && <TextInput style={styles.input} value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
+        {showNameInput && <TextInput style={styles.input} value={Telefon} keyboardType="numeric" onChangeText={Telefon => setTelefon(Telefon)} placeholder='Telefon'/>}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
