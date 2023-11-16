@@ -2,7 +2,9 @@ import React, { useState,useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Image, TouchableOpacity, Switch } from 'react-native';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
+import { firestore } from '../firebase';
 
+import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
@@ -31,8 +33,14 @@ export default function LoginScreen() {
         // Kayıt ol butonuna tıklanınca yapılacak işlemler
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
+        const usersCollection = firestore.collection('userss');
         const userId = user.uid;
-       
+        //firestore ekleme kısmı
+        await  setDoc(doc(usersCollection,userId),{
+          email: user.email,
+          id:userId,
+          name:name
+        });
   
        
         console.log('Kullanıcı kayıt oldu', user.email);

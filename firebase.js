@@ -1,7 +1,6 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import 'firebase/compat/firestore'; // Firestore modülünü ekleyin
-import { getFirestore } from '@firebase/firestore';
+import 'firebase/compat/firestore';
 
 
 const firebaseConfig = {
@@ -18,7 +17,6 @@ if (!firebase.apps.length) {
 }
 
 const auth = firebase.auth();
+const firestore = firebase.firestore();
 
-
-
-export { auth };
+export { auth, firestore };
