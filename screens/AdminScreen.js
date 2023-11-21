@@ -40,7 +40,7 @@ export default function AdminScreen() {
   }}
 >
   <Tab.Screen name="Ana Sayfa" component={Home} />
-  <Tab.Screen name="Öğrenci Listesi" component={OgrenciList} />
+  <Tab.Screen options={{headerShown:false}} name="Öğrenci Listesi" component={OgrenciList} />
   <Tab.Screen name="Dersler" component={DerslerScreen} />
   <Tab.Screen name="Muhasebe" component={MuhasebeScreen} />
   

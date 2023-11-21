@@ -11,10 +11,16 @@ const handleSignOut = () => {
   };
 export default function Home() {
   return (
-    <View>
+    <View style={styles.HomeContainer}>
       <Text>Home</Text>
     </View>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    HomeContainer:{
+        flex:1,
+        backgroundColor:'black',
+
+    }
+})

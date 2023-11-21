@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Home from '../Home';
 import DerslerScreen from './DerslerScreen';
+import KullaniciScreen from './KullaniciScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,6 +53,7 @@ export default function HomeScreen() {
     >
       <Tab.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
       <Tab.Screen options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
+      <Tab.Screen options={{headerShown:false}} name="Kullanici" component={KullaniciScreen} />
     </Tab.Navigator>
   );
 }

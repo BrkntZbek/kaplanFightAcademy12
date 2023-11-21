@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity,StyleSheet,Image, ScrollView  } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
 import { firestore } from '../firebase'; // Firestore bağlantısını içe aktarın
 
 export default function OgrenciList() {
   const [students, setStudents] = useState([]);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -19,45 +20,56 @@ export default function OgrenciList() {
     fetchStudents();
   }, []);
 
+  // İsme göre filtreleme fonksiyonu
+  const filterStudents = () => {
+    return students.filter(student =>
+      student.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+  };
 
   return (
     <View style={styles.container}>
-    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-  <FlatList
-    style={{ flex: 1 }}
-    data={students}
-    keyExtractor={(item, index) => index.toString()}
-    numColumns={2}
-    renderItem={({ item, index }) => (
-      <View style={styles.FlatList}>
-        <Image
-          style={styles.image}
-          source={
-            item.photoURL
-              ? { uri: item.photoURL }
-              : item.gender === 'Erkek'
-              ? require('../img/man.png')
-              : require('../img/woman.png')
-          }
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Arama"
+        value={searchText}
+        onChangeText={(text) => setSearchText(text)}
+      />
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <FlatList
+          style={{ flex: 1 }}
+          data={filterStudents()}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={2}
+          renderItem={({ item, index }) => (
+            <View style={styles.FlatList}>
+              <Image
+                style={styles.image}
+                source={
+                  item.photoURL
+                    ? { uri: item.photoURL }
+                    : item.gender === 'Erkek'
+                    ? require('../img/man.png')
+                    : require('../img/woman.png')
+                }
+              />
+              <Text style={styles.text}>{` ${item.name}`}</Text>
+              {/* Diğer bilgileri de burada gösterebilirsiniz */}
+            </View>
+          )}
         />
-        <Text style={styles.text}>{` ${item.name}`}</Text>
-        
-        {/* Diğer bilgileri de burada gösterebilirsiniz */}
-      </View>
-    )}
-  />
-</ScrollView>
-</View>
+      </ScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   FlatList: {
     borderWidth: 2,
     borderRadius: 10,
-    margin: 2,
+   margin:15,
     borderColor: 'black', // borderBlockColor yerine borderColor kullanın
     backgroundColor:'yellow',
-    width: 190, // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
+    width: 160, // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
     height: 180,
     justifyContent: 'center',
     alignItems: 'center', // Yukarıdan aşağıya sıralamak için
@@ -88,6 +100,19 @@ const styles = StyleSheet.create({
     borderColor:'black'
   },
   container:{
+    flex:1,
+    marginTop:20,
+    
     backgroundColor:'black'
-  }
+  },
+  searchInput: {
+    
+    backgroundColor: 'yellow',
+    fontSize:15,
+    fontWeight:'bold',
+    textAlign:'center',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+  },
 });
