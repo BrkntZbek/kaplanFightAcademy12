@@ -6,14 +6,19 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import AdminScreen from './screens/AdminScreen';
 import OgrenciList from './screens/OgrenciList';
+import Home from './Home';
+import DerslerScreen from './screens/DerslerScreen';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator>
       <Stack.Screen options={{headerShown:false}} name="Login" component={LoginScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Admin" component={AdminScreen} />
+      <Stack.Screen options={{headerShown:false}} name="Home" component={HomeScreen} />
+      <Stack.Screen options={{headerShown:false}} name="Admin" component={AdminScreen} />
+      <Stack.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
+      <Stack.Screen  options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
+   
    
     </Stack.Navigator>
   </NavigationContainer>

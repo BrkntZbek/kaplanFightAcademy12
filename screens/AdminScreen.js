@@ -5,8 +5,10 @@ import OgrenciList from './OgrenciList'; // Örnek bir sayfa
 import DerslerScreen from './DerslerScreen'; // Örnek bir sayfa
 import MuhasebeScreen from './MuhasebeScreen'; // Örnek bir sayfa
 import { Ionicons } from '@expo/vector-icons'; 
+import Home from '../Home';
 
 const Tab = createBottomTabNavigator();
+
 
 export default function AdminScreen() {
   return (
@@ -37,10 +39,11 @@ export default function AdminScreen() {
       },
   }}
 >
-  <Tab.Screen name="Ana Sayfa" component={HomeScreen} />
+  <Tab.Screen name="Ana Sayfa" component={Home} />
   <Tab.Screen name="Öğrenci Listesi" component={OgrenciList} />
   <Tab.Screen name="Dersler" component={DerslerScreen} />
   <Tab.Screen name="Muhasebe" component={MuhasebeScreen} />
+  
 </Tab.Navigator>
 
 

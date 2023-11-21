@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Image, Touchab
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { firestore } from '../firebase';
-
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
@@ -11,8 +11,17 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [Telefon, setTelefon] = useState(0);
+  const [telefon, setTelefon] = useState('');
+  const [selectedGender, setSelectedGender] = useState(null);
   const navigation=useNavigation();
+
+
+  const radioProps = [
+    { label: 'Kadın', value: 'Kadın' },
+    { label: 'Erkek', value: 'Erkek' },
+  ];
+
+  
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -25,7 +34,7 @@ export default function LoginScreen() {
         } else {
           // Diğer kullanıcılar
           navigation.replace('Home');
-          console.log('Normal kullanıcı kayıt oldu', user.email);
+          console.log('Normal kullanıcı Giriş yaptı', user.email);
         }
       }
     });
@@ -56,7 +65,8 @@ export default function LoginScreen() {
           email: user.email,
           id:userId,
           name:name,
-          telefon:Telefon
+          telefon:telefon,
+          gender:selectedGender,
         });
   
        
@@ -81,7 +91,7 @@ export default function LoginScreen() {
       <View style={styles.imageContainer}>
         <Image style={styles.logoİmg} source={require('../img/kaplanLogo.png')} />
       </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' , marginTop:-40, }}>
   <Text style={{ color: isRegisterMode ? 'grey' : 'green' ,fontWeight:'bold'}}>Giriş Yap</Text>
   <Switch
     value={isRegisterMode}
@@ -93,16 +103,33 @@ export default function LoginScreen() {
 </View>
       
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder='Email' value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/> 
-        <TextInput style={styles.input} placeholder='Şifre' value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
-        {showNameInput && <TextInput style={styles.input} value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
-        {showNameInput && <TextInput style={styles.input} value={Telefon} keyboardType="numeric" onChangeText={Telefon => setTelefon(Telefon)} placeholder='Telefon'/>}
+        <TextInput style={styles.input} placeholder='Email' placeholderTextColor="black"  value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/> 
+        <TextInput style={styles.input} placeholder='Şifre' placeholderTextColor="black" value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
+        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
+        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={telefon} keyboardType="numeric" onChangeText={telefon => setTelefon(telefon)} placeholder='Telefon'/>}
       </View>
+
+      {showNameInput &&<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}> 
+      
+      <RadioForm
+        radio_props={radioProps}
+        initial={selectedGender}
+        onPress={(value) => setSelectedGender(value)}
+        formHorizontal={true}
+        labelHorizontal={true}
+        buttonColor={'yellow'}
+        selectedButtonColor={'yellow'}
+        labelStyle={{ marginRight: 20, fontSize: 15, color: 'yellow' }}
+      />
+     
+       </View>}
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.button, styles.outlineButton]}
           onPress={handleButtonClick}>
           <Text style={styles.buttonText}>{isRegisterMode ? 'Kayıt Ol' : 'Giriş Yap'}</Text>
+          
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -132,8 +159,9 @@ const styles = StyleSheet.create({
     buttonContainer:{
         marginTop:20,
       width:'60%',
-     
-     
+    },
+    genderText:{
+      color:'yellow'
     },
     button:{
        
