@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './HomeScreen'; // Örnek bir sayfa
-import OgrenciList from './OgrenciList'; // Örnek bir sayfa
-import DerslerScreen from './DerslerScreen'; // Örnek bir sayfa
-import MuhasebeScreen from './MuhasebeScreen'; // Örnek bir sayfa
+
+import OgrenciList from './OgrenciList'; 
+import DerslerScreen from './DerslerScreen'; 
+import MuhasebeScreen from './MuhasebeScreen'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import Home from '../Home';
 

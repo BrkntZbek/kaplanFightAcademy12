@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     },
     
     logoİmg:{
-        width:350, // İstediğiniz genişlik ve yüksekliği ayarlayın
+        width:350, 
         height: 350,
 
     },

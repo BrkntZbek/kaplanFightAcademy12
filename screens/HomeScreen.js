@@ -3,7 +3,7 @@ import React from 'react';
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons ,FontAwesome ,MaterialCommunityIcons} from '@expo/vector-icons';
 import Home from '../Home';
 import DerslerScreen from './DerslerScreen';
 import KullaniciScreen from './KullaniciScreen';
@@ -23,32 +23,32 @@ export default function HomeScreen() {
 
   return (
     <Tab.Navigator
+    
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name === 'Ana Sayfa') {
-            iconName = focused ? 'home' : 'home-outline';
+          return  iconName = focused ?<Ionicons name="home" size={24} color="black" />  : <Ionicons name="home-outline" size={24} color="black" />;
           } else if (route.name === 'Öğrenci Listesi') {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'Dersler') {
-            iconName = focused ? 'book' : 'book-outline';
-          } else if (route.name === 'Muhasebe') {
-            iconName = focused ? 'cash' : 'cash-outline';
+          return iconName = focused ? <FontAwesome name="th-list" size={24} color="black" /> : <FontAwesome name="list" size={24} color="black" />;
+          } else if (route.name === 'Kullanici') {
+            return  iconName = focused ?<FontAwesome name="user" size={24} color="black" />  : <FontAwesome name="user-o" size={24} color="black" />;
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <FontAwesome name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'black',
-        inactiveTintColor: 'gray',
+        activeTintColor: 'black', // Seçili sekmenin rengi
+        inactiveTintColor: 'gray', // Seçili olmayan sekmenin rengi
+        
         tabStyle: {
           backgroundColor: 'yellow',
-          borderRadius: 5,
-          borderWidth: 2, // İstediğiniz genişlikte kenarlık
-      borderColor: 'black', // Kenarlık rengi
-        },
+         
+          },
       }}
     >
       <Tab.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />

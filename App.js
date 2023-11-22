@@ -8,6 +8,8 @@ import AdminScreen from './screens/AdminScreen';
 import OgrenciList from './screens/OgrenciList';
 import Home from './Home';
 import DerslerScreen from './screens/DerslerScreen';
+import StudentDetailsScreen from './screens/StudentDetailsScreen';
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -18,6 +20,7 @@ export default function App() {
       <Stack.Screen options={{headerShown:false}} name="Admin" component={AdminScreen} />
       <Stack.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
       <Stack.Screen  options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
+      <Stack.Screen  options={{headerShown:false}} name="Studentinfo" component={StudentDetailsScreen} />
    
    
     </Stack.Navigator>

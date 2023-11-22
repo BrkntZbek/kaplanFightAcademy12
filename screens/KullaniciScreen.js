@@ -48,7 +48,7 @@ const UserProfile = () => {
       const userId = auth.currentUser.uid;
       const imageName = `profile_${userId}.jpg`;
 
-      // storage nesnesini tanımlayın
+      // storage nesnesini tanımlama
       const storageRef = storage().ref().child(`userss/${userId}/${imageName}`);
 
       await storageRef.put(blob);
@@ -81,12 +81,29 @@ const UserProfile = () => {
 
   return (
     <View style={styles.KullaniciContainer}>
-      <TouchableOpacity onPress={pickImage}>
-        <Image style={styles.profileImage} source={profileImageSource} />
-      </TouchableOpacity>
-      <Text style={styles.kkText}>Merhaba, {userData.name}!</Text>
-      <Text style={styles.kkText}>Email: {userData.email}</Text>
-      <Text style={styles.kkText}>Telefon: {userData.telefon}</Text>
+      <View style={styles.infoContainer}>
+        <View style={styles.textContainer}>
+          <View style={styles.nameContainer}>
+        <Text style={styles.nameText}>{userData.name}</Text>
+        </View>
+          <View style={styles.info}>
+          <Text style={styles.kkText}>Email: {userData.email}</Text>
+          <Text style={styles.kkText}>Telefon: {userData.telefon}</Text>
+          <Text style={{fontSize:20,fontWeight:'bold', textDecorationLine: 'underline'}}>Paketim</Text>
+          <Text style={{fontSize:15}}>Paket Türü</Text>
+          <Text style={{fontSize:15}}>Ders Sayısı</Text>
+          <Text style={{fontSize:15}}>Başlangıç Tarihi</Text>
+          <Text style={{fontSize:15}}>Zaman Aşımı Tarihi</Text>
+          
+          <Text style={styles.kkText}>Gelecek Antrenman</Text>
+          <Text style={styles.kkText}>Antrenman Geçmişi</Text>
+          
+          </View>
+          </View>
+          <View style={styles.altContainer}>
+          <Text style={styles.kkText}>Antrenman Geçmişi</Text>
+          </View>
+      </View>
     </View>
   );
 };
@@ -98,16 +115,58 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+   
   },
-  profileImage: {
-    borderWidth: 4,
-    borderColor: 'yellow',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+  nameContainer:{
+    borderBottomWidth:2,
+    width:'100%',
+    alignItems:'center',
+    
+    borderBottomEndRadius:30
+  },
+  nameText:{
+      fontWeight:'bold',
+      fontSize:30,
+      
+  },
+  info:{
+   
+    height:'90%',
+    width:'100%',
+    justifyContent:'start',
+    marginTop:40,
+    alignItems:'center',
+    borderBottomWidth:2,
+    borderColor:'black'
+  },
+  textContainer: {
+   height:'80%',
+   padding:20,
+   
+   margin:10,
+   borderTopLeftRadius:90,
+  
+   alignItems:'center',
+   justifyContent:'start',
   },
   kkText: {
-    color: 'yellow',
+    color: 'black',
+    fontSize:15,
+    margin:10,
+    padding:10,
+    borderWidth:2,
+    borderColor:'black',
+    borderRadius:20,
+    
   },
+  infoContainer:{
+    backgroundColor: 'rgba(255, 255, 0, 0.7)',
+    width:'80%',
+    height:'95%',
+    borderTopLeftRadius:90,
+    borderBottomLeftRadius:50,
+   
+    justifyContent:'flex-start',
+  }
 });
