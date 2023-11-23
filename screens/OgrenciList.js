@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, ScrollView, TextInput, Modal } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput, Modal } from 'react-native';
 import { firestore } from '../firebase'; // Firestore bağlantısını içe aktarın
 
 
@@ -47,35 +47,34 @@ export default function OgrenciList() {
         value={searchText}
         onChangeText={(text) => setSearchText(text)}
       />
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        <FlatList
-          style={{ flex: 1 }}
-          data={filterStudents()}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={2}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => handleStudentPress(item)}
-              style={styles.touchableContainer}
-            >
-              <View style={styles.FlatList}>
-                <Image
-                  style={styles.image}
-                  source={
-                    item.photoURL
-                      ? { uri: item.photoURL }
-                      : item.gender === 'Erkek'
-                      ? require('../img/man.png')
-                      : require('../img/woman.png')
-                  }
-                />
-                <Text style={styles.text}>{` ${item.name}`}</Text>
-                
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-      </ScrollView>
+     <View style={styles.scrollViewContainer}>
+  <FlatList
+    style={{ flex: 1 }}
+    data={filterStudents()}
+    keyExtractor={(item, index) => index.toString()}
+    numColumns={2}
+    renderItem={({ item, index }) => (
+      <TouchableOpacity
+        onPress={() => handleStudentPress(item)}
+        style={styles.touchableContainer}
+      >
+        <View style={styles.FlatList}>
+          <Image
+            style={styles.image}
+            source={
+              item.photoURL
+                ? { uri: item.photoURL }
+                : item.gender === 'Erkek'
+                ? require('../img/man.png')
+                : require('../img/woman.png')
+            }
+          />
+          <Text style={styles.text}>{` ${item.name}`}</Text>
+        </View>
+      </TouchableOpacity>
+    )}
+  />
+</View>
 
       {/* Modal Ekranı */}
    

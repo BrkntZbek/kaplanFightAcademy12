@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Image, Touchab
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { firestore } from '../firebase';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+
 import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
@@ -16,10 +16,7 @@ export default function LoginScreen() {
   const navigation=useNavigation();
 
 
-  const radioProps = [
-    { label: 'Kadın', value: 'Kadın' },
-    { label: 'Erkek', value: 'Erkek' },
-  ];
+
 
   
 
@@ -111,16 +108,7 @@ export default function LoginScreen() {
 
       {showNameInput &&<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}> 
       
-      <RadioForm
-        radio_props={radioProps}
-        initial={selectedGender}
-        onPress={(value) => setSelectedGender(value)}
-        formHorizontal={true}
-        labelHorizontal={true}
-        buttonColor={'yellow'}
-        selectedButtonColor={'yellow'}
-        labelStyle={{ marginRight: 20, fontSize: 15, color: 'yellow' }}
-      />
+      
      
        </View>}
 

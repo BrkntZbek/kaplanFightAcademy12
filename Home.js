@@ -12,7 +12,7 @@ const handleSignOut = () => {
 export default function Home() {
   return (
     <View style={styles.HomeContainer}>
-      <Text>Home</Text>
+      <Text style={{color:'yellow'}}>Home</Text>
     </View>
   )
 }
@@ -21,6 +21,8 @@ const styles = StyleSheet.create({
     HomeContainer:{
         flex:1,
         backgroundColor:'black',
+        alignItems:'center',
+        justifyContent:'center'
 
     }
 })

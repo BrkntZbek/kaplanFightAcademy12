@@ -6,6 +6,7 @@ import DerslerScreen from './DerslerScreen';
 import MuhasebeScreen from './MuhasebeScreen'; 
 import { Ionicons } from '@expo/vector-icons'; 
 import Home from '../Home';
+import AdminSetting from './AdminSetting';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,7 @@ export default function AdminScreen() {
         iconName = focused ? 'person' : 'person-outline';
       } else if (route.name === 'Dersler') {
         iconName = focused ? 'book' : 'book-outline';
-      } else if (route.name === 'Muhasebe') {
+      } else if (route.name === 'Admin Ayarları') {
         iconName = focused ? 'cash' : 'cash-outline';
       }
        
@@ -42,7 +43,7 @@ export default function AdminScreen() {
   <Tab.Screen name="Ana Sayfa" component={Home} />
   <Tab.Screen options={{headerShown:false}} name="Öğrenci Listesi" component={OgrenciList} />
   <Tab.Screen name="Dersler" component={DerslerScreen} />
-  <Tab.Screen name="Muhasebe" component={MuhasebeScreen} />
+  <Tab.Screen name="Admin Ayarları" component={AdminSetting} />
   
 </Tab.Navigator>
 

@@ -54,6 +54,9 @@ export default function HomeScreen() {
       <Tab.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
       <Tab.Screen options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
       <Tab.Screen options={{headerShown:false}} name="Kullanici" component={KullaniciScreen} />
+
+
+      
     </Tab.Navigator>
   );
 }

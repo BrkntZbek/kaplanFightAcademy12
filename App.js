@@ -9,6 +9,7 @@ import OgrenciList from './screens/OgrenciList';
 import Home from './Home';
 import DerslerScreen from './screens/DerslerScreen';
 import StudentDetailsScreen from './screens/StudentDetailsScreen';
+import AdminSetting from './screens/AdminSetting';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -20,7 +21,8 @@ export default function App() {
       <Stack.Screen options={{headerShown:false}} name="Admin" component={AdminScreen} />
       <Stack.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
       <Stack.Screen  options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
-      <Stack.Screen  options={{headerShown:false}} name="Studentinfo" component={StudentDetailsScreen} />
+     
+     
    
    
     </Stack.Navigator>
