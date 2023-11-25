@@ -45,6 +45,7 @@ export default function AdminScreen() {
   <Tab.Screen name="Dersler" component={DerslerScreen} />
   <Tab.Screen name="Admin Ayarları" component={AdminSetting} />
   
+  
 </Tab.Navigator>
 
 

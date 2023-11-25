@@ -32,6 +32,7 @@ const UserProfile = () => {
       unsubscribe();
     };
   }, []);
+ 
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({

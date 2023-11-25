@@ -12,7 +12,8 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [telefon, setTelefon] = useState('');
-  const [selectedGender, setSelectedGender] = useState(null);
+  const [size,setSize] = useState('');
+  const [weight,setWeight] = useState('');
   const navigation=useNavigation();
 
 
@@ -63,7 +64,8 @@ export default function LoginScreen() {
           id:userId,
           name:name,
           telefon:telefon,
-          gender:selectedGender,
+          boy:size,
+          kilo:weight,
         });
   
        
@@ -104,6 +106,8 @@ export default function LoginScreen() {
         <TextInput style={styles.input} placeholder='Şifre' placeholderTextColor="black" value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
         {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
         {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={telefon} keyboardType="numeric" onChangeText={telefon => setTelefon(telefon)} placeholder='Telefon'/>}
+        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={size} keyboardType="numeric" onChangeText={size => setSize(size)} placeholder='Boy'/>}
+        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={weight} keyboardType="numeric" onChangeText={weight => setWeight(weight)} placeholder='Kilo'/>}
       </View>
 
       {showNameInput &&<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}> 

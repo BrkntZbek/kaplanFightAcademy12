@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput, Modal } from 'react-native';
-import { firestore } from '../firebase'; // Firestore bağlantısını içe aktarın
+import { firestore,firebase,auth } from '../firebase'; // Firestore bağlantısını içe aktarın
 
+import StudentsModal from '../Components/Modal/StudentsModal';
 
 export default function OgrenciList() {
   const [students, setStudents] = useState([]);
+ 
   const [searchText, setSearchText] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState([]);
+
+ const [studentİnfoVisible,setStudentİnfoVisible] = useState(false);
 
 
+ console.log(studentİnfoVisible);
   const handleStudentPress = (item) => {
     setSelectedStudent(item);
+    setStudentİnfoVisible(true);
   };
 
-  const handleCloseModal = () => {
-    setSelectedStudent(null);
+  const handleCloseStudentModel = () => {
+    setStudentİnfoVisible(false);
   };
+  
+
+  
+
+
+
 
   // Öğrencileri Listelemek için
   useEffect(() => {
@@ -24,13 +36,19 @@ export default function OgrenciList() {
         const studentsCollection = await firestore.collection('userss').get();
         const studentsData = studentsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setStudents(studentsData);
+       
       } catch (error) {
         console.error('Error fetching students:', error);
       }
     };
-
+     
     fetchStudents();
   }, []);
+
+
+
+ 
+  
 
   // İsme göre filtreleme fonksiyonu
   const filterStudents = () => {
@@ -78,63 +96,10 @@ export default function OgrenciList() {
 
       {/* Modal Ekranı */}
    
-      <Modal visible={selectedStudent !== null} transparent={true} animationType="slide">
-
-        {/* Modal İçeriği */}
-        <View style={[styles.modalContainer, { height: 600 }]}>
-          <View style={styles.modalContent}>
-            <View style={styles.nameContainer}>
-            <Text style={{fontWeight:'bold', fontSize:20, color:'yellow'}}>{selectedStudent?.name}</Text>
-            </View>
-            <View style={styles.Studentİnfo}>
-            <Text style={styles.textModal}>{selectedStudent?.email}</Text>
-            <Text style={styles.textModal}>{selectedStudent?.telefon}</Text>
-
-            <View style={styles.paket}>
-            <Text style={{fontWeight:'bold', fontSize:20, color:'yellow'}}>Paket</Text>
-            <Text style={styles.textModal}>Paket Tipi</Text>
-            <Text style={styles.textModal}>Paket Fiyatı</Text>
-            <Text style={styles.textModal}>Ders Sayısı</Text>
-            <Text style={styles.textModal}>Kalan Ders</Text>
-            <Text style={styles.textModal}>Ödeme</Text>
-            </View>
-            
-            <View style={styles.paket}>
-            <Text style={{fontWeight:'bold', fontSize:13}}>Toplam Ders Sayısı: </Text>
-            
-            </View>
-
-
-            <View style={styles.paket}>
-
-            <Text style={{fontWeight:'bold',  fontSize:20, color:'yellow',}}>Geçmiş Dersler</Text>
-            <Text style={styles.textModal}>Son Ders</Text>
-            <Text style={styles.textModal}>Tüm Dersler</Text>
-            </View>
-            
-           <View>
-
-           </View>
-            
-            </View>
-            {/* Diğer öğrenci bilgilerini buraya ekleyebilirsiniz */}
-
-            <View style={styles.buttons}>
-            <TouchableOpacity onPress={handleCloseModal}>
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}}>Paket Ekle</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleCloseModal}>
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}}>Ders Ekle</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleCloseModal}>
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Kapat</Text>
-            </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        
-      </Modal>
+      <StudentsModal isVisible={studentİnfoVisible}  selectedStudent={selectedStudent} firestore={firestore} handleCloseModal={handleCloseStudentModel} firebase={firebase}/>
+      
     </View>
+    
   );
 }
 const styles = StyleSheet.create({
