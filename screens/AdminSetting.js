@@ -51,6 +51,27 @@ export default function AdminSetting() {
            <TouchableOpacity onPress={openModal} >
               <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Ekle</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={openModal} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Güncelle</Text>
+            </TouchableOpacity>
+           
+            <TouchableOpacity onPress={openModal} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Hoca Ekle</Text>
+            </TouchableOpacity>
+            
+        </View>
+        <View style={styles.paketler}>
+            <Text style={{color:'yellow',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Muhasebe</Text>
+           <TouchableOpacity onPress={openModal} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Masraf Ekle</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openModal} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Gelir Ekle</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openModal} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Genel Muhasebe</Text>
+            </TouchableOpacity>
+            
         </View>
         <View style={styles.paketler}>
              <Text style={{color:'yellow',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paketler</Text>
@@ -68,10 +89,6 @@ export default function AdminSetting() {
       />
         </View>
 
-
-
-
-        
         <Modal
         animationType="slide"
         transparent={true}
@@ -91,11 +108,13 @@ export default function AdminSetting() {
               <Text style={{fontWeight:'bold', color:'yellow', fontSize:15,borderWidth:1,borderRadius:10,padding:5,borderWidth:1,borderColor:'yellow',marginTop:10}}  >Paket Ekle</Text>
              
             </TouchableOpacity>  
-          </View>
-          <TouchableOpacity onPress={openModal} >
+           
+            <TouchableOpacity onPress={openModal} >
               <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} onPress={closeModal} >Kapat</Text>
              
             </TouchableOpacity>
+          </View>
+          
         </View>
       </Modal>
     </View>
@@ -125,7 +144,7 @@ const styles = StyleSheet.create({
         borderRadius:20,
         padding:15,
         width:'80%',
-        height:'40%',
+        height:'auto',
         alignItems:'center',
         marginTop:20
     },
@@ -141,7 +160,7 @@ const styles = StyleSheet.create({
         fontWeight:'bold'
      },
     modalContainer:{
-        height: 600,
+        height: '90%',
         flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -155,7 +174,7 @@ const styles = StyleSheet.create({
         backgroundColor:'black',
         borderRadius: 20,
         width: '80%', // Modal'ın genişliği
-        maxHeight: '80%', // Modal'ın maksimum yüksekliği
+        
     },
     modalText:{
         color:'yellow',

@@ -1,19 +1,21 @@
 import { StyleSheet, Text, View ,Modal,TouchableOpacity , FlatList} from 'react-native'
 import React, { useState,useEffect} from 'react';
-import { doc, setDoc } from '@firebase/firestore';
+import { doc, getDoc, setDoc ,updateDoc} from '@firebase/firestore';
 import { firestore } from '../../firebase'; // Firestore bağlantısını içe aktarın
 
 
 export default function AddPackModel({ isVisible, handleCloseModal,selectedStudent }) {
     const [packageList, setPackageList] = useState([]);
     const [selectedPackageId, setSelectedPackageId] = useState([]);
- 
+  
+
     useEffect(() => {
       const fetchPackages = async () => {
         try {
           const packageCollection = await firestore.collection('LessonPackage').get();
           const packageData = packageCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setPackageList(packageData);
+          console.log('Tüm Paketler : ',packageData)
         } catch (error) {
           console.error('Error fetching packages:', error);
         }
@@ -21,25 +23,49 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
   
       fetchPackages();
     }, []);
-
+    console.log('Paket Eklenecek Üye',selectedStudent)
     const addPackage = async () => {
+      try {
         // Firebase Authentication ile kullanıcı bilgilerini al
         // Kullanıcı oturum açmışsa
-            const PackagesSold = firestore.collection('PackagesSold');
+        const PackagesSold = firestore.collection('PackagesSold');
+        const UserUpdate = doc(firestore, 'userss', selectedStudent.id);
+        console.log('useri buldu mu', UserUpdate);
     
-            // Firestore'a paket eklemek için örnek bir belge
-            console.log('Selected Package:', selectedPackageId);
-            await setDoc(doc(PackagesSold), {
-                SatilanPaket:selectedPackageId.paketTuru,
-                SatilanKisiID: selectedStudent.id,
-                SatilanKisiİsim: selectedStudent.name,
-                Fiyat: selectedPackageId.paketFiyati ,
-                DersSayisi: selectedPackageId.dersSayisi ,
-                KalanDers: selectedPackageId.dersSayisi,
-                aktif: 'Aktif'
-            });
+        // Firestore'a paket eklemek için örnek bir belge
+        const newPackageRef = doc(PackagesSold);
     
-            console.log('Yeni Paket Eklendi', selectedPackageId ? selectedPackageId.paketTuru : 'Bir paket seçilmemiş', userID.id);
+        console.log('Selected Package:', selectedPackageId);
+    
+        // Belgeyi ekleyin ve referansını alın Burada ayrıca Userss deposuna paketID sini eklemek gerekiyor.
+        await setDoc(newPackageRef, {
+          SatilanPaket: selectedPackageId.paketTuru,
+          SatilanKisiID: selectedStudent.id,
+          SatilanKisiİsim: selectedStudent.name,
+          Fiyat: selectedPackageId.paketFiyati,
+          DersSayisi: selectedPackageId.dersSayisi,
+          KalanDers: selectedPackageId.dersSayisi,
+          aktif: 'Aktif'
+        });
+    
+        // Eklenen belgenin ID'sini alın
+        const newPackageId = newPackageRef.id;
+    
+        // Eklenen belgenin ID'sini verilere ekleyin (bu adımda daha önce eklenmiş bir belgeye değer ekliyoruz)
+        await updateDoc(newPackageRef, {
+          belgeId: newPackageId
+        });
+    
+        // Kullanıcının belgesini güncelle ve paketID'yi ekleyin
+        await updateDoc(UserUpdate, {
+          paketId: newPackageId
+        });
+    
+        console.log('Yeni Paket Eklendi', selectedPackageId ? selectedPackageId.paketTuru : 'Bir paket seçilmemiş', selectedStudent.id, 'ID:', newPackageId);
+       handleCloseModal();
+      } catch (error) {
+        console.error('Hata:', error);
+      }
     };
   
     const handlePackagePress = (selectedPackageId) => {
@@ -55,7 +81,7 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
           console.log('Kalan ders bilgisi yok.');
         }
       
-        console.log('User ID:', userID.id);
+        console.log('User ID:', selectedStudent.id);
       
         // Diğer işlemleri buraya ekleyebilirsiniz
       };

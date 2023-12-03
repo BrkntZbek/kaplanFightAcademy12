@@ -42,8 +42,8 @@ export default function HomeScreen() {
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'black', // Seçili sekmenin rengi
-        inactiveTintColor: 'gray', // Seçili olmayan sekmenin rengi
+        activeTintColor: 'black', 
+        inactiveTintColor: 'gray', 
         
         tabStyle: {
           backgroundColor: 'yellow',

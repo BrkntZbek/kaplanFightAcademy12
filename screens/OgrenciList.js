@@ -23,12 +23,6 @@ export default function OgrenciList() {
     setStudentİnfoVisible(false);
   };
   
-
-  
-
-
-
-
   // Öğrencileri Listelemek için
   useEffect(() => {
     const fetchStudents = async () => {
@@ -71,6 +65,7 @@ export default function OgrenciList() {
     data={filterStudents()}
     keyExtractor={(item, index) => index.toString()}
     numColumns={2}
+    
     renderItem={({ item, index }) => (
       <TouchableOpacity
         onPress={() => handleStudentPress(item)}
@@ -106,14 +101,14 @@ const styles = StyleSheet.create({
   FlatList: {
     borderWidth: 2,
     borderRadius: 10,
-   margin:15,
+   margin:5,
     borderColor: 'black', // borderBlockColor yerine borderColor kullanın
     backgroundColor:'yellow',
     width: 160, // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
     height: 180,
     justifyContent: 'center',
     alignItems: 'center', // Yukarıdan aşağıya sıralamak için
-    padding: 2,
+    marginLeft:20,
     backgroundColor: 'rgba(255, 255, 0, 0.7)', // Sarı renginde ve hafif saydam (0.7 opacity)
   },
   buttons:{

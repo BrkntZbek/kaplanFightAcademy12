@@ -5,13 +5,22 @@ import * as ImagePicker from 'expo-image-picker';
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
+  const [userPackage, setUserPackage] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe =  auth.onAuthStateChanged((user) => {
       if (user) {
         const userId = user.uid;
-        const userRef = firestore.collection('userss').doc(userId);
-
+        const userRef =  firestore.collection('userss').doc(userId);
+        const packageRef =  firestore.collection('PackagesSold').where('SatilanKisi', '==', userId).get();
+        if(!packageRef.empty)
+        {
+          const packageData = packageRef.docs[0].data();
+          setUserPackage(packageData);
+        }
+        else{
+          setUserPackage('Paket Bulunamadı.');
+        }
         const unsubscribeFirestore = userRef.onSnapshot((doc) => {
           if (doc.exists) {
             setUserData(doc.data());
@@ -66,7 +75,9 @@ const UserProfile = () => {
   };
 
   if (!userData) {
-    return <Text>Loading...</Text>;
+    return <View style={styles.loading}>
+      <Text style={styles.loadingText}>Yükleniyor...</Text>
+    </View>;
   }
 
   let profileImageSource;
@@ -118,6 +129,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
    
+  },
+  loading:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  loadingText:{
+     fontWeight:'bold',
+     fontSize:30
   },
   nameContainer:{
     borderBottomWidth:2,

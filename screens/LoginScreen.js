@@ -28,7 +28,7 @@ export default function LoginScreen() {
         if (user.email === 'admin@kaplanfight.com') {
           // Admin kontrolü
           navigation.replace('Admin');
-          console.log('Admin kullanıcı kayıt oldu', user.email);
+          console.log('Admin Giriş yaptı', user.email);
         } else {
           // Diğer kullanıcılar
           navigation.replace('Home');
@@ -106,8 +106,11 @@ export default function LoginScreen() {
         <TextInput style={styles.input} placeholder='Şifre' placeholderTextColor="black" value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
         {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
         {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={telefon} keyboardType="numeric" onChangeText={telefon => setTelefon(telefon)} placeholder='Telefon'/>}
-        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={size} keyboardType="numeric" onChangeText={size => setSize(size)} placeholder='Boy'/>}
-        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={weight} keyboardType="numeric" onChangeText={weight => setWeight(weight)} placeholder='Kilo'/>}
+        <View style={styles.sizeAndWeight}> 
+        {showNameInput && <TextInput style={styles.input1} placeholderTextColor="black" value={size} keyboardType="numeric" onChangeText={size => setSize(size)} placeholder='Boy'/>}
+        {showNameInput && <TextInput style={styles.input1} placeholderTextColor="black" value={weight} keyboardType="numeric" onChangeText={weight => setWeight(weight)} placeholder='Kilo'/>}
+        </View>
+        
       </View>
 
       {showNameInput &&<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}> 
@@ -135,8 +138,28 @@ const styles = StyleSheet.create({
       alignItems:'center',
       backgroundColor:'black'
     },
+    input1:{
+      backgroundColor:'yellow',
+      paddingHorizontal:15,
+      paddingVertical:10,
+      justifyContent:'center',
+      marginBottom:5,
+      borderRadius:20,
+      width:'30%',
+      margin:5,
+      color:'black',
+
+    },
     inputContainer:{
        width:'80%'
+    },
+    sizeAndWeight:{
+       alignItems:'center',
+       justifyContent:'center',
+       flexDirection: 'row',  
+       margin:2,
+       padding:2,
+      
     },
     input:{
        backgroundColor:'yellow',
