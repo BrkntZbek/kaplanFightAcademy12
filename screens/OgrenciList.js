@@ -25,7 +25,9 @@ export default function OgrenciList() {
   
   // Öğrencileri Listelemek için
   useEffect(() => {
+    setStudents([]);
     fetchStudents(setStudents);
+  
   }, [firestore, setStudents]);
 
 
