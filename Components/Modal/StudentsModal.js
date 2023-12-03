@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, } from "react";
 import AddPackModel from "./AddPackModel";
 import Toast from 'react-native-toast-message';
 import AddLessonModal from "./AddLessonModal";
-
+import { lastLesson } from "../../firebase";
 export default function StudentsModal({
   selectedStudent,
   firestore,
@@ -14,6 +14,9 @@ export default function StudentsModal({
   const [addPackageModalVisible, setAddPackageModalVisible] = useState(false);
   const [packageInfo, setPackageInfo] = useState(null);
   const [lessonModalVisible,setLessonModalVisible] = useState(false);
+  const [lastLesson,setLastLesson] = useState(null)
+  
+ 
   const toastRef = useRef(); 
 
     const handleOpenLessonModal = () =>{
@@ -51,7 +54,9 @@ export default function StudentsModal({
             .where("belgeId", "==", selectedStudent.paketId)   // sıkıntı UI da Paketi olan bir öğrencinin modeli açıldığında ardından paketi olmayan bir öğrenciyi açtığında rastgele bir paket geliyor. HALLET.
             .where("aktif", "==", "Aktif")
             .get();
-      
+            
+
+           
           if (!packageSnapshot.empty) {
             const packageData = packageSnapshot.docs[0].data();
             setPackageInfo(packageData);
@@ -63,8 +68,11 @@ export default function StudentsModal({
           console.error("Paket bilgilerini alma hatası:", error);
         }
       };
+
+      
      
       fetchPackageInfo();
+      
     }
   }, [selectedStudent, firestore]);
    console.log()
@@ -119,8 +127,8 @@ export default function StudentsModal({
             </View>
 
             <View style={styles.paket}>
-              <Text style={{ fontWeight: "bold", fontSize: 13 ,color:'red' }}>
-                Toplam Ders Sayısı:{" "}
+              <Text style={{ fontWeight: "bold", fontSize: 13 ,color:'yellow' }}>
+                Toplam Ders Sayısı:{selectedStudent.ToplamDers}
               </Text>
             </View>
 
@@ -130,7 +138,7 @@ export default function StudentsModal({
               >
                 Geçmiş Dersler
               </Text>
-              <Text style={styles.textModal}>Son Ders</Text>
+              <Text style={styles.textModal}>ss</Text>
               <Text style={styles.textModal}>Tüm Dersler</Text>
             </View>
 
@@ -167,6 +175,21 @@ export default function StudentsModal({
                 Ders Ekle
               </Text>
             </TouchableOpacity>
+           
+            <TouchableOpacity onPress={handleCloseModal}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  color: "yellow",
+                  fontSize: 18,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  padding: 5,
+                }}
+              >
+                Detay
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleCloseModal}>
               <Text
                 style={{
@@ -181,6 +204,7 @@ export default function StudentsModal({
                 Kapat
               </Text>
             </TouchableOpacity>
+            
           </View>
           <AddPackModel
             isVisible={addPackageModalVisible}

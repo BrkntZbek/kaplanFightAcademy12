@@ -2,10 +2,13 @@ import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
 import React, { useState,useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { doc, setDoc,updateDoc  } from '@firebase/firestore';
+import { updateStudentsLesson } from '../../firebase';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function AddLessonModal({ isVisible, selectedStudent, firestore, handleCloseAddModal ,packageInfo}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
    const [lessonİnfo,setLessonİnfo] = useState(null);
+   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
    console.log(packageInfo)
   const handleDateChange = (date) => {
@@ -32,6 +35,8 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
         OgrenciID: selectedStudent.id,
         Ogrenci: selectedStudent.name,
         DersTarihi: formattedDate,
+        Durum:'İşlenmedi',
+        
     });
 
     console.log(`"${selectedStudent.name}" adlı öğrenciye ders eklendi.`);
@@ -48,6 +53,7 @@ const packageToUpdate = packageInfo.belgeId;
 try {
   // Firebase Firestore veya başka bir yere güncelleme yapılacaksa burada işlemi gerçekleştirin.
   await updateDoc(doc(firestore, 'PackagesSold', packageToUpdate), { KalanDers: updatedKalanDers });
+  updateStudentsLesson(selectedStudent)
   console.log(`Paket güncellendi: Kalan Ders: ${updatedKalanDers}`);
 } catch (error) {
   console.error('Firestore güncelleme hatası:', error);
@@ -80,10 +86,23 @@ try {
   onChange={(event, date) => handleDateChange(date)}
   locale="tr"
 />
+<DropDownPicker
+      items={[
+        { label: 'Item 1', value: 'item1' },
+        { label: 'Item 2', value: 'item2' },
+        // Firebase'den çekilen verilerle dinamik olarak oluşturabilirsiniz
+      ]}
+      defaultValue={selectedTeacher}
+      containerStyle={{ height: 40 }}
+      onChangeItem={(item) => setSelectedTeacher(item.value)}
+    />
 
           <TouchableOpacity style={styles.addButton} onPress={handleAddLesson}>
             <Text style={styles.buttonText}>Ders Ekle</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={handleCloseAddModal} style={styles.closeButton}>
+              <Text style={{ color: 'blue' }}>Kapat</Text>
+            </TouchableOpacity>
           
         </View>
       </View>

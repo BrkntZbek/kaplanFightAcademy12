@@ -66,6 +66,7 @@ export default function LoginScreen() {
           telefon:telefon,
           boy:size,
           kilo:weight,
+          yetki:'Yok'
         });
   
        

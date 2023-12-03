@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput, Modal } from 'react-native';
 import { firestore,firebase,auth } from '../firebase'; // Firestore bağlantısını içe aktarın
-
+import { fetchStudents } from '../firebase'; 
 import StudentsModal from '../Components/Modal/StudentsModal';
 
 export default function OgrenciList() {
@@ -25,19 +25,8 @@ export default function OgrenciList() {
   
   // Öğrencileri Listelemek için
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const studentsCollection = await firestore.collection('userss').get();
-        const studentsData = studentsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setStudents(studentsData);
-       
-      } catch (error) {
-        console.error('Error fetching students:', error);
-      }
-    };
-     
-    fetchStudents();
-  }, []);
+    fetchStudents(setStudents);
+  }, [firestore, setStudents]);
 
 
 
@@ -64,7 +53,7 @@ export default function OgrenciList() {
     style={{ flex: 1 }}
     data={filterStudents()}
     keyExtractor={(item, index) => index.toString()}
-    numColumns={2}
+    numColumns={1}
     
     renderItem={({ item, index }) => (
       <TouchableOpacity
@@ -72,16 +61,7 @@ export default function OgrenciList() {
         style={styles.touchableContainer}
       >
         <View style={styles.FlatList}>
-          <Image
-            style={styles.image}
-            source={
-              item.photoURL
-                ? { uri: item.photoURL }
-                : item.gender === 'Erkek'
-                ? require('../img/man.png')
-                : require('../img/woman.png')
-            }
-          />
+       
           <Text style={styles.text}>{` ${item.name}`}</Text>
         </View>
       </TouchableOpacity>
@@ -101,14 +81,14 @@ const styles = StyleSheet.create({
   FlatList: {
     borderWidth: 2,
     borderRadius: 10,
-   margin:5,
+    margin:2,
     borderColor: 'black', // borderBlockColor yerine borderColor kullanın
     backgroundColor:'yellow',
-    width: 160, // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
-    height: 180,
+    width: '100%', // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
+    height: 'auto',
     justifyContent: 'center',
     alignItems: 'center', // Yukarıdan aşağıya sıralamak için
-    marginLeft:20,
+   
     backgroundColor: 'rgba(255, 255, 0, 0.7)', // Sarı renginde ve hafif saydam (0.7 opacity)
   },
   buttons:{
@@ -181,7 +161,9 @@ const styles = StyleSheet.create({
     backgroundColor:'black'
   },
   searchInput: {
-    
+    marginTop:25,
+    borderBottomWidth:2,
+    borderBottomColor:'red',
     backgroundColor: 'yellow',
     fontSize:15,
     fontWeight:'bold',
