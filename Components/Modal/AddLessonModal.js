@@ -3,13 +3,12 @@ import React, { useState,useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { doc, setDoc,updateDoc  } from '@firebase/firestore';
 import { updateStudentsLesson } from '../../firebase';
-import DropDownPicker from 'react-native-dropdown-picker';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 export default function AddLessonModal({ isVisible, selectedStudent, firestore, handleCloseAddModal ,packageInfo}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
-   const [lessonİnfo,setLessonİnfo] = useState(null);
    const [selectedTeacher, setSelectedTeacher] = useState(null);
-
+   const [selectedTime, setSelectedTime] = useState("saat seç");
    console.log(packageInfo)
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -17,6 +16,17 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
     console.log('Package Info:', packageInfo);
     console.log('hesapla',packageInfo.KalanDers-1)
   };
+
+  const generateTimeRange = () => {
+    const times = [];
+    for (let hour = 6; hour <= 23; hour++) {
+      times.push(`${hour < 10 ? '0' : ''}${hour}:00`);
+    }
+    return times;
+  };
+
+  const timeItems = generateTimeRange();
+  console.log(timeItems)
 
 
 
@@ -32,10 +42,11 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
 
     // Firestore'a ders eklemek
     await setDoc(doc(Lessons), {
-        OgrenciID: selectedStudent.id,
-        Ogrenci: selectedStudent.name,
-        DersTarihi: formattedDate,
-        Durum:'İşlenmedi',
+        ogrenciId: selectedStudent.id,
+        ogrenci: selectedStudent.name,
+        tarih: formattedDate,
+        saat:selectedTime,
+        durum:'İşlenmedi',
         
     });
 
@@ -81,21 +92,32 @@ try {
           <DateTimePicker
   style={styles.datePicker}
   value={selectedDate}
-  mode="datetime"
+  mode="date"
   display="default"
   onChange={(event, date) => handleDateChange(date)}
   locale="tr"
+  minuteInterval={60}
 />
-<DropDownPicker
-      items={[
-        { label: 'Item 1', value: 'item1' },
-        { label: 'Item 2', value: 'item2' },
-        // Firebase'den çekilen verilerle dinamik olarak oluşturabilirsiniz
-      ]}
-      defaultValue={selectedTeacher}
-      containerStyle={{ height: 40 }}
-      onChangeItem={(item) => setSelectedTeacher(item.value)}
-    />
+        <ModalDropdown
+        options={timeItems}
+        defaultValue="Saat Seçiniz"
+        onSelect={(index, value) => setSelectedTime(value)}
+        style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 5,width:100 }}
+        textStyle={{ fontSize: 16 }} // Bu kısım text boyutunu ayarlar
+        
+        dropdownStyle={{ width: 150, marginTop: 10 }}
+        renderRow={(option, index, isSelected) => (
+          <Text
+            style={{
+              padding: 10,
+              fontSize: 16, // Bu kısım modal içindeki text boyutunu ayarlar
+              color: isSelected ? '#ffdf00' : 'black', // Seçilen değerin rengini değiştirmek için
+            }}
+          >
+            {option}
+          </Text>
+        )}
+      />
 
           <TouchableOpacity style={styles.addButton} onPress={handleAddLesson}>
             <Text style={styles.buttonText}>Ders Ekle</Text>
@@ -115,10 +137,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    margin:5,
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 40,
+    padding: 5,
+    margin:10,
     borderWidth: 2,
     borderColor: 'yellow',
     borderRadius: 10,

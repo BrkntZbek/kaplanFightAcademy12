@@ -3,6 +3,8 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { getStorage,updateDoc } from 'firebase/storage';
 import 'firebase/compat/storage';
+import { useEffect } from 'react';
+import { doc, setDoc } from '@firebase/firestore';
 
 
 
@@ -25,10 +27,70 @@ const fetchStudents = async ( setStudents) => {
   }
 };
 
+const fetchPackageInfo = async (selectedStudent, setPackageInfo) => {
+  try {
+    if (!selectedStudent.paketId) {
+      console.log('Öğrencinin paket bilgisi bulunmamaktadır.');
+      setPackageInfo(null);
+      return;
+    }
+
+    const packageSnapshot = await firestore
+      .collection("PackagesSold")
+      .where("belgeId", "==", selectedStudent.paketId)
+      .where("aktif", "==", "Aktif")
+      .get();
+
+    if (!packageSnapshot.empty) {
+      const packageData = packageSnapshot.docs[0].data();
+      setPackageInfo(packageData);
+    } else {
+      console.log('Paket bulunamadı');
+      setPackageInfo(null);
+    }
+  } catch (error) {
+    console.error("Paket bilgilerini alma hatası:", error);
+  }
+};
+
 const updateStudentsLesson = async (selectedStudent) =>{
   const numberOfLesson = selectedStudent.ToplamDers + 1;
   await updateDoc(doc(firestore, 'userss', selectedStudent.id), { ToplamDers: numberOfLesson });
 }
+
+const updateStudentTeacher = async (selectedStudent) => {
+  console.log(selectedStudent.yetki)
+  try {
+    if (selectedStudent.yetki !== "Hoca") {
+      await firestore.collection('userss').doc(selectedStudent.id).update({ yetki: 'Hoca' });
+      console.log('Hocalık yetkisi güncellendi.');
+      console.log('Yeni Yetki: ',selectedStudent.yetki)
+      const teachersCollection = firestore.collection('Teachers');
+      await setDoc(doc(teachersCollection,selectedStudent.id),{
+        id:selectedStudent.id,
+        name:selectedStudent.name,
+        telefon:selectedStudent.telefon,
+        email:selectedStudent.email,
+        boy:selectedStudent.boy,
+        kilo:selectedStudent.kilo,
+
+        toplamDers:0,
+        toplamGider:0,
+        toplamOgrenci:0,
+        yetki:"Hoca",
+        egitimAlani:"",
+
+      });
+        
+
+
+    } else {
+      console.log("Seçtiğiniz Kullanıcının Hocalık Yetkisi zaten bulunmaktadır.");
+    }
+  } catch (error) {
+    console.error('Firestore güncelleme hatası:', error);
+  }
+};
 
 
 
@@ -42,4 +104,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,updateStudentsLesson,fetchStudents};
+export { auth, firestore,storage,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo};

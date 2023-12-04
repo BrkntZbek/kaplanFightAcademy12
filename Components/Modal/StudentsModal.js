@@ -3,18 +3,17 @@ import React, { useState, useEffect, useRef, } from "react";
 import AddPackModel from "./AddPackModel";
 import Toast from 'react-native-toast-message';
 import AddLessonModal from "./AddLessonModal";
-import { lastLesson } from "../../firebase";
+
 export default function StudentsModal({
   selectedStudent,
   firestore,
-  firebase,
+  packageInfo,
   isVisible,
   handleCloseModal,
 }) {
   const [addPackageModalVisible, setAddPackageModalVisible] = useState(false);
-  const [packageInfo, setPackageInfo] = useState(null);
   const [lessonModalVisible,setLessonModalVisible] = useState(false);
-  const [lastLesson,setLastLesson] = useState(null)
+
   
  
   const toastRef = useRef(); 
@@ -45,36 +44,7 @@ export default function StudentsModal({
     setAddPackageModalVisible(true);
   };
   console.log('paket',packageInfo);
-  useEffect(() => {
-    if (selectedStudent && selectedStudent.paketId) {
-      const fetchPackageInfo = async () => {
-        try {
-          const packageSnapshot = await firestore
-            .collection("PackagesSold")
-            .where("belgeId", "==", selectedStudent.paketId)   // sıkıntı UI da Paketi olan bir öğrencinin modeli açıldığında ardından paketi olmayan bir öğrenciyi açtığında rastgele bir paket geliyor. HALLET.
-            .where("aktif", "==", "Aktif")
-            .get();
-            
-
-           
-          if (!packageSnapshot.empty) {
-            const packageData = packageSnapshot.docs[0].data();
-            setPackageInfo(packageData);
-          } else {
-            setPackageInfo(null);
-            console.log('Paket bulunamadı');
-          }
-        } catch (error) {
-          console.error("Paket bilgilerini alma hatası:", error);
-        }
-      };
-
-      
-     
-      fetchPackageInfo();
-      
-    }
-  }, [selectedStudent, firestore]);
+  
    console.log()
   return (
     <Modal

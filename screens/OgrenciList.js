@@ -3,21 +3,28 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput, M
 import { firestore,firebase,auth } from '../firebase'; // Firestore bağlantısını içe aktarın
 import { fetchStudents } from '../firebase'; 
 import StudentsModal from '../Components/Modal/StudentsModal';
-
+import { fetchPackageInfo } from '../firebase';
 export default function OgrenciList() {
   const [students, setStudents] = useState([]);
- 
   const [searchText, setSearchText] = useState('');
   const [selectedStudent, setSelectedStudent] = useState([]);
-
+  const [packageInfo, setPackageInfo] = useState(null);
  const [studentİnfoVisible,setStudentİnfoVisible] = useState(false);
 
 
  console.log(studentİnfoVisible);
-  const handleStudentPress = (item) => {
-    setSelectedStudent(item);
-    setStudentİnfoVisible(true);
-  };
+ 
+
+useEffect(() => {
+  if (selectedStudent && selectedStudent.paketId) {
+    
+  }
+}, [selectedStudent, firestore]);
+
+const handleStudentPress = (item) => {
+  setSelectedStudent(item);
+  setStudentİnfoVisible(true);
+};
 
   const handleCloseStudentModel = () => {
     setStudentİnfoVisible(false);
@@ -27,8 +34,8 @@ export default function OgrenciList() {
   useEffect(() => {
     setStudents([]);
     fetchStudents(setStudents);
-  
-  }, [firestore, setStudents]);
+    fetchPackageInfo(selectedStudent, setPackageInfo); // Burada fetchPackageInfo fonksiyonunu çağırırken değerleri iletiyorsunuz.
+  }, [firestore, setStudents, selectedStudent]);
 
 
 
@@ -73,7 +80,7 @@ export default function OgrenciList() {
 
       {/* Modal Ekranı */}
    
-      <StudentsModal isVisible={studentİnfoVisible}  selectedStudent={selectedStudent} firestore={firestore} handleCloseModal={handleCloseStudentModel} firebase={firebase}/>
+      <StudentsModal isVisible={studentİnfoVisible} packageInfo={packageInfo}  selectedStudent={selectedStudent} firestore={firestore} handleCloseModal={handleCloseStudentModel} firebase={firebase}/>
       
     </View>
     

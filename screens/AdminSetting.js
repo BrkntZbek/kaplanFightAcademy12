@@ -2,29 +2,27 @@ import { StyleSheet, Text, View,TouchableOpacity,TextInput,Modal, FlatList } fro
 import React, { useState,useEffect} from 'react';
 import { doc, setDoc } from '@firebase/firestore';
 import { firestore } from '../firebase';
-import AddTeacherModal from '../Components/AdminScreen/AddTeacherModal';
+import { useNavigation } from '@react-navigation/native';
 export default function AdminSetting() {
     const [packageList, setPackageList] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [paketTuru, setPaketTuru] = useState('');
     const [paketFiyati, setPaketFiyati] = useState('');
     const [dersSayisi, setDersSayisi] = useState('');
-    const [addTeacherModalVisible,setAddTeacherModalVisible] = useState(false)
-
+   
+    const navigation = useNavigation();
   const openModal = () => {
     setModalVisible(true);
   };
 
-  const openTeacherModal = () =>{
-    setAddTeacherModalVisible(true);
-    console.log('add şey',addTeacherModalVisible)
-  }
-
   const closeModal = () => {
     setModalVisible(false);
-    setAddTeacherModalVisible(false)
+
   };
 
+  const addTeacherPage = (firestore) =>{
+    navigation.navigate('Hoca Ekle');
+  }
   const addPackage = async () =>{
     const lessonPackage = firestore.collection('LessonPackage');
     await  setDoc(doc(lessonPackage),{
@@ -63,8 +61,8 @@ export default function AdminSetting() {
               <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Güncelle</Text>
             </TouchableOpacity>
            
-            <TouchableOpacity onPress={openTeacherModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Hoca Ekle</Text>
+            <TouchableOpacity onPress={addTeacherPage} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Yetkiler Ve Kullanıcılar</Text>
             </TouchableOpacity>
             
         </View>
@@ -126,7 +124,7 @@ export default function AdminSetting() {
         </View>
       </Modal>
 
-      <AddTeacherModal isVisible={addTeacherModalVisible} closeModal={closeModal}/>
+     
     </View>
   )
 }
