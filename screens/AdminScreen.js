@@ -35,15 +35,15 @@ export default function AdminScreen() {
     activeTintColor: 'black', // Seçili sekmenin rengi
     inactiveTintColor: 'gray', // Seçili olmayan sekmenin rengi
     tabStyle: {
-        backgroundColor: 'yellow', // Tab çubuğunun arka plan rengi
+        backgroundColor: '#ffdf00', // Tab çubuğunun arka plan rengi
         BorderRadius: 20, // Kenar yuvarlaklığı
       },
   }}
 >
-  <Tab.Screen name="Ana Sayfa" component={Home} />
+  <Tab.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
   <Tab.Screen options={{headerShown:false}} name="Öğrenci Listesi" component={OgrenciList} />
-  <Tab.Screen name="Dersler" component={DerslerScreen} />
-  <Tab.Screen name="Admin Ayarları" component={AdminSetting} />
+  <Tab.Screen options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
+  <Tab.Screen options={{headerShown:false}} name="Admin Ayarları" component={AdminSetting} />
   
   
 </Tab.Navigator>

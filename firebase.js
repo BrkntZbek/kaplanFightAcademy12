@@ -3,7 +3,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { getStorage,updateDoc } from 'firebase/storage';
 import 'firebase/compat/storage';
-import { useEffect } from 'react';
+
 import { doc, setDoc } from '@firebase/firestore';
 
 
@@ -24,6 +24,17 @@ const fetchStudents = async ( setStudents) => {
     setStudents(studentsData);
   } catch (error) {
     console.error('Error fetching students:', error);
+  }
+};
+const fetchLessons = async (SetLessons) => {
+  try {
+    const lessonsCollection = await firestore.collection('Lessons').get();
+    const lessonsData = lessonsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    SetLessons(lessonsData);
+    console.log(lessonsData)
+  } catch (error) {
+    // Hata yönetimi burada yapılabilir
+    console.error('Error fetching lessons:', error);
   }
 };
 
@@ -81,9 +92,6 @@ const updateStudentTeacher = async (selectedStudent) => {
         egitimAlani:"",
 
       });
-        
-
-
     } else {
       console.log("Seçtiğiniz Kullanıcının Hocalık Yetkisi zaten bulunmaktadır.");
     }
@@ -92,7 +100,16 @@ const updateStudentTeacher = async (selectedStudent) => {
   }
 };
 
-
+ const fetchTeacher =  async (setTeachers) =>{
+  const teacherList=[];
+  try {
+    const teachersCollection = await firestore.collection('Teachers').get();
+    const teachersData = teachersCollection.docs.map(doc => ({id:doc.id, ...doc.data()}));
+    setTeachers(teachersData)
+  } catch (error) {
+    console.error('Error Teacher students:', error);
+  }
+ }
 
 
 
@@ -104,4 +121,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo};
+export { auth, firestore,storage,fetchTeacher,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo};

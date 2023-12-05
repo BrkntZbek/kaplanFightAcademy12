@@ -4,9 +4,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { doc, setDoc,updateDoc  } from '@firebase/firestore';
 import { updateStudentsLesson } from '../../firebase';
 import ModalDropdown from 'react-native-modal-dropdown';
-
+import { fetchTeacher } from '../../firebase';
 export default function AddLessonModal({ isVisible, selectedStudent, firestore, handleCloseAddModal ,packageInfo}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [teachers,setTeachers] = useState([])
    const [selectedTeacher, setSelectedTeacher] = useState(null);
    const [selectedTime, setSelectedTime] = useState("saat seç");
    console.log(packageInfo)
@@ -26,8 +27,11 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
   };
 
   const timeItems = generateTimeRange();
-  console.log(timeItems)
 
+  useEffect(() =>{
+    setTeachers([])
+    fetchTeacher(setTeachers);
+  },[setTeachers])
 
 
   const handleAddLesson = async () => {
@@ -36,25 +40,20 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
     });
 
     // Firestore'a ders eklemek
     await setDoc(doc(Lessons), {
         ogrenciId: selectedStudent.id,
         ogrenci: selectedStudent.name,
+        hoca:selectedTeacher,
         tarih: formattedDate,
         saat:selectedTime,
         durum:'İşlenmedi',
         
     });
 
-    console.log(`"${selectedStudent.name}" adlı öğrenciye ders eklendi.`);
-
-
-     
-     
+   
     // KalanDers'i azaltma işlemi
 const updatedKalanDers = packageInfo.KalanDers - 1;
 
@@ -88,8 +87,8 @@ try {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.headerText}>Ders Ekle</Text>
-
-          <DateTimePicker
+            <View style={styles.input}>
+            <DateTimePicker
   style={styles.datePicker}
   value={selectedDate}
   mode="date"
@@ -98,11 +97,32 @@ try {
   locale="tr"
   minuteInterval={60}
 />
-        <ModalDropdown
+<ModalDropdown
         options={timeItems}
         defaultValue="Saat Seçiniz"
         onSelect={(index, value) => setSelectedTime(value)}
-        style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 5,width:100 }}
+        style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 20,width:100 }}
+        textStyle={{ fontSize: 16 }} // Bu kısım text boyutunu ayarlar
+        initialScrollIndex={19}
+        dropdownStyle={{ width: 150, marginTop: 10 }}
+        renderRow={(option, index, isSelected) => (
+          <Text
+            style={{
+              padding: 10,
+              fontSize: 16, // Bu kısım modal içindeki text boyutunu ayarlar
+              color: isSelected ? '#ffdf00' : 'black', // Seçilen değerin rengini değiştirmek için
+            }}
+          >
+            {option}
+          </Text>
+        )}
+      />
+            </View>
+            <ModalDropdown
+        options={teachers.map(teacher => teacher.name)}
+        defaultValue="Hoca Seçiniz"
+        onSelect={(index, value) => setSelectedTeacher(value)}
+        style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 20,width:200,marginTop:10 }}
         textStyle={{ fontSize: 16 }} // Bu kısım text boyutunu ayarlar
         
         dropdownStyle={{ width: 150, marginTop: 10 }}
@@ -118,7 +138,7 @@ try {
           </Text>
         )}
       />
-
+        
           <TouchableOpacity style={styles.addButton} onPress={handleAddLesson}>
             <Text style={styles.buttonText}>Ders Ekle</Text>
           </TouchableOpacity>
@@ -139,13 +159,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin:5,
   },
+  input:{
+    flexDirection:'row',
+    alignItems:'center',
+  
+
+  },
   modalContent: {
     backgroundColor: 'white',
     padding: 5,
-    margin:10,
+    margin:5,
     borderWidth: 2,
     borderColor: 'yellow',
     borderRadius: 10,
+    alignItems:'center',
     width: '80%',
     maxHeight: '80%',
   },
@@ -155,8 +182,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   datePicker: {
-    width: 200,
-    marginBottom: 20,
+    width: 100,
+    marginRight:20
+    
   },
   addButton: {
     backgroundColor: 'blue',

@@ -19,6 +19,15 @@ export default function StudentsModal({
   const toastRef = useRef(); 
 
     const handleOpenLessonModal = () =>{
+      if(packageInfo === null)
+      {
+        Toast.show({
+          type:'error',
+          text1:'Hata',
+          text2:'Bu Öğrenciye Ait Bir Paket bulunmamakta Ders eklemek için önce bir paket Girilmeli.'
+        });
+        return;
+      }
         setLessonModalVisible(true);
         console.log('lesson modal açıldı')
         console.log(lessonModalVisible)
