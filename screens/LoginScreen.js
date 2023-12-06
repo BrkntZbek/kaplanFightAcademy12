@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, KeyboardAvoidingView, Image, Touchab
 import { auth } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
 import { firestore } from '../firebase';
-
+import inputStyle from '../Styles/İnputStyle';
 import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
@@ -66,7 +66,8 @@ export default function LoginScreen() {
           telefon:telefon,
           boy:size,
           kilo:weight,
-          yetki:'Yok'
+          yetki:'Yok',
+          toplamDers:0
         });
   
        
@@ -103,13 +104,13 @@ export default function LoginScreen() {
 </View>
       
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder='Email' placeholderTextColor="black"  value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/> 
-        <TextInput style={styles.input} placeholder='Şifre' placeholderTextColor="black" value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
-        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
-        {showNameInput && <TextInput style={styles.input} placeholderTextColor="black" value={telefon} keyboardType="numeric" onChangeText={telefon => setTelefon(telefon)} placeholder='Telefon'/>}
+        <TextInput style={inputStyle.loginİnput} placeholder='Email' placeholderTextColor="black"  value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/> 
+        <TextInput style={inputStyle.loginİnput} placeholder='Şifre' placeholderTextColor="black" value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
+        {showNameInput && <TextInput style={inputStyle.loginİnput} placeholderTextColor="black" value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
+        {showNameInput && <TextInput style={inputStyle.loginİnput} placeholderTextColor="black" value={telefon} keyboardType="numeric" onChangeText={telefon => setTelefon(telefon)} placeholder='Telefon'/>}
         <View style={styles.sizeAndWeight}> 
-        {showNameInput && <TextInput style={styles.input1} placeholderTextColor="black" value={size} keyboardType="numeric" onChangeText={size => setSize(size)} placeholder='Boy'/>}
-        {showNameInput && <TextInput style={styles.input1} placeholderTextColor="black" value={weight} keyboardType="numeric" onChangeText={weight => setWeight(weight)} placeholder='Kilo'/>}
+        {showNameInput && <TextInput style={inputStyle.sizeAndWeightİnput} placeholderTextColor="black" value={size} keyboardType="numeric" onChangeText={size => setSize(size)} placeholder='Boy'/>}
+        {showNameInput && <TextInput style={inputStyle.sizeAndWeightİnput} placeholderTextColor="black" value={weight} keyboardType="numeric" onChangeText={weight => setWeight(weight)} placeholder='Kilo'/>}
         </View>
         
       </View>
@@ -139,18 +140,7 @@ const styles = StyleSheet.create({
       alignItems:'center',
       backgroundColor:'black'
     },
-    input1:{
-      backgroundColor:'yellow',
-      paddingHorizontal:15,
-      paddingVertical:10,
-      justifyContent:'center',
-      marginBottom:5,
-      borderRadius:20,
-      width:'30%',
-      margin:5,
-      color:'black',
-
-    },
+    
     inputContainer:{
        width:'80%'
     },
@@ -162,16 +152,7 @@ const styles = StyleSheet.create({
        padding:2,
       
     },
-    input:{
-       backgroundColor:'yellow',
-       paddingHorizontal:15,
-       paddingVertical:10,
-       marginBottom:5,
-       borderRadius:20,
-       color:'black',
-      
-       fontWeight:'bold'
-    },
+   
     buttonContainer:{
         marginTop:20,
       width:'60%',

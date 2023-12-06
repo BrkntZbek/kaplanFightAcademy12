@@ -1,9 +1,9 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
-import { getStorage,updateDoc } from 'firebase/storage';
-import 'firebase/compat/storage';
-
+import { getStorage } from 'firebase/storage';
+import { updateDoc } from 'firebase/firestore'; // Değişiklik burada
+import 'firebase/compat/firestore'; // Bu satırı ekleyin
+import 'firebase/compat/storage'; // Bu satırı ekleyin
 import { doc, setDoc } from '@firebase/firestore';
 
 
@@ -26,6 +26,22 @@ const fetchStudents = async ( setStudents) => {
     console.error('Error fetching students:', error);
   }
 };
+
+
+const cancelledLesson = async (lesson) => {
+  const fetchPackageOwner = await firestore.collection('userss')
+    .where("id", "==", lesson.ogrenciId)
+    .get();
+
+  const userDoc = fetchPackageOwner.docs[0];
+
+  if (userDoc) {
+    const totalLesson = userDoc.data().toplamDers || 0; // Mevcut değeri alır (varsayılan olarak 0)
+    await updateDoc(doc(firestore, 'Lessons', lesson.id), { durum: "İptal" });
+    await updateDoc(doc(firestore, 'userss', userDoc.id), { toplamDers: totalLesson + 1 });
+  }
+};
+   
 const fetchLessons = async (SetLessons) => {
   try {
     const lessonsCollection = await firestore.collection('Lessons').get();
@@ -111,7 +127,12 @@ const updateStudentTeacher = async (selectedStudent) => {
   }
  }
 
-
+const teachALesson = async (lesson,lessonDetail) =>{
+   if(lesson)
+   {
+    await updateDoc(doc(firestore,'Lessons',lesson.id),{durum:"İşlendi",ayrinti:lessonDetail});
+   }
+}
 
 
 if (!firebase.apps.length) {
@@ -121,4 +142,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,fetchTeacher,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo};
+export { auth, firestore,storage,fetchTeacher,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson};

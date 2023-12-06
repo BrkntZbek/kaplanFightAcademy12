@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, } from "react";
 import AddPackModel from "./AddPackModel";
 import Toast from 'react-native-toast-message';
 import AddLessonModal from "./AddLessonModal";
-
+import ButtonStyle from  "../../Styles/ButtonStyle"
 export default function StudentsModal({
   selectedStudent,
   firestore,
@@ -128,28 +128,14 @@ export default function StudentsModal({
           <View style={styles.buttons}>
             <TouchableOpacity onPress={handleOpenModal}>
               <Text
-                style={{
-                  fontWeight: "bold",
-                  color: "yellow",
-                  fontSize: 18,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  padding: 5,
-                }}
+                style={ButtonStyle.contentButton}
               >
                 Paket Ekle
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleOpenLessonModal}>
               <Text
-                style={{
-                  fontWeight: "bold",
-                  color: "yellow",
-                  fontSize: 18,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  padding: 5,
-                }}
+                style={ButtonStyle.contentButton}
               >
                 Ders Ekle
               </Text>
@@ -157,28 +143,14 @@ export default function StudentsModal({
            
             <TouchableOpacity onPress={handleCloseModal}>
               <Text
-                style={{
-                  fontWeight: "bold",
-                  color: "yellow",
-                  fontSize: 18,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  padding: 5,
-                }}
+               style={ButtonStyle.contentButton}
               >
                 Detay
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleCloseModal}>
               <Text
-                style={{
-                  fontWeight: "bold",
-                  color: "yellow",
-                  fontSize: 18,
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  padding: 5,
-                }}
+               style={ButtonStyle.contentButton}
               >
                 Kapat
               </Text>

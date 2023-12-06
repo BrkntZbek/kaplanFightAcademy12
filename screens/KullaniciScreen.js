@@ -8,39 +8,43 @@ const UserProfile = () => {
   const [userPackage, setUserPackage] = useState(null);
 
   useEffect(() => {
-    const unsubscribe =  auth.onAuthStateChanged((user) => {
-      if (user) {
-        const userId = user.uid;
-        const userRef =  firestore.collection('userss').doc(userId);
-        const packageRef =  firestore.collection('PackagesSold').where('SatilanKisi', '==', userId).get();
-        if(!packageRef.empty)
-        {
-          const packageData = packageRef.docs[0].data();
-          setUserPackage(packageData);
+  const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      const userId = user.uid;
+      const userRef = firestore.collection('userss').doc(userId);
+      
+      try {
+        const doc = await userRef.get();
+        if (doc.exists) {
+          setUserData(doc.data());
+        } else {
+          console.log('Firestore belgesi bulunamadı');
         }
-        else{
+      } catch (error) {
+        console.error('Firestore belgesi alınırken bir hata oluştu:', error);
+      }
+
+      const packageRef = firestore.collection('PackagesSold').where('SatilanKisi', '==', userId);
+      try {
+        const packageSnapshot = await packageRef.get();
+        if (!packageSnapshot.empty) {
+          const packageData = packageSnapshot.docs[0].data();
+          setUserPackage(packageData);
+        } else {
           setUserPackage('Paket Bulunamadı.');
         }
-        const unsubscribeFirestore = userRef.onSnapshot((doc) => {
-          if (doc.exists) {
-            setUserData(doc.data());
-          } else {
-            console.log('Firestore belgesi bulunamadı');
-          }
-        });
-
-        return () => {
-          unsubscribeFirestore();
-        };
-      } else {
-        setUserData(null);
+      } catch (error) {
+        console.error('Paket bilgisi alınırken bir hata oluştu:', error);
       }
-    });
+    } else {
+      setUserData(null);
+    }
+  });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  return () => {
+    unsubscribe();
+  };
+}, []);
  
 
   const pickImage = async () => {

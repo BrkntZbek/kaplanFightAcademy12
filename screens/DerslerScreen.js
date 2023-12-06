@@ -3,6 +3,7 @@ import { fetchLessons } from '../firebase'
 import React, {  useState ,useEffect } from 'react'
 import Header from '../Components/Header/Header'
 import HandleLessons from '../Components/Modal/HandleLessons';
+import LessonsList from '../Components/DerslerScreen/LessonsList';
 
 export default function DerslerScreen() {
     const [lessons,SetLessons] = useState([]);
@@ -10,13 +11,13 @@ export default function DerslerScreen() {
     const [selectLesson,setSelectLesson] = useState([])
     useEffect(() => {
       fetchLessons(SetLessons);
-    }, [fetchLessons]);
+    }, [selectLesson,fetchLessons]);
     
     const handleCloseModal = () => {
       setHandleLessonsVisible(false);
     };
     
-
+  
     const handleLessonPress = (item) =>{
       setSelectLesson(item);
       setHandleLessonsVisible(true)
@@ -42,33 +43,7 @@ export default function DerslerScreen() {
             <Text style={styles.buttonText}>Tüm</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.lessons}>
-        <FlatList
-    style={{ flex: 1 }}
-    data={lessons}
-    keyExtractor={(item, index) => index.toString()}
-    numColumns={1}
-    
-    renderItem={({ item, index }) => (
-      <TouchableOpacity
-        onPress={() => handleLessonPress(item)}
-        style={styles.touchableContainer}
-      >
-        <View style={styles.FlatList}>
-       
-          <Text style={{fontSize:20,fontWeight:'bold',color:'#3B5119'}}>{` ${item.ogrenci}`}</Text>
-          <View style={styles.lessonsContent}>
-             <Text style={{width:'35%'}}>{` ${item.hoca}`}</Text>
-             <Text style={styles.text}>{` ${item.tarih}`}</Text>
-             <Text style={styles.text}>{` ${item.saat}`}</Text>
-             <Text style={{color: item.durum === "İşlenmedi" ? '#BF3624' : '#67BA46',marginLeft:20}}>{` ${item.durum}`}</Text>
-          </View>
-          
-        </View>
-      </TouchableOpacity>
-    )}
-  />
-        </View>
+        <LessonsList lessons={lessons} handleLessonPress={handleLessonPress} />
       </View>
      
       <HandleLessons selectLesson={selectLesson} handleLessonsVisible={handleLessonsVisible} handleCloseModal={handleCloseModal} />
@@ -82,40 +57,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-  },
-  lessonsContent:{
-    flexDirection:'row',
-   
-    padding:3,
-    paddingRight:5,
-    width:'100%',
-    paddingTop:10
-  },
-  text:{
-    width:'20%'
-  },
-  lessons:{
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal:10,
-    backgroundColor:'black',
-    paddingTop:15
-  },
-  FlatList:{
-    borderWidth: 2,
-    borderRadius: 10,
-    margin:2,
-    borderWidth:1,
-    borderColor:'#67BA46',
-    backgroundColor:'#E8E5D1',
-    width: '100%', // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
-    height: 'auto',
-    justifyContent: 'center',
-    alignItems: 'center', // Yukarıdan aşağıya sıralamak için
-   
-  
   },
   button:{
     backgroundColor: '#FFDF00',
@@ -131,7 +72,7 @@ const styles = StyleSheet.create({
   },
   buttons:{
     flexDirection:'row',
-    backgroundColor:'#E8E5D1',
+    backgroundColor:'#DFE8D1',
     width:'95%',
     borderRadius:30,
     marginTop:10

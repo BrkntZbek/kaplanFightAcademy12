@@ -5,6 +5,7 @@ import { doc, setDoc,updateDoc  } from '@firebase/firestore';
 import { updateStudentsLesson } from '../../firebase';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { fetchTeacher } from '../../firebase';
+import buttonStyle from '../../Styles/ButtonStyle';
 export default function AddLessonModal({ isVisible, selectedStudent, firestore, handleCloseAddModal ,packageInfo}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [teachers,setTeachers] = useState([])
@@ -42,17 +43,19 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
         day: 'numeric',
     });
 
-    // Firestore'a ders eklemek
-    await setDoc(doc(Lessons), {
+    const lessonRef = doc(Lessons); // Belge referansını al
+    await setDoc(lessonRef, {
+        dersId:lessonRef.id,
         ogrenciId: selectedStudent.id,
         ogrenci: selectedStudent.name,
-        hoca:selectedTeacher,
+        hoca: selectedTeacher,
         tarih: formattedDate,
-        saat:selectedTime,
-        durum:'İşlenmedi',
-        
+        saat: selectedTime,
+        durum: 'İşlenmedi',
+        ayrinti:'',
     });
 
+    
    
     // KalanDers'i azaltma işlemi
 const updatedKalanDers = packageInfo.KalanDers - 1;
@@ -139,11 +142,11 @@ try {
         )}
       />
         
-          <TouchableOpacity style={styles.addButton} onPress={handleAddLesson}>
-            <Text style={styles.buttonText}>Ders Ekle</Text>
+          <TouchableOpacity  onPress={handleAddLesson}>
+            <Text  style={buttonStyle.contentButton}>Ders Ekle</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleCloseAddModal} style={styles.closeButton}>
-              <Text style={{ color: 'blue' }}>Kapat</Text>
+          <TouchableOpacity onPress={handleCloseAddModal} >
+              <Text  style={buttonStyle.contentButton}>Kapat</Text>
             </TouchableOpacity>
           
         </View>
