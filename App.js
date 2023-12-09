@@ -11,6 +11,7 @@ import DerslerScreen from './screens/DerslerScreen';
 import StudentDetailsScreen from './screens/StudentDetailsScreen';
 import AdminSetting from './screens/AdminSetting';
 import AddTeacherModal from './Components/AdminScreen/AddTeacherModal';
+import AddBlogPage from './Components/AdminScreen/AddBlogPage';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
       <Stack.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
       <Stack.Screen  options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
       <Stack.Screen  options={{headerShown:false}} name="Hoca Ekle" component={AddTeacherModal} />
+      <Stack.Screen  options={{headerShown:false}} name="Blog Ekle" component={AddBlogPage} />
      
    
    

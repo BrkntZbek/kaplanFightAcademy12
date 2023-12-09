@@ -23,6 +23,11 @@ export default function AdminSetting() {
   const addTeacherPage = (firestore) =>{
     navigation.navigate('Hoca Ekle');
   }
+
+  const addBlogPage = (firestore) =>{
+    navigation.navigate('Blog Ekle'); 
+  }
+
   const addPackage = async () =>{
     const lessonPackage = firestore.collection('LessonPackage');
     await  setDoc(doc(lessonPackage),{
@@ -47,6 +52,15 @@ export default function AdminSetting() {
 
     fetchStudents();
   }, []);
+  const formatMoney = (amount) => {
+    const formatter = new Intl.NumberFormat('tr-TR', {
+      style: 'currency',
+      currency: 'TRY',
+      minimumFractionDigits: 0,
+    });
+  
+    return formatter.format(amount);
+  };
  
 
 
@@ -63,6 +77,9 @@ export default function AdminSetting() {
            
             <TouchableOpacity onPress={addTeacherPage} >
               <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Yetkiler Ve Kullanıcılar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={addBlogPage} >
+              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Blog Ekle</Text>
             </TouchableOpacity>
             
         </View>
@@ -88,7 +105,7 @@ export default function AdminSetting() {
           <View style={styles.packageList}>
             <Text style={styles.packageİnfo}>{item.paketTuru}</Text>
             <Text style={styles.packageİnfo}>Ders Sayisi: {item.dersSayisi}</Text>
-            <Text style={styles.packageİnfo}>Paket Fiyatı: {item.paketFiyati}₺</Text>
+            <Text style={styles.packageİnfo}>Paket Fiyatı: {formatMoney(item.paketFiyati)}</Text>
             {/* Diğer veri özelliklerini burada listeleyin */}
           </View>
         )}
@@ -130,6 +147,7 @@ export default function AdminSetting() {
 }
 const styles = StyleSheet.create({
     AdminSetting:{
+      marginTop:20,
         flex:1,
         backgroundColor:'black',
         alignItems:'center',

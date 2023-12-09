@@ -157,6 +157,22 @@ const teachALesson = async (lesson,lessonDetail) =>{
    }
 }
 
+const addBlog = async (title, contents) => {
+  const blogCollection = firestore.collection('Blog');
+  
+  // Sadece koleksiyon referansını kullanarak otomatik bir doküman ID'si oluşturulur
+  const blogDoc = doc(blogCollection);
+
+  await setDoc(blogDoc, {
+    id:blogDoc.id,
+    icerik: contents,
+    baslik: title,
+    photoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Recep_Tayyip_Erdogan_in_Ukraine.jpg"
+  });
+};
+const fetchBlog = async() =>{
+  
+}
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -165,4 +181,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,fetchTeacher,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson};
+export { auth, firestore,storage,fetchTeacher,addBlog,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson};
