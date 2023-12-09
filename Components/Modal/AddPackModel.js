@@ -15,7 +15,7 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
           const packageCollection = await firestore.collection('LessonPackage').get();
           const packageData = packageCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setPackageList(packageData);
-          console.log('Tüm Paketler : ',packageData)
+          
         } catch (error) {
           console.error('Error fetching packages:', error);
         }
@@ -23,19 +23,19 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
   
       fetchPackages();
     }, []);
-    console.log('Paket Eklenecek Üye',selectedStudent)
+   
     const addPackage = async () => {
       try {
         // Firebase Authentication ile kullanıcı bilgilerini al
         // Kullanıcı oturum açmışsa
         const PackagesSold = firestore.collection('PackagesSold');
         const UserUpdate = doc(firestore, 'userss', selectedStudent.id);
-        console.log('useri buldu mu', UserUpdate);
+        
     
         // Firestore'a paket eklemek için örnek bir belge
         const newPackageRef = doc(PackagesSold);
     
-        console.log('Selected Package:', selectedPackageId);
+       
     
         // Belgeyi ekleyin ve referansını alın Burada ayrıca Userss deposuna paketID sini eklemek gerekiyor.
         await setDoc(newPackageRef, {
@@ -61,7 +61,7 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
           paketId: newPackageId
         });
     
-        console.log('Yeni Paket Eklendi', selectedPackageId ? selectedPackageId.paketTuru : 'Bir paket seçilmemiş', selectedStudent.id, 'ID:', newPackageId);
+       
        handleCloseModal();
       } catch (error) {
         console.error('Hata:', error);
@@ -71,17 +71,16 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
     const handlePackagePress = (selectedPackageId) => {
         setSelectedPackageId(selectedPackageId);
       
-        console.log('Selected Package:', selectedPackageId);
-        console.log('Selected Package ID:', selectedPackageId ? selectedPackageId.id : 'Seçilen paket yok');
+       
       
         // selectedPackageId değeri tanımlıysa ve kalanDers özelliği varsa yazdır
         if (selectedPackageId && selectedPackageId.kalanDers !== undefined) {
-          console.log('info:', selectedPackageId.dersSayisi);
+         
         } else {
-          console.log('Kalan ders bilgisi yok.');
+          
         }
       
-        console.log('User ID:', selectedStudent.id);
+        
       
         // Diğer işlemleri buraya ekleyebilirsiniz
       };

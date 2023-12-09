@@ -1,126 +1,101 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { auth, firestore, storage } from '../firebase';
-import * as ImagePicker from 'expo-image-picker';
+import { StyleSheet, Text, View } from 'react-native';
+import { auth, firestore } from '../firebase';
+import { fetchPackageInfo } from '../firebase';
+import StudentHomeHeader from '../Components/Header/StudentHomeHeader';
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
-  const [userPackage, setUserPackage] = useState(null);
+  const [packageInfo, setPackageInfo] = useState(null);
 
   useEffect(() => {
-  const unsubscribe = auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      const userId = user.uid;
-      const userRef = firestore.collection('userss').doc(userId);
-      
+    const fetchData = async () => {
       try {
-        const doc = await userRef.get();
-        if (doc.exists) {
-          setUserData(doc.data());
+        const user = auth.currentUser;
+        if (user) {
+          const userId = user.uid;
+          console.log('ID', userId);
+
+          const userRef = firestore.collection('userss').doc(userId);
+          const selectedStudentSnapshot = await firestore.collection('userss').where('id', '==', userId).get();
+
+          if (selectedStudentSnapshot.docs.length === 0) {
+            console.log('Öğrencinin belgesi bulunmamaktadır.');
+            setUserData(null);
+            setPackageInfo(null);
+            return;
+          }
+
+          const selectedStudent = selectedStudentSnapshot.docs[0];
+
+          // userData ayarla
+          const doc = await userRef.get();
+          if (doc.exists) {
+            setUserData(doc.data());
+          } else {
+            console.log('Firestore belgesi bulunamadı');
+          }
+
+          // packageInfo'yu ayarla
+          fetchPackageInfo(selectedStudent, setPackageInfo);
         } else {
-          console.log('Firestore belgesi bulunamadı');
+          setUserData(null);
+          setPackageInfo(null);
         }
       } catch (error) {
-        console.error('Firestore belgesi alınırken bir hata oluştu:', error);
+        console.error('Hata oluştu:', error);
+        setUserData(null);
+        setPackageInfo(null);
       }
+    };
 
-      const packageRef = firestore.collection('PackagesSold').where('SatilanKisi', '==', userId);
-      try {
-        const packageSnapshot = await packageRef.get();
-        if (!packageSnapshot.empty) {
-          const packageData = packageSnapshot.docs[0].data();
-          setUserPackage(packageData);
-        } else {
-          setUserPackage('Paket Bulunamadı.');
-        }
-      } catch (error) {
-        console.error('Paket bilgisi alınırken bir hata oluştu:', error);
-      }
-    } else {
-      setUserData(null);
-    }
-  });
-
-  return () => {
-    unsubscribe();
-  };
-}, []);
- 
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled ) {
-      // Seçilen fotoğrafı Firebase Storage'a yükleme
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
-      const userId = auth.currentUser.uid;
-      const imageName = `profile_${userId}.jpg`;
-
-      // storage nesnesini tanımlama
-      const storageRef = storage().ref().child(`userss/${userId}/${imageName}`);
-
-      await storageRef.put(blob);
-
-      // Yükleme tamamlandığında indirilebilir URL'yi al
-      const downloadURL = await storageRef.getDownloadURL();
-
-      // Firestore'daki kullanıcı belgesini güncelleme
-      const userRef = firestore.collection('userss').doc(userId);
-      await userRef.update({
-        photoURL: downloadURL,
-      });
-    }
-  };
+    fetchData();
+  }, []);
 
   if (!userData) {
-    return <View style={styles.loading}>
-      <Text style={styles.loadingText}>Yükleniyor...</Text>
-    </View>;
+    return (
+      <View style={styles.loading}>
+        <Text style={styles.loadingText}>Yükleniyor...</Text>
+      </View>
+    );
   }
 
-  let profileImageSource;
-  if (userData.photoURL) {
-    profileImageSource = { uri: userData.photoURL };
-  } else {
-    const defaultImage =
-      userData.gender === 'Kadın'
-        ? require('../img/woman.png')
-        : require('../img/man.png');
-    profileImageSource = defaultImage;
+  if (!packageInfo) {
+    // Eğer `packageInfo` henüz gelmemişse, bekleme durumunu render et
+    return (
+      <View style={styles.loading}>
+        <Text style={styles.loadingText}>Paket bilgileri yükleniyor...</Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.KullaniciContainer}>
-      <View style={styles.infoContainer}>
-        <View style={styles.textContainer}>
-          <View style={styles.nameContainer}>
-        <Text style={styles.nameText}>{userData.name}</Text>
-        </View>
-          <View style={styles.info}>
-          <Text style={styles.kkText}>Email: {userData.email}</Text>
-          <Text style={styles.kkText}>Telefon: {userData.telefon}</Text>
-          <Text style={{fontSize:20,fontWeight:'bold', textDecorationLine: 'underline'}}>Paketim</Text>
-          <Text style={{fontSize:15}}>Paket Türü</Text>
-          <Text style={{fontSize:15}}>Ders Sayısı</Text>
-          <Text style={{fontSize:15}}>Başlangıç Tarihi</Text>
-          <Text style={{fontSize:15}}>Zaman Aşımı Tarihi</Text>
-          
-          <Text style={styles.kkText}>Gelecek Antrenman</Text>
-          <Text style={styles.kkText}>Antrenman Geçmişi</Text>
-          
-          </View>
-          </View>
-          <View style={styles.altContainer}>
-          <Text style={styles.kkText}>Antrenman Geçmişi</Text>
-          </View>
+     
+    <View style={styles.infoContainer}>
+      <View style={styles.textContainer}>
+        <View style={styles.nameContainer}>
+      <Text style={styles.nameText}>{userData.name}</Text>
       </View>
+        <View style={styles.info}>
+        <Text style={styles.kkText}>Email: {userData.email}</Text>
+        <Text style={styles.kkText}>Telefon: {userData.telefon}</Text>
+        <Text style={{fontSize:20,fontWeight:'bold', textDecorationLine: 'underline'}}>Paketim</Text>
+        <Text style={{fontSize:15}}>{packageInfo.SatilanPaket}</Text>
+        <Text style={{fontSize:15}}>{packageInfo.KalanDers}</Text>
+        <Text style={{fontSize:15}}>{packageInfo.Fiyat}</Text>
+        <Text style={{fontSize:15}}>tarih</Text>
+        
+        <Text style={styles.kkText}>Gelecek Antrenman</Text>
+        <Text style={styles.kkText}>Antrenman Geçmişi</Text>
+        
+        </View>
+        </View>
+        <View style={styles.altContainer}>
+        <Text style={styles.kkText}>Antrenman Geçmişi</Text>
+        </View>
     </View>
+  </View>
   );
 };
 

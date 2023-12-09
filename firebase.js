@@ -17,7 +17,7 @@ const firebaseConfig = {
   messagingSenderId: "120319904391",
   appId: "1:120319904391:web:5eb488d55c936eb6668622"
 };
-const fetchStudents = async ( setStudents) => {
+const fetchStudents = async (setStudents) => {
   try {
     const studentsCollection = await firestore.collection('userss').get();
     const studentsData = studentsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -54,22 +54,45 @@ const fetchLessons = async (SetLessons) => {
   }
 };
 
+
+const fetchUserPackage = async (selectedStudent, setPackageInfo) => {
+  if (selectedStudent) {
+    const querySnapshot = await firestore
+      .collection('PackagesSold')
+      .where('SatilanKisiID', '==', selectedStudent.id)
+      .where('aktif', '==', 'Aktif')
+      .get();
+
+    // Veri var mı kontrolü
+    if (!querySnapshot.empty) {
+      // İlk belgeyi seçiyoruz, ancak birden çok belge varsa bu kısmı ihtiyaca göre güncelleyebilirsiniz.
+      const firstDocument = querySnapshot.docs[0].data();
+      
+      // Veriyi state'e set ediyoruz
+      setPackageInfo(firstDocument);
+    } else {
+      // Veri bulunamadıysa state'i boş bırakabilir veya istediğiniz bir değeri atayabilirsiniz.
+      setPackageInfo(null);
+    }
+  }
+};
 const fetchPackageInfo = async (selectedStudent, setPackageInfo) => {
   try {
-    if (!selectedStudent.paketId) {
+    if (!selectedStudent.data || !selectedStudent.data().paketId) {
       console.log('Öğrencinin paket bilgisi bulunmamaktadır.');
       setPackageInfo(null);
       return;
     }
-
+     console.log('ss',selectedStudent)
     const packageSnapshot = await firestore
       .collection("PackagesSold")
-      .where("belgeId", "==", selectedStudent.paketId)
+      .where("belgeId", "==", selectedStudent.data().paketId)
       .where("aktif", "==", "Aktif")
       .get();
 
     if (!packageSnapshot.empty) {
       const packageData = packageSnapshot.docs[0].data();
+      console.log('packageData:', packageData);
       setPackageInfo(packageData);
     } else {
       console.log('Paket bulunamadı');
@@ -142,4 +165,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,fetchTeacher,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson};
+export { auth, firestore,storage,fetchTeacher,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson};

@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
     borderColor: "white",
     backgroundColor: "#E8E5D1",
     borderRadius: 10,
-    width: "80%", // Modal'ın genişliği
-    height: '50%', // Modal'ın maksimum yüksekliği
+    width: "80%", 
+    height: '50%', 
     },
     buttonText:{
         

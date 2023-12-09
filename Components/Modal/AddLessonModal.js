@@ -11,12 +11,10 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
   const [teachers,setTeachers] = useState([])
    const [selectedTeacher, setSelectedTeacher] = useState(null);
    const [selectedTime, setSelectedTime] = useState("saat seç");
-   console.log(packageInfo)
+  
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    console.log(selectedStudent.name)
-    console.log('Package Info:', packageInfo);
-    console.log('hesapla',packageInfo.KalanDers-1)
+
   };
 
   const generateTimeRange = () => {
@@ -67,7 +65,7 @@ try {
   // Firebase Firestore veya başka bir yere güncelleme yapılacaksa burada işlemi gerçekleştirin.
   await updateDoc(doc(firestore, 'PackagesSold', packageToUpdate), { KalanDers: updatedKalanDers });
   updateStudentsLesson(selectedStudent)
-  console.log(`Paket güncellendi: Kalan Ders: ${updatedKalanDers}`);
+ 
 } catch (error) {
   console.error('Firestore güncelleme hatası:', error);
   // Hata durumunda uygun bir şekilde işlem yapabilirsiniz.
@@ -77,7 +75,7 @@ try {
 
    
 
-    console.log(`Paket güncellendi: Kalan Ders: ${updatedKalanDers}`);
+    
 };
 
   return (
@@ -105,15 +103,15 @@ try {
         defaultValue="Saat Seçiniz"
         onSelect={(index, value) => setSelectedTime(value)}
         style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 20,width:100 }}
-        textStyle={{ fontSize: 16 }} // Bu kısım text boyutunu ayarlar
+        textStyle={{ fontSize: 16 }}
         initialScrollIndex={19}
         dropdownStyle={{ width: 150, marginTop: 10 }}
         renderRow={(option, index, isSelected) => (
           <Text
             style={{
               padding: 10,
-              fontSize: 16, // Bu kısım modal içindeki text boyutunu ayarlar
-              color: isSelected ? '#ffdf00' : 'black', // Seçilen değerin rengini değiştirmek için
+              fontSize: 16, 
+              color: isSelected ? '#ffdf00' : 'black', 
             }}
           >
             {option}
@@ -126,15 +124,15 @@ try {
         defaultValue="Hoca Seçiniz"
         onSelect={(index, value) => setSelectedTeacher(value)}
         style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 20,width:200,marginTop:10 }}
-        textStyle={{ fontSize: 16 }} // Bu kısım text boyutunu ayarlar
+        textStyle={{ fontSize: 16 }} 
         
         dropdownStyle={{ width: 150, marginTop: 10 }}
         renderRow={(option, index, isSelected) => (
           <Text
             style={{
               padding: 10,
-              fontSize: 16, // Bu kısım modal içindeki text boyutunu ayarlar
-              color: isSelected ? '#ffdf00' : 'black', // Seçilen değerin rengini değiştirmek için
+              fontSize: 16, 
+              color: isSelected ? '#ffdf00' : 'black',
             }}
           >
             {option}

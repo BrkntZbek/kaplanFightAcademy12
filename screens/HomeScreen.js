@@ -22,6 +22,7 @@ export default function HomeScreen() {
   };
 
   return (
+    
     <Tab.Navigator
     
       screenOptions={({ route }) => ({

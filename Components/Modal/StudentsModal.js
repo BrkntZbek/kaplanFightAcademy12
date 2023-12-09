@@ -4,19 +4,25 @@ import AddPackModel from "./AddPackModel";
 import Toast from 'react-native-toast-message';
 import AddLessonModal from "./AddLessonModal";
 import ButtonStyle from  "../../Styles/ButtonStyle"
+import { fetchUserPackage } from "../../firebase";
+
 export default function StudentsModal({
   selectedStudent,
   firestore,
-  packageInfo,
   isVisible,
+ 
   handleCloseModal,
 }) {
   const [addPackageModalVisible, setAddPackageModalVisible] = useState(false);
   const [lessonModalVisible,setLessonModalVisible] = useState(false);
+  const [packageInfo, setPackageInfo] = useState(null)
 
-  
+  console.log(packageInfo)
  
   const toastRef = useRef(); 
+  useEffect(()=>{
+    fetchUserPackage(selectedStudent,setPackageInfo)
+  },[selectedStudent])
 
     const handleOpenLessonModal = () =>{
       if(packageInfo === null)
@@ -52,7 +58,7 @@ export default function StudentsModal({
     // Paket bilgisi null ise modal'ı aç
     setAddPackageModalVisible(true);
   };
-  console.log('paket',packageInfo);
+  
   
    console.log()
   return (
@@ -107,7 +113,7 @@ export default function StudentsModal({
 
             <View style={styles.paket}>
               <Text style={{ fontWeight: "bold", fontSize: 13 ,color:'yellow' }}>
-                Toplam Ders Sayısı:{selectedStudent.ToplamDers}
+                Toplam Ders Sayısı:{selectedStudent.toplamDers}
               </Text>
             </View>
 
