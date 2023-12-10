@@ -8,8 +8,8 @@ import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@kaplanfight.com');
+  const [password, setPassword] = useState('gorkemkaplan');
   const [name, setName] = useState('');
   const [telefon, setTelefon] = useState('');
   const [size,setSize] = useState('');
@@ -19,7 +19,7 @@ export default function LoginScreen() {
 
 
 
-  
+
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -36,7 +36,7 @@ export default function LoginScreen() {
         }
       }
     });
-  
+
     return () => {
       unsubscribe(); // useEffect temizleme fonksiyonu
     };
@@ -53,7 +53,7 @@ export default function LoginScreen() {
     try {
       if (isRegisterMode) {
         // Kayıt ol butonuna tıklanınca yapılacak işlemler
-        
+
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
         const usersCollection = firestore.collection('userss');
@@ -69,15 +69,15 @@ export default function LoginScreen() {
           yetki:'Yok',
           toplamDers:0
         });
-  
-       
+
+
         console.log('Kullanıcı kayıt oldu', user.email);
       } else {
         // Giriş yap butonuna tıklanınca yapılacak işlemler
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
         const userId = user.uid;
-  
+
         // Firestore ekleme
         console.log('Kullanıcı giriş yaptı', user.email);
       }
@@ -88,7 +88,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior='padding'> 
+    <KeyboardAvoidingView style={styles.container} behavior='padding'>
       <View style={styles.imageContainer}>
         <Image style={styles.logoİmg} source={require('../img/kaplanLogo.png')} />
       </View>
@@ -102,23 +102,23 @@ export default function LoginScreen() {
   />
   <Text style={{ color: isRegisterMode ? 'green' : 'grey',fontWeight:'bold' }}>Kayıt Ol</Text>
 </View>
-      
+
       <View style={styles.inputContainer}>
-        <TextInput style={inputStyle.loginİnput} placeholder='Email' placeholderTextColor="black"  value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/> 
+        <TextInput style={inputStyle.loginİnput} placeholder='Email' placeholderTextColor="black"  value={email} onChangeText={text => setEmail(text)} autoCapitalize='none'/>
         <TextInput style={inputStyle.loginİnput} placeholder='Şifre' placeholderTextColor="black" value={password} onChangeText={password => setPassword(password)} autoCapitalize='none' secureTextEntry={true} />
         {showNameInput && <TextInput style={inputStyle.loginİnput} placeholderTextColor="black" value={name} onChangeText={name => setName(name)} placeholder='İsim Soyisim'/>}
         {showNameInput && <TextInput style={inputStyle.loginİnput} placeholderTextColor="black" value={telefon} keyboardType="numeric" onChangeText={telefon => setTelefon(telefon)} placeholder='Telefon'/>}
-        <View style={styles.sizeAndWeight}> 
+        <View style={styles.sizeAndWeight}>
         {showNameInput && <TextInput style={inputStyle.sizeAndWeightİnput} placeholderTextColor="black" value={size} keyboardType="numeric" onChangeText={size => setSize(size)} placeholder='Boy'/>}
         {showNameInput && <TextInput style={inputStyle.sizeAndWeightİnput} placeholderTextColor="black" value={weight} keyboardType="numeric" onChangeText={weight => setWeight(weight)} placeholder='Kilo'/>}
         </View>
-        
+
       </View>
 
-      {showNameInput &&<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}> 
-      
-      
-     
+      {showNameInput &&<View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+
+
+
        </View>}
 
       <View style={styles.buttonContainer}>
@@ -126,7 +126,7 @@ export default function LoginScreen() {
           style={[styles.button, styles.outlineButton]}
           onPress={handleButtonClick}>
           <Text style={styles.buttonText}>{isRegisterMode ? 'Kayıt Ol' : 'Giriş Yap'}</Text>
-          
+
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -140,19 +140,19 @@ const styles = StyleSheet.create({
       alignItems:'center',
       backgroundColor:'black'
     },
-    
+
     inputContainer:{
        width:'80%'
     },
     sizeAndWeight:{
        alignItems:'center',
        justifyContent:'center',
-       flexDirection: 'row',  
+       flexDirection: 'row',
        margin:2,
        padding:2,
-      
+
     },
-   
+
     buttonContainer:{
         marginTop:20,
       width:'60%',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
       color:'yellow'
     },
     button:{
-       
+
         margin:5,
         height:35,
         borderRadius:20,
@@ -179,15 +179,15 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         color:'yellow',
     },
-    
+
     logoİmg:{
-        width:350, 
+        width:350,
         height: 350,
 
     },
     imageContainer:{
-        
-        
+
+
     }
 
 })
