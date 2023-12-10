@@ -6,6 +6,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
   listAll,
+  images,
 } from "firebase/storage";
 import { updateDoc } from 'firebase/firestore'; // Değişiklik burada
 import 'firebase/compat/firestore'; // Bu satırı ekleyin
@@ -176,21 +177,15 @@ const addBlog = async (title, contents, image) => {
     photoUrl: image,
   });
 };
-const fetchBlog = async() =>{
 
-}
-
-
-const listFiles = async () => {
-  const storage = getStorage();
-
-  // Create a reference under which you want to list
-  const listRef = ref(storage, "images");
-
-  // Find all the prefixes and items.
-  const listResp = await getDownloadURL(listRef);
-  console.log({ listResp });
-  return listResp.items;
+const listFiles = async (setFiles) => {
+  try {
+    const blogCollection = await firestore.collection('Blog').get();
+    const blogData = blogCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setFiles(blogData);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 };
 
 const uploadToFirebase = async (uri, name, onProgress) => {
@@ -226,42 +221,23 @@ const uploadToFirebase = async (uri, name, onProgress) => {
 };
 
 
-const uploadImage = async (image, setImage, setUploading) => {
-  const blob = await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-      resolve(xhr.response);
-    };
-    xhr.onerror = function() {
-      reject(new TypeError('Network request failed'));
-    };
-    xhr.responseType = 'blob';
-    xhr.open('GET', image, true);
-    xhr.send(null);
-  })
-  const ref = firebase.storage().ref().child(`Pictures/Image1`)
-  const snapshot = ref.put(blob)
-  snapshot.on(firebase.storage.TaskEvent.STATE_CHANGED,
-    ()=>{
-      setUploading(true)
-    },
-    (error) => {
-      setUploading(false)
-      console.log(error)
-      blob.close()
-      return
-    },
-    () => {
-      snapshot.snapshot.ref.getDownloadURL().then((url) => {
-        setUploading(false)
-        console.log("Download URL: ", url)
-        setImage(url)
-        blob.close()
-        return url
-      })
-    }
-    )
-}
+
+const uploadImage = async (imageUri, setImage, setUploading) => {
+  try {
+    setUploading(true);
+    const uri = Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri;
+    const fileName = uri.split("/").pop();
+    const uploadResp = await uploadToFirebase(uri, fileName, (v) => console.log(v));
+    const downloadUrl = await uploadResp.ref.getDownloadURL();
+    console.log('Dosya URL:', downloadUrl);
+
+    setImage(downloadUrl);
+  } catch (error) {
+    console.error('Hata oluştu:', error);
+  } finally {
+    setUploading(false);
+  }
+};
 
 
 if (!firebase.apps.length) {

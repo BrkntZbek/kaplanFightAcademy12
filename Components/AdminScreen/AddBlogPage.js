@@ -67,7 +67,7 @@ export default function AddBlogPage() {
         // permission check
   if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
     return (
-      <View style={styles.container}>
+      <View style={{marginTop:50}}>
         <Text>Permission Not Granted - {permission?.status}</Text>
         <StatusBar style="auto" />
         <Button title="Request Permission" onPress={requestPermission}></Button>
@@ -89,7 +89,7 @@ export default function AddBlogPage() {
                 <TextInput
                     placeholder='İçerik'
                     value={contents}
-                    onChangeText={setContents} // <-- Burayı onChangeText olarak değiştir
+                    onChangeText={setContents} 
                     style={İnputStyle.loginİnput}
                 />
                 <Button title="FOTO ÇEK" onPress={takePhoto}></Button>
@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
     addBlogContainer:{
         flex:1,
         alignItems:'center',
-        marginBottom:20
+        marginBottom:30,
+        marginTop:30
     },
     addBlogContent:{
         width:'80%',
