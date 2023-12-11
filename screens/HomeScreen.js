@@ -47,7 +47,7 @@ export default function HomeScreen() {
         inactiveTintColor: 'gray', 
         
         tabStyle: {
-          backgroundColor: 'yellow',
+          backgroundColor: '#ffdf00',
          
           },
       }}

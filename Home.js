@@ -11,9 +11,10 @@ const handleSignOut = () => {
       .catch((error) => alert(error.message));
   };
 export default function Home() {
+
+
   return (
     <View style={styles.HomeContainer}>
-      <Text style={{color:'yellow'}}>Home</Text>
        <Blog/>
     </View>
   )

@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin:2,
     borderColor: 'black', // borderBlockColor yerine borderColor kullanın
-    backgroundColor:'yellow',
+    backgroundColor:'#ffdf00',
     width: '100%', // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
     height: 'auto',
     justifyContent: 'center',
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   paket:{
     borderWidth:2,
-    borderColor:'yellow',
+    borderColor:'#ffdf00',
     borderRadius:10,
     width:200,
     alignItems: 'center',
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   textModal:{
     fontWeight:'bold',
      fontSize:13,
-     color:'yellow',
+     color:'#ffdf00',
   },
   modalContainer: {
     flex: 1,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 40,
     borderWidth:2,
-    borderColor:'yellow',
+    borderColor:'#ffdf00',
     backgroundColor:'black',
     borderRadius: 10,
     width: '80%', // Modal'ın genişliği
@@ -160,15 +160,13 @@ const styles = StyleSheet.create({
   },
   container:{
     flex:1,
-    marginTop:20,
-    
     backgroundColor:'black'
   },
   searchInput: {
-    marginTop:25,
+    marginTop:50,
     borderBottomWidth:2,
     borderBottomColor:'red',
-    backgroundColor: 'yellow',
+    backgroundColor: '#ffdf00',
     fontSize:15,
     fontWeight:'bold',
     textAlign:'center',
@@ -178,7 +176,7 @@ const styles = StyleSheet.create({
   },
   nameContainer:{
     borderBottomWidth:2,
-    borderColor:'yellow',
+    borderColor:'#ffdf00',
     width:'100%',
     alignItems:'center',
     

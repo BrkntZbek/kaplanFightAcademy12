@@ -1,66 +1,84 @@
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { listFiles } from '../../firebase';
-
+import { useNavigation } from '@react-navigation/native';
+import TextStyle from '../../Styles/TextStyle';
 export default function Blog() {
   const [files, setFiles] = useState([]);
-
+  const [selectedBlog, setSelectedBlog] = useState(null); // İlk değeri null olarak ayarlandı
   useEffect(() => {
-    listFiles(setFiles)
+    listFiles(setFiles);
   }, [setFiles]);
- 
+  const navigation = useNavigation();
 
-  console.log(files);
 
-  const Item = ({ name }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{name}</Text>
-    </View>
-  );
+
+  const pushBlogPages = (item) => {
+    setSelectedBlog(item);
+    console.log(selectedBlog)
+    navigation.navigate('Blog Page', { selectedBlog: item }); // Veriyi doğrudan iletiyoruz
+  };
 
   return (
-<View style={styles.blogContainer}>
-  <View style={styles.context}>
-    <Text>Blogslar</Text>
-  </View>
-  <View style={styles.blog}>
-  <FlatList
-    data={files}
-    horizontal={true} 
-    renderItem={({ item }) => (
-      <View style={styles.blogItem}>
-        <Text style={{color:'red'}}>{item.baslik}</Text>
-        <Image source={{ uri: item.photoUrl }} style={{ width: 170, height: 200 }} />
+    <View style={styles.blogContainer}>
+      <View style={styles.context}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#ffdf00' }}>Bloglar</Text>
       </View>
-    )}
-    keyExtractor={(item) => item.id}
-  />
-</View>
-</View>
-  )
+      <View style={styles.blog}>
+        <FlatList
+          data={files}
+          horizontal={true}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => pushBlogPages(item)}>
+              <View style={styles.blogItem}>
+                <View style={styles.blogPhotoAndContext}>
+                  <Image source={{ uri: item.photoUrl }} style={{ width: '100%', height: '100%',borderRadius:15 }} resizeMode="cover" />
+                </View>
+                <View style={styles.baslik}>
+                  <Text style={TextStyle.blogStyle}>{item.baslik}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id.toString()} // keyExtractor'ı string olarak ayarlandı
+        />
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    blogContainer:{
-        marginTop:80,
-       backgroundColor:'red',
-       width:'100%',
-       height:'30%',
-      
-      },
-      blog:{
-        flexDirection:'row',
-        backgroundColor:'yellow'
-      },
-      item: {
-        marginVertical: 16,
-        marginHorizontal: 16,
-      },
-      title: {
-        fontSize: 18,
-      },
-      blogItem:{
-        width:'30%',
-        height:'20%'
-      }
-})
+  blogContainer: {
+    marginTop: 40,
+    width: '100%',
+    height: '40%',
+  },
+  context: {
+    padding: 10,
+    alignItems:'center'
+  },
+  blog: {
+    flexDirection: 'row',
+    
+    height: '90%',
+    width:'100%'
+  },
+  blogItem: {
+    width:200,
+    height: '100%',
+    marginRight: 10,
+  },
+  blogPhotoAndContext: {
+    marginTop: 5,
+    width: '100%',
+    height: '85%',
+  },
+  baslik: {
+    
+    height: '30%',
+   
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+
+  },
+});

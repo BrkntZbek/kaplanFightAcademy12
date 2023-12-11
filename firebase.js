@@ -189,35 +189,43 @@ const listFiles = async (setFiles) => {
 };
 
 const uploadToFirebase = async (uri, name, onProgress) => {
-  const fetchResponse = await fetch(uri);
-  const theBlob = await fetchResponse.blob();
+  try {
+    const fetchResponse = await fetch(uri);
+    const theBlob = await fetchResponse.blob();
 
-  const imageRef = ref(getStorage(), `images/${name}`);
+    const storageRef = ref(getStorage(), `images/${name}`);
 
-  const uploadTask = uploadBytesResumable(imageRef, theBlob);
+    const uploadTask = uploadBytesResumable(storageRef, theBlob);
 
-  return new Promise((resolve, reject) => {
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        onProgress && onProgress(progress);
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-        console.log(error);
-        reject(error);
-      },
-      async () => {
-        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-        resolve({
-          downloadUrl,
-          metadata: uploadTask.snapshot.metadata,
-        });
-      }
-    );
-  });
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          onProgress && onProgress(progress);
+        },
+        (error) => {
+          console.error("Upload error:", error);
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve({
+              downloadUrl,
+              metadata: uploadTask.snapshot.metadata,
+            });
+          } catch (error) {
+            console.error("Download URL error:", error);
+            reject(error);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
+  }
 };
 
 
@@ -225,13 +233,18 @@ const uploadToFirebase = async (uri, name, onProgress) => {
 const uploadImage = async (imageUri, setImage, setUploading) => {
   try {
     setUploading(true);
-    const uri = Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri;
+
+    // imageUri'den "file://" kısmını kaldır
+    const uri = imageUri.replace('file://', '');
+
     const fileName = uri.split("/").pop();
     const uploadResp = await uploadToFirebase(uri, fileName, (v) => console.log(v));
-    const downloadUrl = await uploadResp.ref.getDownloadURL();
+    const downloadUrl = await uploadResp.downloadUrl;
     console.log('Dosya URL:', downloadUrl);
 
-    setImage(downloadUrl);
+    // setImage(downloadUrl); // Eğer bu URL'yi bir nesne içinde saklamak istiyorsanız bu satırı kullanın
+    // Eğer sadece URL'yi bir string olarak saklamak istiyorsanız aşağıdaki satırı kullanın:
+    setImage(downloadUrl.toString());
   } catch (error) {
     console.error('Hata oluştu:', error);
   } finally {

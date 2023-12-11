@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { auth, firestore } from '../firebase';
 import { fetchPackageInfo } from '../firebase';
-import StudentHomeHeader from '../Components/Header/StudentHomeHeader';
+
+import LoadingData from '../Components/Loading/LoadingData';
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [packageInfo, setPackageInfo] = useState(null);
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,23 +52,11 @@ const UserProfile = () => {
     };
 
     fetchData();
+
   }, []);
 
-  if (!userData) {
-    return (
-      <View style={styles.loading}>
-        <Text style={styles.loadingText}>Yükleniyor...</Text>
-      </View>
-    );
-  }
-
-  if (!packageInfo) {
-    // Eğer `packageInfo` henüz gelmemişse, bekleme durumunu render et
-    return (
-      <View style={styles.loading}>
-        <Text style={styles.loadingText}>Paket bilgileri yükleniyor...</Text>
-      </View>
-    );
+  if (!userData || !packageInfo) {
+    return <LoadingData />;
   }
 
   return (
@@ -109,15 +99,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
    
   },
-  loading:{
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center'
-  },
-  loadingText:{
-     fontWeight:'bold',
-     fontSize:30
-  },
+ 
   nameContainer:{
     borderBottomWidth:2,
     width:'100%',

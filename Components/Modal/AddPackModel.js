@@ -139,7 +139,7 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
       padding: 40,
       borderWidth: 2,
       borderColor: 'black',
-      backgroundColor: 'yellow',
+      backgroundColor: '#ffdf00',
       alignItems: 'center',
       borderRadius: 10,
       width: '80%', // Modal'ın genişliği

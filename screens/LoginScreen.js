@@ -8,8 +8,8 @@ import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
-  const [email, setEmail] = useState('admin@kaplanfight.com');
-  const [password, setPassword] = useState('gorkemkaplan');
+  const [email, setEmail] = useState('sertac@gmail.com');
+  const [password, setPassword] = useState('lm5bll88a');
   const [name, setName] = useState('');
   const [telefon, setTelefon] = useState('');
   const [size,setSize] = useState('');
@@ -27,11 +27,11 @@ export default function LoginScreen() {
         // Kullanıcı oturum açtı
         if (user.email === 'admin@kaplanfight.com') {
           // Admin kontrolü
-          navigation.replace('Admin');
+          navigation.replace('Admin',{loginUser:user});
           console.log('Admin Giriş yaptı', user.email);
         } else {
           // Diğer kullanıcılar
-          navigation.replace('Home');
+          navigation.replace('Home',{loginUser:user});
           console.log('Normal kullanıcı Giriş yaptı', user.email);
         }
       }
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
       width:'60%',
     },
     genderText:{
-      color:'yellow'
+      color:'#ffdf00'
     },
     button:{
 
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         borderRadius:20,
         backgroundColor:'black',
         borderWidth:2,
-        borderColor:'yellow',
+        borderColor:'#ffdf00',
         alignItems:'center',
         justifyContent:'center'
     },
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     },
     buttonText:{
         fontWeight:'bold',
-        color:'yellow',
+        color:'#ffdf00',
     },
 
     logoİmg:{

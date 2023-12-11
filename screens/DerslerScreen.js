@@ -27,7 +27,6 @@ export default function DerslerScreen() {
 
   return (
     <View style={styles.container}>
-       <Header/>
       <View style={styles.content}>
         <View style={styles.buttons}>
         <TouchableOpacity style={styles.button} >
@@ -57,6 +56,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+  },
+  content:{
+     marginTop:40
   },
   button:{
     backgroundColor: '#FFDF00',

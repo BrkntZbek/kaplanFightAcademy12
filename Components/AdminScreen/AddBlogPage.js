@@ -17,6 +17,7 @@ export default function AddBlogPage() {
     const Blog = () => {
         addBlog(title, contents, image)
         console.log(`${title} adlı blog eklendi`);
+        console.log('fotoğraf url:',image)
     }
 
     const takePhoto = async () => {
@@ -58,7 +59,7 @@ export default function AddBlogPage() {
 
           console.log(result);
 
-          if (!result.cancelled) {
+          if (!result.canceled) {
             setImage(result.uri);
           }
         };
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
         flex:1,
         alignItems:'center',
         marginBottom:30,
-        marginTop:30
+       
     },
     addBlogContent:{
         width:'80%',

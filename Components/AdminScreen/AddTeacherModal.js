@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
   },
 
   activeButton: {
-    backgroundColor: 'yellow',
-    borderColor: 'yellow',
+    backgroundColor: '#ffdf00',
+    borderColor: '#ffdf00',
   },
 
   disabledButton: {

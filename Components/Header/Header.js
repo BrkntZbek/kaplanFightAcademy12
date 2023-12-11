@@ -23,7 +23,7 @@ export default function Header() {
 
 const styles = StyleSheet.create({
     headContainer:{
-        paddingTop:30,
+        
         borderRadius:15,
         backgroundColor:'gray',
         width:'100%',

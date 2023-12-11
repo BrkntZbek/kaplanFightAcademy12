@@ -14,6 +14,11 @@ const TextStyle ={
        fontWeight:'bold',
        margin:10,
        alignItems:'center',
+    },
+    blogStyle:{
+        fontSize:20,
+        color:'#ffdf00'
+        
     }
 }
 

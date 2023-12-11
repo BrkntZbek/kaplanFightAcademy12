@@ -67,37 +67,37 @@ export default function AdminSetting() {
   return (
     <View style={styles.AdminSetting}>
         <View style={styles.paketler}>
-            <Text style={{color:'yellow',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paket Sistemi</Text>
+            <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paket Sistemi</Text>
            <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Ekle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Güncelle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Güncelle</Text>
             </TouchableOpacity>
            
             <TouchableOpacity onPress={addTeacherPage} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Yetkiler Ve Kullanıcılar</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Yetkiler Ve Kullanıcılar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={addBlogPage} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Blog Ekle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Blog Ekle</Text>
             </TouchableOpacity>
             
         </View>
         <View style={styles.paketler}>
-            <Text style={{color:'yellow',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Muhasebe</Text>
+            <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Muhasebe</Text>
            <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Masraf Ekle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Masraf Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Gelir Ekle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Gelir Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Genel Muhasebe</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Genel Muhasebe</Text>
             </TouchableOpacity>
             
         </View>
         <View style={styles.paketler}>
-             <Text style={{color:'yellow',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paketler</Text>
+             <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paketler</Text>
              <FlatList
         data={packageList}
         keyExtractor={(item) => item.id}
@@ -120,7 +120,7 @@ export default function AdminSetting() {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <View style={{borderBottomWidth:2,borderColor:'yellow',width:'100%',alignItems:'center',}}>
+            <View style={{borderBottomWidth:2,borderColor:'#ffdf00',width:'100%',alignItems:'center',}}>
             <Text style={styles.modalText}>Paket Ekle</Text>
             </View>
            
@@ -128,12 +128,12 @@ export default function AdminSetting() {
             <TextInput style={styles.input} placeholder='Paket Fiyatı' placeholderTextColor="black"  value={paketFiyati} onChangeText={text => setPaketFiyati(text)} autoCapitalize='none'/>
             <TextInput style={styles.input} placeholder='Ders Sayısı' placeholderTextColor="black"  value={dersSayisi} onChangeText={text => setDersSayisi(text)} autoCapitalize='none'/> 
             <TouchableOpacity onPress={addPackage} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:15,borderWidth:1,borderRadius:10,padding:5,borderWidth:1,borderColor:'yellow',marginTop:10}}  >Paket Ekle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:15,borderWidth:1,borderRadius:10,padding:5,borderWidth:1,borderColor:'#ffdf00',marginTop:10}}  >Paket Ekle</Text>
              
             </TouchableOpacity>  
            
             <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'yellow', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} onPress={closeModal} >Kapat</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} onPress={closeModal} >Kapat</Text>
              
             </TouchableOpacity>
           </View>
@@ -147,14 +147,14 @@ export default function AdminSetting() {
 }
 const styles = StyleSheet.create({
     AdminSetting:{
-      marginTop:20,
+     
         flex:1,
         backgroundColor:'black',
         alignItems:'center',
     },
     packageList:{
       borderWidth:1,
-      borderColor:'yellow',
+      borderColor:'#ffdf00',
       borderRadius:20,
       width:200,
       alignItems:'center',
@@ -162,20 +162,20 @@ const styles = StyleSheet.create({
       marginBottom:10,
     },
     packageİnfo:{
-       color:'yellow'
+       color:'#ffdf00'
     },
     paketler:{
         borderWidth:1,
-        borderColor:'yellow',
+        borderColor:'#ffdf00',
         borderRadius:20,
         padding:15,
         width:'80%',
         height:'auto',
         alignItems:'center',
-        marginTop:20
+        marginTop:50
     },
     input:{
-        backgroundColor:'yellow',
+        backgroundColor:'#ffdf00',
         paddingHorizontal:15,
         paddingVertical:10,
         marginBottom:5,
@@ -196,14 +196,14 @@ const styles = StyleSheet.create({
         alignItems:'center',
         padding: 40,
         borderWidth:2,
-        borderColor:'yellow',
+        borderColor:'#ffdf00',
         backgroundColor:'black',
         borderRadius: 20,
         width: '80%', // Modal'ın genişliği
         
     },
     modalText:{
-        color:'yellow',
+        color:'#ffdf00',
         fontWeight:'bold',
         textDecorationLine:'underline',
         fontSize:20,

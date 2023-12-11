@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     padding: 5,
     margin:5,
     borderWidth: 2,
-    borderColor: 'yellow',
+    borderColor: '#ffdf00',
     borderRadius: 10,
     alignItems:'center',
     width: '80%',

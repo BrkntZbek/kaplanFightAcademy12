@@ -71,7 +71,7 @@ export default function StudentsModal({
       <View style={[styles.modalContainer, { height: 600 }]}>
         <View style={styles.modalContent}>
           <View style={styles.nameContainer}>
-            <Text style={{ fontWeight: "bold", fontSize: 20, color: "yellow" }}>
+            <Text style={{ fontWeight: "bold", fontSize: 20, color: "#ffdf00" }}>
               {selectedStudent?.name}
             </Text>
           </View>
@@ -81,7 +81,7 @@ export default function StudentsModal({
 
             <View style={styles.paket}>
               <Text
-                style={{ fontWeight: "bold", fontSize: 20, color: "yellow" }}
+                style={{ fontWeight: "bold", fontSize: 20, color: "#ffdf00" }}
               >
                 Paket
               </Text>
@@ -112,14 +112,14 @@ export default function StudentsModal({
             </View>
 
             <View style={styles.paket}>
-              <Text style={{ fontWeight: "bold", fontSize: 13 ,color:'yellow' }}>
+              <Text style={{ fontWeight: "bold", fontSize: 13 ,color:'#ffdf00' }}>
                 Toplam Ders Sayısı:{selectedStudent.toplamDers}
               </Text>
             </View>
 
             <View style={styles.paket}>
               <Text
-                style={{ fontWeight: "bold", fontSize: 20, color: "yellow" }}
+                style={{ fontWeight: "bold", fontSize: 20, color: "#ffdf00" }}
               >
                 Geçmiş Dersler
               </Text>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   paket: {
     borderWidth: 2,
-    borderColor: "yellow",
+    borderColor: "#ffdf00",
     borderRadius: 10,
     width: 200,
     alignItems: "center",
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   textModal: {
     fontWeight: "bold",
     fontSize: 13,
-    color: "yellow",
+    color: "#ffdf00",
   },
   Studentİnfo: {
     alignItems: "center",
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     borderBottomWidth: 2,
-    borderColor: "yellow",
+    borderColor: "#ffdf00",
     width: "100%",
     alignItems: "center",
 
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 40,
     borderWidth: 2,
-    borderColor: "yellow",
+    borderColor: "#ffdf00",
     backgroundColor: "black",
     borderRadius: 10,
     width: "80%", // Modal'ın genişliği

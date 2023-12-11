@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     inputcu:{
         color:'red',
         borderWidth:1,
-        borderColor:'yellow',
+        borderColor:'#ffdf00',
         width:'100%',
         height:'50%'
     },
