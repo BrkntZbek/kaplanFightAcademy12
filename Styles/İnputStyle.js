@@ -33,6 +33,16 @@ const inputStyle ={
         height:'60%',
         fontWeight:'bold'
      },
+     contextİnptut:{
+        backgroundColor:'yellow',
+        paddingHorizontal:15,
+        height:100,
+        paddingVertical:10,
+        marginBottom:5,
+        borderRadius:20,
+        color:'black',
+        fontWeight:'bold'
+     },
 }
 
 export default inputStyle;

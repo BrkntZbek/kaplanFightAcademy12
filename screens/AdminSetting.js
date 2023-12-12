@@ -9,7 +9,7 @@ export default function AdminSetting() {
     const [paketTuru, setPaketTuru] = useState('');
     const [paketFiyati, setPaketFiyati] = useState('');
     const [dersSayisi, setDersSayisi] = useState('');
-   
+   const [paketSuresi,setPaketSuresi] = useState(0)
     const navigation = useNavigation();
   const openModal = () => {
     setModalVisible(true);
@@ -35,6 +35,8 @@ export default function AdminSetting() {
         paketTuru: paketTuru,
         paketFiyati:paketFiyati,
         dersSayisi:dersSayisi,
+        paketSuresi:paketSuresi,
+
       });
       console.log('Yeni Paket Eklendi',paketTuru);
   }
@@ -69,7 +71,7 @@ export default function AdminSetting() {
         <View style={styles.paketler}>
             <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paket Sistemi</Text>
            <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Ekle</Text>
+              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5}} >Paket Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={openModal} >
               <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Güncelle</Text>
@@ -124,9 +126,10 @@ export default function AdminSetting() {
             <Text style={styles.modalText}>Paket Ekle</Text>
             </View>
            
-            <TextInput style={styles.input} placeholder='Paket Türü' placeholderTextColor="black"  value={paketTuru} onChangeText={text => setPaketTuru(text)} autoCapitalize='none'/>
-            <TextInput style={styles.input} placeholder='Paket Fiyatı' placeholderTextColor="black"  value={paketFiyati} onChangeText={text => setPaketFiyati(text)} autoCapitalize='none'/>
-            <TextInput style={styles.input} placeholder='Ders Sayısı' placeholderTextColor="black"  value={dersSayisi} onChangeText={text => setDersSayisi(text)} autoCapitalize='none'/> 
+            <TextInput style={styles.input} placeholder='Paket İsmi' placeholderTextColor="black"  value={paketTuru} onChangeText={text => setPaketTuru(text)} autoCapitalize='none'/>
+            <TextInput style={styles.input} placeholder='Paket Fiyatı' placeholderTextColor="black"  value={paketFiyati}  keyboardType='numeric' onChangeText={text => setPaketFiyati(text)} autoCapitalize='none'/>
+            <TextInput style={styles.input} placeholder='Ders Sayısı' placeholderTextColor="black"  value={dersSayisi}  keyboardType='numeric' onChangeText={text => setDersSayisi(text)} autoCapitalize='none'/> 
+            <TextInput style={styles.input} placeholder='Paket Süresi(ay)' placeholderTextColor="black"  value={paketSuresi}  keyboardType='numeric' onChangeText={text => setPaketSuresi(text)} autoCapitalize='none'/>
             <TouchableOpacity onPress={addPackage} >
               <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:15,borderWidth:1,borderRadius:10,padding:5,borderWidth:1,borderColor:'#ffdf00',marginTop:10}}  >Paket Ekle</Text>
              

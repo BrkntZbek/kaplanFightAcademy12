@@ -8,7 +8,7 @@ export default function Blog() {
   const [selectedBlog, setSelectedBlog] = useState(null); // İlk değeri null olarak ayarlandı
   useEffect(() => {
     listFiles(setFiles);
-  }, [setFiles]);
+  }, [setFiles,files]);
   const navigation = useNavigation();
 
 

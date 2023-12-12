@@ -8,8 +8,8 @@ import { doc, setDoc } from '@firebase/firestore';
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
-  const [email, setEmail] = useState('sertac@gmail.com');
-  const [password, setPassword] = useState('lm5bll88a');
+  const [email, setEmail] = useState('admin@kaplanfight.com');
+  const [password, setPassword] = useState('gorkemkaplan');
   const [name, setName] = useState('');
   const [telefon, setTelefon] = useState('');
   const [size,setSize] = useState('');

@@ -9,7 +9,7 @@ export default function BlogPages({ route }) {
     <View style={styles.BlogPagesContainer}>
       <Header/>
       <View style={styles.context}>
-         <Image source={{ uri: selectedBlog.photoUrl }} style={{ width: '80%', height: '100%',borderRadius:15 }} resizeMode="strech" />
+         <Image source={{ uri: selectedBlog.photoUrl }} style={{ width: '80%', height: '100%',borderRadius:15 }} resizeMode="stretch" />
        
       </View>
       <View style={styles.contentContainer}>
@@ -26,7 +26,7 @@ export default function BlogPages({ route }) {
 
 const styles = StyleSheet.create({
   BlogPagesContainer: {
-   flex:1
+   flex:1,
   },
 
   context: {

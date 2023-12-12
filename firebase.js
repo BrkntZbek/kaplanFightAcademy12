@@ -35,6 +35,7 @@ const fetchStudents = async (setStudents) => {
 };
 
 
+
 const cancelledLesson = async (lesson) => {
   const fetchPackageOwner = await firestore.collection('userss')
     .where("id", "==", lesson.ogrenciId)
@@ -227,9 +228,6 @@ const uploadToFirebase = async (uri, name, onProgress) => {
     throw error;
   }
 };
-
-
-
 const uploadImage = async (imageUri, setImage, setUploading) => {
   try {
     setUploading(true);
@@ -253,6 +251,105 @@ const uploadImage = async (imageUri, setImage, setUploading) => {
 };
 
 
+const todaysLessons = async (setLessons) => {
+  try {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth() + 1; // Aylar 0'dan başlar, bu nedenle +1 eklenir
+    const currentYear = currentDate.getFullYear();
+    // Tarihi belirli bir formatta oluştur
+    const formattedDate = `${currentDay}.${currentMonth}.${currentYear}`;
+  
+    const todaysLessonsSnapsShot = await firestore
+      .collection("Lessons")
+      .where("tarih", "==", formattedDate)
+      .get();
+  
+    if (!todaysLessonsSnapsShot.empty) {
+      // Belge varsa
+      const lessons = todaysLessonsSnapsShot.docs.map(doc => doc.data());
+      setLessons(lessons);
+    } else {
+      console.log('Paket bulunamadı');
+      setLessons([]);
+    }
+  } catch (error) {
+    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
+    console.error('Hata:', error);
+    setLessons(null);
+  }
+};
+
+const getWeekRange = (date) => {
+  const startOfWeek = new Date(date);
+  startOfWeek.setDate(date.getDate() - date.getDay()); // Haftanın başlangıcı (Pazar günü)
+  const endOfWeek = new Date(date);
+  endOfWeek.setDate(date.getDate() - date.getDay() + 6); // Haftanın sonu (Cumartesi günü)
+
+  return { startOfWeek, endOfWeek };
+};
+
+const weeklyLessons = async (setLessons) => {
+  try {
+    const currentDate = new Date();
+    const { startOfWeek, endOfWeek } = getWeekRange(currentDate);
+
+    // Tarihleri belirli bir formatta oluştur
+    const formattedStartOfWeek = `${startOfWeek.getDate()}.${startOfWeek.getMonth() + 1}.${startOfWeek.getFullYear()}`;
+    const formattedEndOfWeek = `${endOfWeek.getDate()}.${endOfWeek.getMonth() + 1}.${endOfWeek.getFullYear()}`;
+     console.log('İlk TarihÇ ',formattedStartOfWeek)
+     console.log('son tarih: ',formattedEndOfWeek)
+    const weeklyLessonsSnapshot = await firestore
+      .collection("Lessons")
+      .where("tarih", ">=", formattedStartOfWeek)
+      .where("tarih", "<=", formattedEndOfWeek)
+      .get();
+
+    if (!weeklyLessonsSnapshot.empty) {
+      // Belge varsa
+      const lessons = weeklyLessonsSnapshot.docs.map(doc => doc.data());
+      setLessons(lessons);
+    } else {
+      console.log('Haftalık ders paketi bulunamadı');
+      setLessons([]);
+    }
+  } catch (error) {
+    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
+    console.error('Hata:', error);
+    setLessons(null);
+  }
+};
+const monthlyLessons = async (setLessons) => {
+  try {
+    const currentDate = new Date();
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+    // Tarihleri belirli bir formatta oluştur
+    const formattedStartOfMonth = `${startOfMonth.getDate()}.${startOfMonth.getMonth() + 1}.${startOfMonth.getFullYear()}`;
+    const formattedEndOfMonth = `${endOfMonth.getDate()}.${endOfMonth.getMonth() + 1}.${endOfMonth.getFullYear()}`;
+
+    const monthlyLessonsSnapshot = await firestore
+      .collection("Lessons")
+      .where("tarih", ">=", formattedStartOfMonth)
+      .where("tarih", "<=", formattedEndOfMonth)
+      .get();
+
+    if (!monthlyLessonsSnapshot.empty) {
+      // Belge varsa
+      const lessons = monthlyLessonsSnapshot.docs.map(doc => doc.data());
+      setLessons(lessons);
+    } else {
+      console.log('Bu ayın ders paketi bulunamadı');
+      setLessons([]);
+    }
+  } catch (error) {
+    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
+    console.error('Hata:', error);
+    setLessons(null);
+  }
+};
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -260,4 +357,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,fetchTeacher,addBlog,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson, uploadToFirebase, listFiles, uploadImage };
+export { auth, firestore,storage,fetchTeacher,monthlyLessons,weeklyLessons,addBlog,todaysLessons,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson, uploadToFirebase, listFiles, uploadImage };

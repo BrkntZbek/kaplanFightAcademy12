@@ -22,7 +22,7 @@ export default function StudentsModal({
   const toastRef = useRef(); 
   useEffect(()=>{
     fetchUserPackage(selectedStudent,setPackageInfo)
-  },[selectedStudent])
+  },[selectedStudent,setPackageInfo])
 
     const handleOpenLessonModal = () =>{
       if(packageInfo === null)
@@ -100,6 +100,9 @@ export default function StudentsModal({
                   </Text>
                   <Text style={styles.textModal}>
                     Kalan Ders: {packageInfo.KalanDers}
+                  </Text>
+                  <Text style={styles.textModal}>
+                    Paket Bitiş Tarihi: {packageInfo.paketBitisTarihi}
                   </Text>
                 </>
               ) : (
@@ -206,6 +209,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 13,
     color: "#ffdf00",
+    marginTop:5
   },
   Studentİnfo: {
     alignItems: "center",

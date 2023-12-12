@@ -18,6 +18,9 @@ export default function AddBlogPage() {
         addBlog(title, contents, image)
         console.log(`${title} adlı blog eklendi`);
         console.log('fotoğraf url:',image)
+        setTitle("")
+        setContents("")
+        setImage(null)
     }
 
     const takePhoto = async () => {
@@ -91,7 +94,8 @@ export default function AddBlogPage() {
                     placeholder='İçerik'
                     value={contents}
                     onChangeText={setContents} 
-                    style={İnputStyle.loginİnput}
+                    multiline={true}
+                    style={İnputStyle.contextİnptut}
                 />
                 <Button title="FOTO ÇEK" onPress={takePhoto}></Button>
                 <View style={styles.container}>

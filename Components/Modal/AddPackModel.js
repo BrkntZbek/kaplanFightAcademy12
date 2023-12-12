@@ -25,19 +25,24 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
     }, []);
    
     const addPackage = async () => {
+      const currentDate = new Date();
+      const currentDay = currentDate.getDate();
+      const currentMonth = currentDate.getMonth() + 1; // Aylar 0'dan başlar, bu nedenle +1 eklenir
+      const currentYear = currentDate.getFullYear();
+      const formattedDate = `${currentDay}.${currentMonth}.${currentYear}`;
+    
       try {
-        // Firebase Authentication ile kullanıcı bilgilerini al
-        // Kullanıcı oturum açmışsa
         const PackagesSold = firestore.collection('PackagesSold');
         const UserUpdate = doc(firestore, 'userss', selectedStudent.id);
-        
     
-        // Firestore'a paket eklemek için örnek bir belge
+        const packageDurationInMonths = selectedPackageId.paketSuresi;
+        console.log(packageDurationInMonths)
+        const packageStartDate = new Date(currentYear, currentMonth - 1, currentDay);
+        const packageEndDate = new Date(packageStartDate);
+        packageEndDate.setMonth(packageEndDate.getMonth() + packageDurationInMonths);
+        
         const newPackageRef = doc(PackagesSold);
     
-       
-    
-        // Belgeyi ekleyin ve referansını alın Burada ayrıca Userss deposuna paketID sini eklemek gerekiyor.
         await setDoc(newPackageRef, {
           SatilanPaket: selectedPackageId.paketTuru,
           SatilanKisiID: selectedStudent.id,
@@ -45,24 +50,22 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
           Fiyat: selectedPackageId.paketFiyati,
           DersSayisi: selectedPackageId.dersSayisi,
           KalanDers: selectedPackageId.dersSayisi,
-          aktif: 'Aktif'
+          aktif: 'Aktif',
+          satisTarihi: formattedDate,
+          paketBitisTarihi: `${packageEndDate.getDate()}.${packageEndDate.getMonth() + 1}.${packageEndDate.getFullYear()}`,
         });
     
-        // Eklenen belgenin ID'sini alın
         const newPackageId = newPackageRef.id;
     
-        // Eklenen belgenin ID'sini verilere ekleyin (bu adımda daha önce eklenmiş bir belgeye değer ekliyoruz)
         await updateDoc(newPackageRef, {
           belgeId: newPackageId
         });
     
-        // Kullanıcının belgesini güncelle ve paketID'yi ekleyin
         await updateDoc(UserUpdate, {
           paketId: newPackageId
         });
     
-       
-       handleCloseModal();
+        handleCloseModal();
       } catch (error) {
         console.error('Hata:', error);
       }
@@ -70,18 +73,10 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
   
     const handlePackagePress = (selectedPackageId) => {
         setSelectedPackageId(selectedPackageId);
-      
-       
-      
         // selectedPackageId değeri tanımlıysa ve kalanDers özelliği varsa yazdır
         if (selectedPackageId && selectedPackageId.kalanDers !== undefined) {
-         
         } else {
-          
         }
-      
-        
-      
         // Diğer işlemleri buraya ekleyebilirsiniz
       };
   
