@@ -12,7 +12,7 @@ export default function DerslerScreen() {
     const [selectLesson,setSelectLesson] = useState([])
     useEffect(() => {
       fetchLessons(SetLessons);
-    }, [selectLesson,fetchLessons,SetLessons]);
+    }, [selectLesson,SetLessons]);
     
     const handleCloseModal = () => {
       setHandleLessonsVisible(false);
@@ -20,8 +20,6 @@ export default function DerslerScreen() {
     const handleLessonPress = (item) =>{
       setSelectLesson(item);
       setHandleLessonsVisible(true)
-      console.log(handleLessonsVisible)
-      console.log(item)
     }
     const today = async () => {
       await todaysLessons(SetLessons);

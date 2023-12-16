@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import İnputStyle from "../../Styles/İnputStyle"
 import Header from "../Header/Header"
 import { addBlog, listFiles, uploadToFirebase, uploadImage } from '../../firebase'
-
+import buttonStyle from '../../Styles/ButtonStyle';
 export default function AddBlogPage() {
     const [title, setTitle] = useState("")
     const [contents, setContents] = useState("")
@@ -97,16 +97,27 @@ export default function AddBlogPage() {
                     multiline={true}
                     style={İnputStyle.contextİnptut}
                 />
-                <Button title="FOTO ÇEK" onPress={takePhoto}></Button>
+               
+              
                 <View style={styles.container}>
                 {image && <Image source={{uri: image}} style={{width: 170 , height: 200}}/>}
-                <Button title='Select Image' onPress={pickImage} />
-                {!uploading ? <Button title='Upload Image' onPress={() => uploadImage(image, setImage, setUploading)} />: <ActivityIndicator size={'small'} color='black' />}
+                <TouchableOpacity style={styles.button} onPress={takePhoto}  >
+               <Text style={buttonStyle.contentButtonLesson}>Fotoğraf Çek</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={pickImage}  >
+               <Text style={buttonStyle.contentButtonLesson}>Fotoğraf Seç</Text>
+            </TouchableOpacity>
+                {!uploading ? <TouchableOpacity style={styles.button} onPress={() => uploadImage(image, setImage, setUploading)}  >
+               <Text style={buttonStyle.contentButtonLesson}>Fotoğrafı Yükle</Text>
+            </TouchableOpacity>: <ActivityIndicator size={'small'} color='black' />}
                 </View>
+               
             </View>
             <TouchableOpacity onPress={Blog}>
-                <Text>Ekle</Text>
+                <Text style={buttonStyle.contentButtonLesson}>Ekle</Text>
             </TouchableOpacity>
+            
+
         </View>
     )
 }
@@ -120,6 +131,11 @@ const styles = StyleSheet.create({
     },
     addBlogContent:{
         width:'80%',
-
+        
+    },
+    container:{
+      alignItems:'center',
+      width:'100%',
+      
     }
 })

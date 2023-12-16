@@ -36,11 +36,10 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
         const UserUpdate = doc(firestore, 'userss', selectedStudent.id);
     
         const packageDurationInMonths = selectedPackageId.paketSuresi;
-        console.log(packageDurationInMonths)
+       
         const packageStartDate = new Date(currentYear, currentMonth - 1, currentDay);
         const packageEndDate = new Date(packageStartDate);
         packageEndDate.setMonth(packageEndDate.getMonth() + packageDurationInMonths);
-        
         const newPackageRef = doc(PackagesSold);
     
         await setDoc(newPackageRef, {
@@ -56,7 +55,6 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
         });
     
         const newPackageId = newPackageRef.id;
-    
         await updateDoc(newPackageRef, {
           belgeId: newPackageId
         });

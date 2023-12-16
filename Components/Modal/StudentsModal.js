@@ -17,7 +17,7 @@ export default function StudentsModal({
   const [lessonModalVisible,setLessonModalVisible] = useState(false);
   const [packageInfo, setPackageInfo] = useState(null)
 
-  console.log(packageInfo)
+
  
   const toastRef = useRef(); 
   useEffect(()=>{
@@ -35,9 +35,6 @@ export default function StudentsModal({
         return;
       }
         setLessonModalVisible(true);
-        console.log('lesson modal açıldı')
-        console.log(lessonModalVisible)
-      
     }
 
   const handleCloseAddModal = () => {
@@ -60,7 +57,7 @@ export default function StudentsModal({
   };
   
   
-   console.log()
+   
   return (
     <Modal
       transparent={true}

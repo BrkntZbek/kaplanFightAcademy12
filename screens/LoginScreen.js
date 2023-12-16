@@ -15,12 +15,6 @@ export default function LoginScreen() {
   const [size,setSize] = useState('');
   const [weight,setWeight] = useState('');
   const navigation=useNavigation();
-
-
-
-
-
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { auth, firestore } from '../firebase';
 import { fetchPackageInfo } from '../firebase';
-
+import Bmı from '../Components/StudentScreen/Bmı';
 import LoadingData from '../Components/Loading/LoadingData';
+import ButtonContainer from '../Components/StudentScreen/ButtonContainer';
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
@@ -16,7 +17,7 @@ const UserProfile = () => {
         const user = auth.currentUser;
         if (user) {
           const userId = user.uid;
-          console.log('ID', userId);
+       
 
           const userRef = firestore.collection('userss').doc(userId);
           const selectedStudentSnapshot = await firestore.collection('userss').where('id', '==', userId).get();
@@ -61,29 +62,26 @@ const UserProfile = () => {
 
   return (
     <View style={styles.KullaniciContainer}>
-     
+    
+        <ButtonContainer/>
+      
     <View style={styles.infoContainer}>
       <View style={styles.textContainer}>
         <View style={styles.nameContainer}>
       <Text style={styles.nameText}>{userData.name}</Text>
       </View>
         <View style={styles.info}>
-        <Text style={styles.kkText}>Email: {userData.email}</Text>
-        <Text style={styles.kkText}>Telefon: {userData.telefon}</Text>
-        <Text style={{fontSize:20,fontWeight:'bold', textDecorationLine: 'underline'}}>Paketim</Text>
-        <Text style={{fontSize:15}}>{packageInfo.SatilanPaket}</Text>
-        <Text style={{fontSize:15}}>{packageInfo.KalanDers}</Text>
-        <Text style={{fontSize:15}}>{packageInfo.Fiyat}</Text>
-        <Text style={{fontSize:15}}>tarih</Text>
-        
-        <Text style={styles.kkText}>Gelecek Antrenman</Text>
-        <Text style={styles.kkText}>Antrenman Geçmişi</Text>
-        
+            <Text style={{fontSize:20,fontWeight:'bold', textDecorationLine: 'underline'}}>Paket Bilgileri</Text>
+            <Text style={{fontSize:15}}>{packageInfo.SatilanPaket}</Text>
+            <Text style={{fontSize:15}}>Kalan Ders: {packageInfo.KalanDers}</Text>
+            <Text style={{fontSize:15}}>Son kullanım tarihi: {packageInfo.paketBitisTarihi}</Text>
         </View>
+       
         </View>
-        <View style={styles.altContainer}>
-        <Text style={styles.kkText}>Antrenman Geçmişi</Text>
+        <View style={styles.endeksCont}>
+            <Bmı height={userData.boy} weight={userData.kilo}/>
         </View>
+       
     </View>
   </View>
   );
@@ -94,11 +92,11 @@ export default UserProfile;
 const styles = StyleSheet.create({
   KullaniciContainer: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#DFE8D1',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-   
+    flexDirection: 'row',
   },
+  
  
   nameContainer:{
     borderBottomWidth:2,
@@ -113,24 +111,22 @@ const styles = StyleSheet.create({
       
   },
   info:{
-   
-    height:'90%',
+    height:'65%',
     width:'100%',
     justifyContent:'start',
-    marginTop:40,
+    marginTop:10,
     alignItems:'center',
     borderBottomWidth:2,
-    borderColor:'black'
+    borderColor:'black',
   },
   textContainer: {
-   height:'80%',
-   padding:20,
+   height:'30%',
+   padding:30,
    
-   margin:10,
    borderTopLeftRadius:90,
-  
    alignItems:'center',
    justifyContent:'start',
+   
   },
   kkText: {
     color: 'black',
@@ -143,12 +139,13 @@ const styles = StyleSheet.create({
     
   },
   infoContainer:{
-    backgroundColor: 'rgba(255, 255, 0, 0.7)',
-    width:'80%',
+    backgroundColor: '#FFDF00',
+    width:'70%',
     height:'95%',
     borderTopLeftRadius:90,
     borderBottomLeftRadius:50,
-   
-    justifyContent:'flex-start',
+    borderWidth:1,
+    borderColor:'black',
+      justifyContent:'flex-start',
   }
 });

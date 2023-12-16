@@ -5,8 +5,6 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
-  listAll,
-  images,
 } from "firebase/storage";
 import { updateDoc } from 'firebase/firestore'; // Değişiklik burada
 import 'firebase/compat/firestore'; // Bu satırı ekleyin
@@ -55,7 +53,6 @@ const fetchLessons = async (SetLessons) => {
     const lessonsCollection = await firestore.collection('Lessons').get();
     const lessonsData = lessonsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     SetLessons(lessonsData);
-    console.log(lessonsData)
   } catch (error) {
     // Hata yönetimi burada yapılabilir
     console.error('Error fetching lessons:', error);
@@ -91,7 +88,7 @@ const fetchPackageInfo = async (selectedStudent, setPackageInfo) => {
       setPackageInfo(null);
       return;
     }
-     console.log('ss',selectedStudent)
+    
     const packageSnapshot = await firestore
       .collection("PackagesSold")
       .where("belgeId", "==", selectedStudent.data().paketId)
@@ -100,10 +97,8 @@ const fetchPackageInfo = async (selectedStudent, setPackageInfo) => {
 
     if (!packageSnapshot.empty) {
       const packageData = packageSnapshot.docs[0].data();
-      console.log('packageData:', packageData);
       setPackageInfo(packageData);
     } else {
-      console.log('Paket bulunamadı');
       setPackageInfo(null);
     }
   } catch (error) {
@@ -117,12 +112,9 @@ const updateStudentsLesson = async (selectedStudent) =>{
 }
 
 const updateStudentTeacher = async (selectedStudent) => {
-  console.log(selectedStudent.yetki)
   try {
     if (selectedStudent.yetki !== "Hoca") {
       await firestore.collection('userss').doc(selectedStudent.id).update({ yetki: 'Hoca' });
-      console.log('Hocalık yetkisi güncellendi.');
-      console.log('Yeni Yetki: ',selectedStudent.yetki)
       const teachersCollection = firestore.collection('Teachers');
       await setDoc(doc(teachersCollection,selectedStudent.id),{
         id:selectedStudent.id,
@@ -297,8 +289,7 @@ const weeklyLessons = async (setLessons) => {
     // Tarihleri belirli bir formatta oluştur
     const formattedStartOfWeek = `${startOfWeek.getDate()}.${startOfWeek.getMonth() + 1}.${startOfWeek.getFullYear()}`;
     const formattedEndOfWeek = `${endOfWeek.getDate()}.${endOfWeek.getMonth() + 1}.${endOfWeek.getFullYear()}`;
-     console.log('İlk TarihÇ ',formattedStartOfWeek)
-     console.log('son tarih: ',formattedEndOfWeek)
+     
     const weeklyLessonsSnapshot = await firestore
       .collection("Lessons")
       .where("tarih", ">=", formattedStartOfWeek)
@@ -310,7 +301,7 @@ const weeklyLessons = async (setLessons) => {
       const lessons = weeklyLessonsSnapshot.docs.map(doc => doc.data());
       setLessons(lessons);
     } else {
-      console.log('Haftalık ders paketi bulunamadı');
+     
       setLessons([]);
     }
   } catch (error) {
@@ -340,7 +331,7 @@ const monthlyLessons = async (setLessons) => {
       const lessons = monthlyLessonsSnapshot.docs.map(doc => doc.data());
       setLessons(lessons);
     } else {
-      console.log('Bu ayın ders paketi bulunamadı');
+     
       setLessons([]);
     }
   } catch (error) {

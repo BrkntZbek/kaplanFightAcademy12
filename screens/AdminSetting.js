@@ -23,6 +23,9 @@ export default function AdminSetting() {
   const addTeacherPage = (firestore) =>{
     navigation.navigate('Hoca Ekle');
   }
+  const muhasebe = (firestore) =>{
+    navigation.navigate('Muhasebe');
+  }
 
   const addBlogPage = (firestore) =>{
     navigation.navigate('Blog Ekle'); 
@@ -93,7 +96,7 @@ export default function AdminSetting() {
             <TouchableOpacity onPress={openModal} >
               <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Gelir Ekle</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={openModal} >
+            <TouchableOpacity onPress={muhasebe} >
               <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Genel Muhasebe</Text>
             </TouchableOpacity>
             
