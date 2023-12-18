@@ -6,13 +6,13 @@ export default function Bottom() {
     <View style={styles.container}>
       <View style={styles.buttons}>
           <TouchableOpacity style={styles.button}  >
-            <Text style={buttonStyle.contentButtonLesson}>Tür</Text>
+            <Text style={buttonStyle.normalButton}>Tür</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}  >
-            <Text style={buttonStyle.contentButtonLesson}>Açıklama</Text>
+            <Text style={buttonStyle.normalButton}>Açıklama</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}  >
-            <Text style={buttonStyle.contentButtonLesson}>Fiyat</Text>
+            <Text style={buttonStyle.normalButton}>Fiyat</Text>
           </TouchableOpacity>
       </View>
     </View>
@@ -21,7 +21,7 @@ export default function Bottom() {
 
 const styles = StyleSheet.create({
     container:{
-       backgroundColor:'gray',
+       backgroundColor:'#1A1A1A',
        borderTopStartRadius:10,
        borderTopEndRadius:10,
        height:'45%'

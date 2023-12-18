@@ -14,6 +14,7 @@ import AddTeacherModal from './Components/AdminScreen/AddTeacherModal';
 import AddBlogPage from './Components/AdminScreen/AddBlogPage';
 import BlogPages from './Components/Home/BlogPages';
 import MuhasebeScreen from './screens/MuhasebeScreen';
+import PaketSistemi from './screens/PaketSistemi';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
       <Stack.Screen  options={{headerShown:false}} name="Blog Ekle" component={AddBlogPage} />
       <Stack.Screen  options={{headerShown:false}} name="Blog Page" component={BlogPages} />
       <Stack.Screen  options={{headerShown:false}} name="Muhasebe" component={MuhasebeScreen} />
+      <Stack.Screen  options={{headerShown:false}} name="Paket Sistemi" component={PaketSistemi} />
      
    
    

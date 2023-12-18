@@ -9,7 +9,7 @@ import {
 import { updateDoc } from 'firebase/firestore'; // Değişiklik burada
 import 'firebase/compat/firestore'; // Bu satırı ekleyin
 import 'firebase/compat/storage'; // Bu satırı ekleyin
-import { doc, setDoc } from '@firebase/firestore';
+import { addDoc, doc, setDoc } from '@firebase/firestore';
 
 
 
@@ -31,6 +31,18 @@ const fetchStudents = async (setStudents) => {
     console.error('Error fetching students:', error);
   }
 };
+
+const fetchIncome = async(setIncome) =>{
+
+  try {
+    const IncomeCollection = await firestore.collection('Muhasebe').get();
+    const incomeData = IncomeCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+setIncome(incomeData);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+  }
+
+}
 
 
 
@@ -171,6 +183,30 @@ const addBlog = async (title, contents, image) => {
   });
 };
 
+const addIncome = async (aciklama, fiyat, durum) => {
+  try {
+    const formattedDate = new Date().toLocaleDateString('tr-TR', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+    console.log(aciklama, fiyat, durum);
+
+    const incomeCollection = firestore.collection('Muhasebe');
+    const incomeDoc = doc(incomeCollection)
+     await setDoc(incomeDoc, {
+      id:incomeDoc.id,
+      aciklama: aciklama,
+      fiyat: fiyat,
+      tarih: formattedDate,
+      durum: durum,
+    });
+
+    console.log('Yeni eklenen gelirin ID:');
+  } catch (error) {
+    console.error('Error adding income:', error);
+  }
+};
 const listFiles = async (setFiles) => {
   try {
     const blogCollection = await firestore.collection('Blog').get();
@@ -341,6 +377,8 @@ const monthlyLessons = async (setLessons) => {
   }
 };
 
+
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -348,4 +386,4 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,fetchTeacher,monthlyLessons,weeklyLessons,addBlog,todaysLessons,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson, uploadToFirebase, listFiles, uploadImage };
+export { auth, firestore,storage,fetchTeacher,fetchIncome,addIncome,monthlyLessons,weeklyLessons,addBlog,todaysLessons,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson, uploadToFirebase, listFiles, uploadImage };

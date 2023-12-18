@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View,TouchableOpacity,TextInput,Modal, FlatList } from 'react-native'
-import React, { useState,useEffect} from 'react';
+import React, { useState} from 'react';
 import { doc, setDoc } from '@firebase/firestore';
 import { firestore } from '../firebase';
 import { useNavigation } from '@react-navigation/native';
+import buttonstyle from '../Styles/ButtonStyle'
 export default function AdminSetting() {
-    const [packageList, setPackageList] = useState([]);
+
     const [modalVisible, setModalVisible] = useState(false);
     const [paketTuru, setPaketTuru] = useState('');
     const [paketFiyati, setPaketFiyati] = useState('');
@@ -26,6 +27,9 @@ export default function AdminSetting() {
   const muhasebe = (firestore) =>{
     navigation.navigate('Muhasebe');
   }
+  const paketSistemi = (firestore) =>{
+    navigation.navigate('Paket Sistemi')
+  }
 
   const addBlogPage = (firestore) =>{
     navigation.navigate('Blog Ekle'); 
@@ -44,19 +48,7 @@ export default function AdminSetting() {
       console.log('Yeni Paket Eklendi',paketTuru);
   }
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const packageCollection = await firestore.collection('LessonPackage').get();
-        const packageData = packageCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setPackageList(packageData);
-      } catch (error) {
-        console.error('Error fetching students:', error);
-      }
-    };
 
-    fetchStudents();
-  }, []);
   const formatMoney = (amount) => {
     const formatter = new Intl.NumberFormat('tr-TR', {
       style: 'currency',
@@ -72,50 +64,33 @@ export default function AdminSetting() {
   return (
     <View style={styles.AdminSetting}>
         <View style={styles.paketler}>
-            <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paket Sistemi</Text>
-           <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5}} >Paket Ekle</Text>
+          
+           <TouchableOpacity onPress={paketSistemi}>
+              <Text style={buttonstyle.contentButton} >Paket Sistemi</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Paket Güncelle</Text>
+            <TouchableOpacity onPress={muhasebe}>
+              <Text style={buttonstyle.contentButton} >Muhasebe</Text>
             </TouchableOpacity>
-           
             <TouchableOpacity onPress={addTeacherPage} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Yetkiler Ve Kullanıcılar</Text>
+              <Text style={buttonstyle.contentButton} >Yetkiler Ve Kullanıcılar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={addBlogPage} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Blog Ekle</Text>
+              <Text style={buttonstyle.contentButton} >Blog Ekle</Text>
             </TouchableOpacity>
-            
-        </View>
-        <View style={styles.paketler}>
-            <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Muhasebe</Text>
-           <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Masraf Ekle</Text>
+            <TouchableOpacity onPress={addBlogPage} >
+              <Text style={buttonstyle.contentButton} >Hocalar</Text>
             </TouchableOpacity>
+
             <TouchableOpacity onPress={openModal} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Gelir Ekle</Text>
+              <Text  style={buttonstyle.contentButton} >İstatislik</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={muhasebe} >
-              <Text style={{fontWeight:'bold', color:'#ffdf00', fontSize:18,borderWidth:1,borderRadius:10,padding:5,}} >Genel Muhasebe</Text>
-            </TouchableOpacity>
+           
+            
+            
             
         </View>
-        <View style={styles.paketler}>
-             <Text style={{color:'#ffdf00',fontWeight:'bold',fontSize:20,textDecorationLine:'underline'}}>Paketler</Text>
-             <FlatList
-        data={packageList}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.packageList}>
-            <Text style={styles.packageİnfo}>{item.paketTuru}</Text>
-            <Text style={styles.packageİnfo}>Ders Sayisi: {item.dersSayisi}</Text>
-            <Text style={styles.packageİnfo}>Paket Fiyatı: {formatMoney(item.paketFiyati)}</Text>
-            {/* Diğer veri özelliklerini burada listeleyin */}
-          </View>
-        )}
-      />
-        </View>
+        
+        
 
         <Modal
         animationType="slide"
@@ -153,46 +128,26 @@ export default function AdminSetting() {
 }
 const styles = StyleSheet.create({
     AdminSetting:{
-     
+       
         flex:1,
         backgroundColor:'black',
         alignItems:'center',
     },
-    packageList:{
-      borderWidth:1,
-      borderColor:'#ffdf00',
-      borderRadius:20,
-      width:200,
-      alignItems:'center',
-      marginTop:20,
-      marginBottom:10,
-    },
-    packageİnfo:{
-       color:'#ffdf00'
-    },
-    paketler:{
-        borderWidth:1,
-        borderColor:'#ffdf00',
-        borderRadius:20,
-        padding:15,
-        width:'80%',
-        height:'auto',
-        alignItems:'center',
-        marginTop:50
-    },
+    
     input:{
         backgroundColor:'#ffdf00',
         paddingHorizontal:15,
         paddingVertical:10,
-        marginBottom:5,
+        
         borderRadius:20,
         color:'black',
         marginTop:15,
         width:'70%',
-        fontWeight:'bold'
+        fontWeight:'bold',
+       
      },
     modalContainer:{
-        height: '90%',
+        height: '100%',
         flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -206,8 +161,19 @@ const styles = StyleSheet.create({
         backgroundColor:'black',
         borderRadius: 20,
         width: '80%', // Modal'ın genişliği
+       
         
     },
+    paketler:{
+      padding:15,
+      width:'80%',
+      height:'auto',
+      alignItems:'center',
+      marginTop:50,
+      backgroundColor:'#1a1a1a',
+      borderRadius:10,
+      
+  },
     modalText:{
         color:'#ffdf00',
         fontWeight:'bold',

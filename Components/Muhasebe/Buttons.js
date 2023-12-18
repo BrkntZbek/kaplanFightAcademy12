@@ -5,13 +5,13 @@ export default function Buttons() {
   return (
     <View style={styles.Buttons}>
           <TouchableOpacity style={styles.button}  >
-            <Text style={buttonStyle.contentButtonLesson}>Bu Hafta</Text>
+            <Text style={buttonStyle.contentButton}>Bu Hafta</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}  >
-            <Text style={buttonStyle.contentButtonLesson}>Bu Ay</Text>
+            <Text style={buttonStyle.contentButton}>Bu Ay</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}  >
-            <Text style={buttonStyle.contentButtonLesson}>Tüm</Text>
+            <Text style={buttonStyle.contentButton}>Tüm</Text>
           </TouchableOpacity>
     </View>
   )
@@ -22,10 +22,11 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         justifyContent:'center',
-        borderWidth:1,
-        borderRadius:10,
+        borderWidth:0.3,
+        borderRadius:20,
        margin:5,
-      backgroundColor:'#FFE43D',
+      backgroundColor:'#1A1A1A',
+      borderColor:'#E8E8D1'
     },
     button:{
         marginHorizontal:30,

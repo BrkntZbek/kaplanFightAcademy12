@@ -23,19 +23,21 @@ export default function Header() {
 
 const styles = StyleSheet.create({
     headContainer:{
-        
-        borderRadius:15,
-        backgroundColor:'gray',
+        marginTop:-5,
+        borderRadius:5,
+        backgroundColor:'#1A1A1A',
         width:'100%',
         height:'10%',
-        paddingTop:25,
         justifyContent: "center",
+        borderBottomWidth:0.3,
+        borderColor:'#E8E8D1'
       },
       button:{
         fontWeight: "bold",
-        color: "black",
+        color: "#E8E8D1",
         fontSize: 18,
         padding: 5,
+        marginTop:50
       },
       img:{
         width:50,

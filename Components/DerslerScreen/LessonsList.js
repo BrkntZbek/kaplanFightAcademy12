@@ -17,16 +17,25 @@ export default function LessonsList({lessons,handleLessonPress}) {
         style={styles.touchableContainer}
       >
         <View style={styles.FlatList}>
-       
-          <Text style={{fontSize:20,fontWeight:'bold',color:'#3B5119'}}>{` ${item.ogrenci}`}</Text>
+          <View style={styles.container}>
+          <View style={{alignItems:'center'}}>
+          <Text style={{fontSize:20,fontWeight:'bold',color:'#1A1A1A'}}>{` ${item.ogrenci}`}</Text>
+       </View>
+          
           <View style={styles.lessonsContent}>
              <Text style={{width:'35%'}}>{` ${item.hoca}`}</Text>
              <Text style={styles.text}>{` ${item.tarih}`}</Text>
              <Text style={styles.text}>{` ${item.saat}`}</Text>
-             <Text style={{ color: item.durum === "İşlenmedi" ? '#BF3624' : item.durum === "İptal" ? 'black' : item.durum === "İşlendi" ? "green":"black", marginLeft: 20 }}>{` ${item.durum}`}</Text>
+           
+            
           </View>
-          
+          </View>
+      
+          <View style={{alignItems:'flex-start',borderLeftWidth:2,width:'20%',}}>
+              <Text style={{marginLeft:10, color: item.durum === "İşlenmedi" ? '#BF3624' : item.durum === "İptal" ? 'black' : item.durum === "İşlendi" ? "green":"black", marginLeft: 20 }}>{` ${item.durum}`}</Text>
         </View>
+        </View>
+       
       </TouchableOpacity>
     )}
   />
@@ -44,6 +53,10 @@ const styles = StyleSheet.create({
         backgroundColor:'black',
         paddingTop:15
       },
+      container:{
+       width:'80%',
+
+      },
        
   FlatList:{
     borderWidth: 2,
@@ -51,21 +64,23 @@ const styles = StyleSheet.create({
     margin:2,
     borderWidth:1,
     borderColor:'#67BA46',
-    backgroundColor:'#E8E5D1',
+    backgroundColor:'#E8E8D1',
     width: '100%', // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
     height: 'auto',
-    justifyContent: 'center',
-    alignItems: 'center', // Yukarıdan aşağıya sıralamak için
+     flexDirection: 'row', // Öğeleri yatayda sırala
+    justifyContent: 'center', // Yatayda ortala
+    alignItems: 'center', // Dikeyde ortal
   },
   lessonsContent:{
     flexDirection:'row',
-   
     padding:3,
     paddingRight:5,
-    width:'100%',
-    paddingTop:10
+    
+    paddingTop:10,
+    
+
   },
   text:{
-    width:'20%'
+    width:'40%'
   },
 })

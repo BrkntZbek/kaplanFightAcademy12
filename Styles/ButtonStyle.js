@@ -1,6 +1,6 @@
 const buttonStyle ={
     loginButton:{
-        backgroundColor:'yellow',
+        backgroundColor:'#FFDF00',
         paddingHorizontal:15,
         paddingVertical:10,
         marginBottom:5,
@@ -10,8 +10,8 @@ const buttonStyle ={
      },
      contentButton:{
         fontWeight: "bold",
-        color: "yellow",
-        fontSize: 18,
+        color: "#FFDF00",
+        fontSize: 20,
         padding:9
         
         
@@ -23,6 +23,11 @@ const buttonStyle ={
       padding:9,
     
    },
-     
+   normalButton:{
+      fontSize: 18,
+      padding:9,
+      
+      color: "#E8E8D1",
+   }
 }
 export default buttonStyle;
