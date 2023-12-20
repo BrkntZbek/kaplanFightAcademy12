@@ -9,7 +9,7 @@ import {
 import { updateDoc } from 'firebase/firestore'; // Değişiklik burada
 import 'firebase/compat/firestore'; // Bu satırı ekleyin
 import 'firebase/compat/storage'; // Bu satırı ekleyin
-import { addDoc, doc, setDoc } from '@firebase/firestore';
+import { Timestamp, doc, setDoc } from '@firebase/firestore';
 
 
 
@@ -47,27 +47,35 @@ setIncome(incomeData);
 
 
 const cancelledLesson = async (lesson) => {
-  const fetchPackageOwner = await firestore.collection('userss')
-    .where("id", "==", lesson.ogrenciId)
-    .get();
+  try {
+    const fetchPackageOwner = await firestore.collection('userss')
+      .where("id", "==", lesson.ogrenciId)
+      .get();
 
-  const userDoc = fetchPackageOwner.docs[0];
+    if (fetchPackageOwner.docs.length > 0) {
+      const userDoc = fetchPackageOwner.docs[0];
+      const totalLesson = userDoc.data().toplamDers || 0; // Mevcut değeri alır (varsayılan olarak 0)
 
-  if (userDoc) {
-    const totalLesson = userDoc.data().toplamDers || 0; // Mevcut değeri alır (varsayılan olarak 0)
-    await updateDoc(doc(firestore, 'Lessons', lesson.id), { durum: "İptal" });
-    await updateDoc(doc(firestore, 'userss', userDoc.id), { toplamDers: totalLesson + 1 });
+      await updateDoc(doc(firestore, 'Lessons', lesson.id), { durum: "İptal" });
+      await updateDoc(doc(firestore, 'userss', userDoc.id), { toplamDers: totalLesson + 1 });
+    } else {
+      console.error('User not found with id:', lesson.ogrenciId);
+     
+    }
+  } catch (error) {
+    console.error('Error in cancelledLesson:', error);
+   
   }
 };
 
-const fetchLessons = async (SetLessons) => {
+const fetchLessons = async (setLessons) => {
   try {
     const lessonsCollection = await firestore.collection('Lessons').get();
-    const lessonsData = lessonsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    SetLessons(lessonsData);
+    const lessonData = lessonsCollection.docs.map(doc => ({id:doc.id,...doc.data()}))
+    setLessons(lessonData)
   } catch (error) {
-    // Hata yönetimi burada yapılabilir
     console.error('Error fetching lessons:', error);
+    throw error; // Hata durumunda hatayı yukarı iletebilirsiniz
   }
 };
 
@@ -162,12 +170,14 @@ const updateStudentTeacher = async (selectedStudent) => {
   }
  }
 
-const teachALesson = async (lesson,lessonDetail) =>{
-   if(lesson)
-   {
-    await updateDoc(doc(firestore,'Lessons',lesson.id),{durum:"İşlendi",ayrinti:lessonDetail});
-   }
-}
+ const teachALesson = async (lesson, lessonDetail) => {
+ 
+  if (lesson && lessonDetail) {
+    await updateDoc(doc(firestore, 'Lessons', lesson.id), { durum: "İşlendi", ayrinti: lessonDetail });
+  } else {
+    console.error('Invalid lesson or lessonDetail:', lesson, lessonDetail);
+  }
+};
 
 const addBlog = async (title, contents, image) => {
   const blogCollection = firestore.collection('Blog');
@@ -185,28 +195,27 @@ const addBlog = async (title, contents, image) => {
 
 const addIncome = async (aciklama, fiyat, durum) => {
   try {
-    const formattedDate = new Date().toLocaleDateString('tr-TR', {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-    });
+    const formattedDate = Timestamp.fromDate(new Date());
+
     console.log(aciklama, fiyat, durum);
 
     const incomeCollection = firestore.collection('Muhasebe');
-    const incomeDoc = doc(incomeCollection)
-     await setDoc(incomeDoc, {
-      id:incomeDoc.id,
+    const incomeDoc = doc(incomeCollection);
+
+    await setDoc(incomeDoc, {
+      id: incomeDoc.id,
       aciklama: aciklama,
       fiyat: fiyat,
       tarih: formattedDate,
       durum: durum,
     });
 
-    console.log('Yeni eklenen gelirin ID:');
+    console.log('Yeni eklenen gelirin ID:',incomeDoc.id);
   } catch (error) {
     console.error('Error adding income:', error);
   }
 };
+
 const listFiles = async (setFiles) => {
   try {
     const blogCollection = await firestore.collection('Blog').get();
@@ -283,27 +292,37 @@ const todaysLessons = async (setLessons) => {
   try {
     const currentDate = new Date();
     const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth() + 1; // Aylar 0'dan başlar, bu nedenle +1 eklenir
+    const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
+
     // Tarihi belirli bir formatta oluştur
     const formattedDate = `${currentDay}.${currentMonth}.${currentYear}`;
-  
-    const todaysLessonsSnapsShot = await firestore
-      .collection("Lessons")
-      .where("tarih", "==", formattedDate)
-      .get();
-  
-    if (!todaysLessonsSnapsShot.empty) {
-      // Belge varsa
-      const lessons = todaysLessonsSnapsShot.docs.map(doc => doc.data());
-      setLessons(lessons);
+
+    if (formattedDate) {
+      const lessonsCollection = firestore.collection("Lessons");
+      const todaysLessonsSnapsShot = await lessonsCollection
+        .where("tarih", "==", formattedDate)
+        .get();
+
+      if (!todaysLessonsSnapsShot.empty) {
+        const lessons = todaysLessonsSnapsShot.docs.map(doc => doc.data());
+        setLessons(lessons);
+      } else {
+        console.log('Paket bulunamadı');
+        setLessons([]);
+      }
     } else {
-      console.log('Paket bulunamadı');
+      console.log('formattedDate değeri undefined veya null.');
       setLessons([]);
     }
   } catch (error) {
-    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
-    console.error('Hata:', error);
+    console.error('Hata oluştu:', error);
+
+    // Hatanın içeriğini daha detaylı kontrol etmek için
+    if (error.code === 'invalid-argument') {
+      console.error('Geçersiz argüman hatası:', error.message);
+    }
+
     setLessons(null);
   }
 };
@@ -317,15 +336,22 @@ const getWeekRange = (date) => {
   return { startOfWeek, endOfWeek };
 };
 
+const getFormattedDate = (date) => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};
+
 const weeklyLessons = async (setLessons) => {
   try {
     const currentDate = new Date();
     const { startOfWeek, endOfWeek } = getWeekRange(currentDate);
 
-    // Tarihleri belirli bir formatta oluştur
-    const formattedStartOfWeek = `${startOfWeek.getDate()}.${startOfWeek.getMonth() + 1}.${startOfWeek.getFullYear()}`;
-    const formattedEndOfWeek = `${endOfWeek.getDate()}.${endOfWeek.getMonth() + 1}.${endOfWeek.getFullYear()}`;
-     
+    // Firestore tarih damgasını alınan tarih formatına çevirin
+    const formattedStartOfWeek = getFormattedDate(startOfWeek);
+    const formattedEndOfWeek = getFormattedDate(endOfWeek);
+
     const weeklyLessonsSnapshot = await firestore
       .collection("Lessons")
       .where("tarih", ">=", formattedStartOfWeek)
@@ -337,7 +363,6 @@ const weeklyLessons = async (setLessons) => {
       const lessons = weeklyLessonsSnapshot.docs.map(doc => doc.data());
       setLessons(lessons);
     } else {
-     
       setLessons([]);
     }
   } catch (error) {
@@ -352,9 +377,9 @@ const monthlyLessons = async (setLessons) => {
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-    // Tarihleri belirli bir formatta oluştur
-    const formattedStartOfMonth = `${startOfMonth.getDate()}.${startOfMonth.getMonth() + 1}.${startOfMonth.getFullYear()}`;
-    const formattedEndOfMonth = `${endOfMonth.getDate()}.${endOfMonth.getMonth() + 1}.${endOfMonth.getFullYear()}`;
+    // Firestore tarih damgasını alınan tarih formatına çevirin
+    const formattedStartOfMonth = getFormattedDate(startOfMonth);
+    const formattedEndOfMonth = getFormattedDate(endOfMonth);
 
     const monthlyLessonsSnapshot = await firestore
       .collection("Lessons")
@@ -367,7 +392,6 @@ const monthlyLessons = async (setLessons) => {
       const lessons = monthlyLessonsSnapshot.docs.map(doc => doc.data());
       setLessons(lessons);
     } else {
-     
       setLessons([]);
     }
   } catch (error) {

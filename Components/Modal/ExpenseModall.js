@@ -4,14 +4,14 @@ import İnputStyle from '../../Styles/İnputStyle';
 import buttonStyle from '../../Styles/ButtonStyle';
 import { addIncome } from '../../firebase';
 
-export default function IncomeModal({ isVisible, handleCloseAddModal }) {
+export default function ExpenseModal({ isVisible, handleCloseAddModal }) {
   const [aciklama, setAciklama] = useState(null);
   const [fiyat, setFiyat] = useState(0);
   const add = () => {
     // Burada durum değeri boş değilse ve diğer değişkenleriniz (aciklama, fiyat) de uygunsa işlemi gerçekleştir
     if (aciklama && fiyat !== null) {
       // isGelirChecked true ise durumu "Gelir" olarak ayarla, değilse "Gider" olarak ayarla
-      const updatedDurum = "Gelir";
+      const updatedDurum = "Gider";
       
       console.log('income: ', updatedDurum, aciklama, fiyat);
       addIncome(aciklama, fiyat, updatedDurum);

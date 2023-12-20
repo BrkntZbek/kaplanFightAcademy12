@@ -2,27 +2,36 @@ import { StyleSheet, Text, View, TouchableOpacity, Modal, FlatList } from 'react
 import React, { useState, useEffect } from 'react';
 import buttonStyle from '../../Styles/ButtonStyle';
 import IncomeModal from '../Modal/IncomeModal';
-
+import ExpenseModal from '../Modal/ExpenseModall';
 
 export default function Top({totalFiyat}) {
   const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
-
+  const [expenseModalVisible,setExpenseModalVisible] = useState(false);
 
   const toggleIncomeModal = () => {
     setIncomeModalVisible(!isIncomeModalVisible);
   };
+  const toggleExpenseModal = () =>{
+    setExpenseModalVisible(!expenseModalVisible)
+  }
  
-
+  const formattedTotalFiyat = new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency: 'TRY',
+  }).format(totalFiyat);
+  
+  // formattedTotalFiyat'ı sadece ondalık kısmındaki sıfırları ve sonundaki virgülü atarak alın
+  const formattedTotalFiyatWithoutDecimalZeros = formattedTotalFiyat.replace(/\.?0+$/, '').replace(/,/, '');
   return (
     <View style={styles.container}>
       <View style={styles.top}>
-        <Text style={{ fontSize: 20 }}>{totalFiyat} TL</Text>
+        <Text style={{ fontSize: 20 }}>{formattedTotalFiyatWithoutDecimalZeros}</Text>
       </View>
       <View style={styles.bottom}>
         <TouchableOpacity onPress={toggleIncomeModal} style={styles.button}>
           <Text style={buttonStyle.contentButtonLesson}>Gelir Ekle</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={toggleExpenseModal}>
           <Text style={buttonStyle.contentButtonLesson}>Gider Ekle</Text>
         </TouchableOpacity>
       </View>
@@ -30,6 +39,7 @@ export default function Top({totalFiyat}) {
     
 
       <IncomeModal isVisible={isIncomeModalVisible} handleCloseAddModal={toggleIncomeModal} />
+      <ExpenseModal isVisible={expenseModalVisible} handleCloseAddModal={toggleExpenseModal}/>
     </View>
   );
 }

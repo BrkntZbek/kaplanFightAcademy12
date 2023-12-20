@@ -11,8 +11,10 @@ export default function DerslerScreen() {
     const [handleLessonsVisible,setHandleLessonsVisible] = useState(false);
     const [selectLesson,setSelectLesson] = useState([])
     useEffect(() => {
+      SetLessons([]);
       fetchLessons(SetLessons);
-    }, [selectLesson,SetLessons]);
+      console.log(lessons)
+    }, [SetLessons]);
     
     const handleCloseModal = () => {
       setHandleLessonsVisible(false);

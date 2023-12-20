@@ -26,7 +26,7 @@ export default function Circular({ totalGelir, totalGider }) {
           backgroundColor={'rgb(255, 0, 0)'}
           
       />
-      <Text style={{marginLeft:35,marginTop:10,color:'white'}}>toplam</Text>
+      <Text style={{marginLeft:35,marginTop:10,color:'white'}}>Gelir</Text>
           </View>
         
         </View>

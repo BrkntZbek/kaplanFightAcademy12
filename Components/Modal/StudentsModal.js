@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Modal, TouchableOpacity } from "react-native";
-import React, { useState, useEffect, useRef, } from "react";
+import React, { useState, useEffect,  } from "react";
 import AddPackModel from "./AddPackModel";
 import Toast from 'react-native-toast-message';
 import AddLessonModal from "./AddLessonModal";
@@ -19,7 +19,7 @@ export default function StudentsModal({
 
 
  
-  const toastRef = useRef(); 
+
   useEffect(()=>{
     fetchUserPackage(selectedStudent,setPackageInfo)
   },[selectedStudent,setPackageInfo])

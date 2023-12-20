@@ -9,13 +9,6 @@ export default function OgrenciList() {
   const [searchText, setSearchText] = useState('');
   const [selectedStudent, setSelectedStudent] = useState([]);
  const [studentİnfoVisible,setStudentİnfoVisible] = useState(false);
-
-
-
- 
-
-
-
 const handleStudentPress = (item) => {
   setSelectedStudent(item);
   setStudentİnfoVisible(true);
@@ -31,11 +24,6 @@ const handleStudentPress = (item) => {
     setStudents([]);
     fetchStudents(setStudents);
   }, [firestore, setStudents]);
-  
-
-
- 
-  
 
   // İsme göre filtreleme fonksiyonu
   const filterStudents = () => {
@@ -75,7 +63,7 @@ const handleStudentPress = (item) => {
 
       {/* Modal Ekranı */}
    
-      <StudentsModal isVisible={studentİnfoVisible}   selectedStudent={selectedStudent} firestore={firestore} handleCloseModal={handleCloseStudentModel} firebase={firebase}/>
+      <StudentsModal isVisible={studentİnfoVisible} selectedStudent={selectedStudent} firestore={firestore} handleCloseModal={handleCloseStudentModel}/>
       
     </View>
     

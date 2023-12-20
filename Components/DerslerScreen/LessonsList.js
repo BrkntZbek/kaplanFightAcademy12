@@ -2,7 +2,7 @@ import { StyleSheet, Text, View,FlatList,TouchableOpacity } from 'react-native'
 import React from 'react'
 
 export default function LessonsList({lessons,handleLessonPress}) {
-    console.log(lessons.dersId)
+  
   return (
     <View style={styles.lessons}>
         <FlatList
@@ -23,7 +23,7 @@ export default function LessonsList({lessons,handleLessonPress}) {
        </View>
           
           <View style={styles.lessonsContent}>
-             <Text style={{width:'35%'}}>{` ${item.hoca}`}</Text>
+             <Text style={{width:'45%'}}>{` ${item.hoca}`}</Text>
              <Text style={styles.text}>{` ${item.tarih}`}</Text>
              <Text style={styles.text}>{` ${item.saat}`}</Text>
            
@@ -31,8 +31,8 @@ export default function LessonsList({lessons,handleLessonPress}) {
           </View>
           </View>
       
-          <View style={{alignItems:'flex-start',borderLeftWidth:2,width:'20%',}}>
-              <Text style={{marginLeft:10, color: item.durum === "İşlenmedi" ? '#BF3624' : item.durum === "İptal" ? 'black' : item.durum === "İşlendi" ? "green":"black", marginLeft: 20 }}>{` ${item.durum}`}</Text>
+          <View style={{alignItems:'flex-start',justifyContent:'center',borderLeftWidth:2,width:'26%'}}>
+              <Text style={{marginLeft:-20, color: item.durum === "İşlenmedi" ? '#BF3624' : item.durum === "İptal" ? 'black' : item.durum === "İşlendi" ? "green":"black", marginLeft: 20 }}>{` ${item.durum}`}</Text>
         </View>
         </View>
        
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         paddingTop:15
       },
       container:{
-       width:'80%',
+       width:'70%',
 
       },
        

@@ -37,6 +37,7 @@ const inputStyle ={
         backgroundColor:'yellow',
         paddingHorizontal:15,
         height:100,
+        width:'85%',
         paddingVertical:10,
         marginBottom:5,
         borderRadius:20,

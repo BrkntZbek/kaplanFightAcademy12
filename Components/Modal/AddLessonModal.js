@@ -40,6 +40,7 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
         month: 'numeric',
         day: 'numeric',
     });
+    
 
     const lessonRef = doc(Lessons); // Belge referansını al
     await setDoc(lessonRef, {
@@ -52,6 +53,7 @@ export default function AddLessonModal({ isVisible, selectedStudent, firestore, 
         durum: 'İşlenmedi',
         ayrinti:'',
     });
+  
 
     
    

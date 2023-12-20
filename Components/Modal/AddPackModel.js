@@ -41,7 +41,11 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
         const packageEndDate = new Date(packageStartDate);
         packageEndDate.setMonth(packageEndDate.getMonth() + packageDurationInMonths);
         const newPackageRef = doc(PackagesSold);
-    
+       
+        const Muhasebe = firestore.collection('Muhasebe');
+       const muhasebeRef = doc(Muhasebe);
+
+
         await setDoc(newPackageRef, {
           SatilanPaket: selectedPackageId.paketTuru,
           SatilanKisiID: selectedStudent.id,
@@ -53,6 +57,13 @@ export default function AddPackModel({ isVisible, handleCloseModal,selectedStude
           satisTarihi: formattedDate,
           paketBitisTarihi: `${packageEndDate.getDate()}.${packageEndDate.getMonth() + 1}.${packageEndDate.getFullYear()}`,
         });
+        await setDoc(muhasebeRef,{
+          id:muhasebeRef.id,
+          aciklama: selectedStudent.name + ' Paket Ödemesi',
+          durum:'Gelir',
+          fiyat:selectedPackageId.paketFiyati,
+          tarih:formattedDate
+        })
     
         const newPackageId = newPackageRef.id;
         await updateDoc(newPackageRef, {

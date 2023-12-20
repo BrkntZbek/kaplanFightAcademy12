@@ -19,18 +19,19 @@ export default function LoginScreen() {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         // Kullanıcı oturum açtı
+        const userProperties = { email: user.email, uid: user.uid }; // Sadece gerekli özellikleri içeren bir nesne
         if (user.email === 'admin@kaplanfight.com') {
           // Admin kontrolü
-          navigation.replace('Admin',{loginUser:user});
+          navigation.replace('Admin', { loginUser: userProperties });
           console.log('Admin Giriş yaptı', user.email);
         } else {
           // Diğer kullanıcılar
-          navigation.replace('Home',{loginUser:user});
+          navigation.replace('Home', { loginUser: userProperties });
           console.log('Normal kullanıcı Giriş yaptı', user.email);
         }
       }
     });
-
+  
     return () => {
       unsubscribe(); // useEffect temizleme fonksiyonu
     };

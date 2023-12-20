@@ -24,41 +24,35 @@ export default function HomeScreen() {
   return (
     
     <Tab.Navigator
-    
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-
-          if (route.name === 'Ana Sayfa') {
-          return  iconName = focused ?<Ionicons name="home" size={24} color="black" />  : <Ionicons name="home-outline" size={24} color="black" />;
-          } else if (route.name === 'Öğrenci Listesi') {
-            iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'Dersler') {
-          return iconName = focused ? <FontAwesome name="th-list" size={24} color="black" /> : <FontAwesome name="list" size={24} color="black" />;
-          } else if (route.name === 'Kullanici') {
-            return  iconName = focused ?<FontAwesome name="user" size={24} color="black" />  : <FontAwesome name="user-o" size={24} color="black" />;
-          }
-
-          return <FontAwesome name={iconName} size={size} color={color} />;
-        },
-      })}
-      tabBarOptions={{
-        activeTintColor: 'black', 
-        inactiveTintColor: 'gray', 
-        
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+  
+        if (route.name === 'Ana Sayfa') {
+          return focused ? <Ionicons name="home" size={24} color="black" /> : <Ionicons name="home-outline" size={24} color="black" />;
+        } else if (route.name === 'Öğrenci Listesi') {
+          iconName = focused ? 'person' : 'person-outline';
+        } else if (route.name === 'Dersler') {
+          return focused ? <FontAwesome name="th-list" size={24} color="black" /> : <FontAwesome name="list" size={24} color="black" />;
+        } else if (route.name === 'Kullanici') {
+          return focused ? <FontAwesome name="user" size={24} color="black" /> : <FontAwesome name="user-o" size={24} color="black" />;
+        }
+  
+        return <FontAwesome name={iconName} size={size} color={color} />;
+      },
+      tabBarOptions: {
+        activeTintColor: 'black',
+        inactiveTintColor: 'gray',
         tabStyle: {
           backgroundColor: '#ffdf00',
-         
-          },
-      }}
-    >
-      <Tab.Screen options={{headerShown:false}} name="Ana Sayfa" component={Home} />
-      <Tab.Screen options={{headerShown:false}} name="Dersler" component={DerslerScreen} />
-      <Tab.Screen options={{headerShown:false}} name="Kullanici" component={KullaniciScreen} />
-
-
-      
-    </Tab.Navigator>
+        },
+      },
+    })}
+  >
+    <Tab.Screen options={{ headerShown: false }} name="Ana Sayfa" component={Home} />
+    <Tab.Screen options={{ headerShown: false }} name="Dersler" component={DerslerScreen} />
+    <Tab.Screen options={{ headerShown: false }} name="Kullanici" component={KullaniciScreen} />
+  </Tab.Navigator>
   );
 }
 
