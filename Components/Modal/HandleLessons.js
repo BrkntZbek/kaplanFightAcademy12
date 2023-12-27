@@ -1,42 +1,57 @@
-import { StyleSheet, Text, View,Modal ,TouchableOpacity,TextInput} from 'react-native'
-import React,{useState,useEffect,useRef} from 'react'
-import buttonStyle from '../../Styles/ButtonStyle'
-import inputStyle from '../../Styles/İnputStyle'
-import { cancelledLesson } from '../../firebase'
-import TextStyle from '../../Styles/TextStyle'
-import { teachALesson } from '../../firebase'
-export default function HandleLessons({ selectLesson, handleLessonsVisible, handleCloseModal }) {
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import buttonStyle from "../../Styles/ButtonStyle";
+import inputStyle from "../../Styles/İnputStyle";
+import { cancelledLesson } from "../../firebase";
+import TextStyle from "../../Styles/TextStyle";
+import { teachALesson } from "../../firebase";
+import HandleArea from "../DerslerScreen/HandleArea";
+export default function HandleLessons({
+  selectLesson,
+  handleLessonsVisible,
+  handleCloseModal,
+}) {
   const [lessonDetail, setLessonDetail] = useState(null);
+  const [AreaChart, setArea] = useState([]);
   const [visible, setVisible] = useState(true);
-  const [lessonDetails, setLessonDetails] = useState([]);
+
   const TextInputRef = useRef(null);
   const cancel = () => {
     cancelledLesson(selectLesson);
     handleCloseModal();
   };
+  const areaChartString = AreaChart.join(', ');
+  console.log('AREA',areaChartString)
   const handleBlur = () => {
     if (TextInputRef.current) {
       TextInputRef.current.blur();
       // TextInput'den çıkarken lessonDetail değerini sıfırlayabilirsiniz
-     
     }
   };
 
   const handleLessonInput = (text) => {
     setLessonDetail(text);
     // Gelen veriyi lessonDetails dizisine ekleyebilirsiniz
-    
   };
 
   const teachALessonPress = () => {
-    teachALesson(selectLesson, lessonDetail);
+    if(areaChartString)
+   
+ { console.log(areaChartString)}
+    teachALesson(selectLesson, lessonDetail,areaChartString);
     handleCloseModal();
   };
 
   useEffect(() => {
     if (selectLesson.durum === "İşlendi" || "İptal") {
       setVisible(false);
-     
     } else {
       setVisible(true);
     }
@@ -54,64 +69,68 @@ export default function HandleLessons({ selectLesson, handleLessonsVisible, hand
         <View style={styles.modalContent}>
           <View style={styles.LessonContent}>
             <Text style={TextStyle.normalText}>{selectLesson.hoca}</Text>
-            <Text style={TextStyle.normalText}>{selectLesson.tarih}</Text>
             <Text style={TextStyle.normalText}>{selectLesson.saat}</Text>
             <View style={styles.inputContainer}>
-            {selectLesson.durum !== "İşlendi" && selectLesson.durum !== "İptal" && selectLesson.durum !== "Geç İptal" && (
-              <View>
-           
-           <TextInput
-  ref={TextInputRef}
-  style={inputStyle.handleLessonİnput}
-  placeholderTextColor="black"
-  placeholder='Ders Ayrıntısı'
-  multiline={true}
-  onChangeText={(text) => handleLessonInput(text)}
-/>
- 
-{lessonDetail !== null && (
-  <TouchableOpacity onPress={handleBlur}>
-    <Text>Onayla</Text>
-  </TouchableOpacity>
-)}
+              {selectLesson.durum !== "İşlendi" &&
+                selectLesson.durum !== "İptal" &&
+                selectLesson.durum !== "Geç İptal" && (
+                  <View style={{ height: "80%", width: "100%",alignItems:'center' }}>
+                    <TextInput
+                      ref={TextInputRef}
+                      style={inputStyle.handleLessonİnput}
+                      placeholderTextColor="black"
+                      placeholder="Ders Ayrıntısı"
+                      multiline={true}
+                      onChangeText={(text) => handleLessonInput(text)}
+                    />
+                    {lessonDetail !== null && (
+                      <TouchableOpacity onPress={handleBlur}>
+                        <Text style={{fontSize:15,fontWeight:'bold',marginBottom:5}}>Onayla</Text>
+                      </TouchableOpacity>
+                    )}
+                    <HandleArea setArea={setArea} />
 
-      
-    
-     
+                   
+                  </View>
+                )}
 
-</View>)}
+              {selectLesson.durum !== "İşlenmedi" && (
+                <View style={styles.contentsContainer}>
+                  <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                    Ders İçeriği
+                  </Text>
+                  <View style={styles.contents}>
 
-{selectLesson.durum !== "İşlenmedi" && (
-  <View style={styles.contentsContainer}>
-  <Text style={{fontWeight:'bold',fontSize:17}}>Ders İçeriği</Text>
-    <View style={styles.contents}> 
-    <Text style={{fontSize:15}}>{selectLesson.ayrinti} </Text>
-    </View>
- 
-  </View>
-        
-)}
-
+                    <Text style={{ fontSize: 15 }}>
+                      {selectLesson.ayrinti}{" "}
+                    </Text>
+                    <Text style={{fontSize:15,fontWeight:'bold',marginTop:5}}>-Çalışılan Bölgeler-</Text>
+                    <Text style={{marginTop:10}}>{selectLesson.calisilanBolge}</Text>
+                  </View>
+                </View>
+              )}
             </View>
           </View>
           <View style={styles.buttonContainer}>
-          {selectLesson.durum === "İşlenmedi" && (
-  <>
-    <TouchableOpacity onPress={teachALessonPress}>
-      <Text style={buttonStyle.contentButtonLesson}>Dersi işle</Text>
-    </TouchableOpacity>
-    
-    <TouchableOpacity onPress={cancel}>
-      <Text style={buttonStyle.contentButtonLesson}>İptal</Text>
-    </TouchableOpacity>
-    <TouchableOpacity  onPress={handleCloseModal}>
-      <Text style={buttonStyle.contentButtonLesson}>Geç İptal</Text>
-    </TouchableOpacity>
-  </>
-             )}
-             <TouchableOpacity  onPress={handleCloseModal}>
-      <Text style={buttonStyle.contentButtonLesson}>Kapat</Text>
-    </TouchableOpacity>
+            {selectLesson.durum === "İşlenmedi" && (
+              <>
+                <TouchableOpacity onPress={teachALessonPress}>
+                  <Text style={buttonStyle.contentButtonLesson}>
+                    Dersi işle
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={cancel}>
+                  <Text style={buttonStyle.contentButtonLesson}>İptal</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleCloseModal}>
+                  <Text style={buttonStyle.contentButtonLesson}>Geç İptal</Text>
+                </TouchableOpacity>
+              </>
+            )}
+            <TouchableOpacity onPress={handleCloseModal}>
+              <Text style={buttonStyle.contentButtonLesson}>Kapat</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -120,58 +139,53 @@ export default function HandleLessons({ selectLesson, handleLessonsVisible, hand
 }
 
 const styles = StyleSheet.create({
-    container:{
-        height: 300,
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        
-    },
-    contentsContainer:{
-       alignItems:'center',
-        borderTopWidth:1,
-        marginTop:5,
-        borderBottomWidth:1,
-        padding:5,
-        height:'65%'
+  container: {
+    height: "70%",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  contentsContainer: {
+    alignItems: "center",
+    borderTopWidth: 1,
+    marginTop: 5,
+    borderBottomWidth: 1,
+    padding: 5,
+    height: "65%",
+  },
+  contents: {
+    marginTop: 10,
+    alignItems:'center'
+  },
+  LessonContent: {
+    alignItems: "center",
+  },
+  inputContainer: {
+    width: 300,
+  },
 
-    },
-    contents:{
-       marginTop:10
-    },
-    LessonContent:{
-     alignItems:'center'
-    },
-    inputContainer:{
-      width:250,
-      
-    },
-    
-    buttonContainer:{
-       marginTop:-10,
-      flexDirection:'row',
-      alignItems:'center'
-    },
-    inputcu:{
-        color:'red',
-        borderWidth:1,
-        borderColor:'#ffdf00',
-        width:'100%',
-        height:'50%'
-    },
-    modalContent:{
-
-    padding: 10,
+  buttonContainer: {
+    marginTop: -10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  inputcu: {
+    color: "red",
+    borderWidth: 1,
+    borderColor: "#ffdf00",
+    width: "100%",
+    height: "50%",
+  },
+  modalContent: {
     borderWidth: 2,
-    alignItems:'center',
+    alignItems: "center",
     borderColor: "white",
     backgroundColor: "#E8E5D1",
     borderRadius: 10,
-    width: "80%", 
-    height: '50%', 
-    },
-    buttonText:{
-        
-        color:'red'
-    }
-})
+    width: "90%",
+    height: "60%",
+  },
+  buttonText: {
+    color: "red",
+  },
+});

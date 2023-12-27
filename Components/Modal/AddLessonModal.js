@@ -1,84 +1,57 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native';
-import React, { useState,useEffect } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { doc, setDoc,updateDoc  } from '@firebase/firestore';
-import { updateStudentsLesson } from '../../firebase';
-import ModalDropdown from 'react-native-modal-dropdown';
-import { fetchTeacher } from '../../firebase';
-import buttonStyle from '../../Styles/ButtonStyle';
-export default function AddLessonModal({ isVisible, selectedStudent, firestore, handleCloseAddModal ,packageInfo}) {
+import { StyleSheet, Text, View, Modal, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { doc, setDoc, updateDoc } from "@firebase/firestore";
+import { addLesson, updateStudentsLesson } from "../../firebase";
+import ModalDropdown from "react-native-modal-dropdown";
+import { fetchTeacher } from "../../firebase";
+import buttonStyle from "../../Styles/ButtonStyle";
+import { Timestamp } from "@firebase/firestore";
+export default function AddLessonModal({
+  isVisible,
+  selectedStudent,
+  firestore,
+  handleCloseAddModal,
+  packageInfo,
+}) {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [teachers,setTeachers] = useState([])
-   const [selectedTeacher, setSelectedTeacher] = useState(null);
-   const [selectedTime, setSelectedTime] = useState("saat seç");
-  
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const [teachers, setTeachers] = useState([]);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedTime, setSelectedTime] = useState("saat seç");
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const handleDateChange = (event, date) => {
+    if (date !== undefined) {
+      setSelectedDate(date);
+    }
+    setShowDatePicker(false);
   };
 
   const generateTimeRange = () => {
     const times = [];
     for (let hour = 6; hour <= 23; hour++) {
-      times.push(`${hour < 10 ? '0' : ''}${hour}:00`);
+      times.push(`${hour < 10 ? "0" : ""}${hour}:00`);
     }
     return times;
   };
 
   const timeItems = generateTimeRange();
 
-  useEffect(() =>{
-    setTeachers([])
+  useEffect(() => {
+    setTeachers([]);
     fetchTeacher(setTeachers);
-  },[setTeachers])
-
+  }, [setTeachers]);
 
   const handleAddLesson = async () => {
-    const Lessons = firestore.collection('Lessons');
-    const formattedDate = selectedDate.toLocaleDateString('tr-TR', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-    });
-    
-
-    const lessonRef = doc(Lessons); // Belge referansını al
-    await setDoc(lessonRef, {
-        dersId:lessonRef.id,
-        ogrenciId: selectedStudent.id,
-        ogrenci: selectedStudent.name,
-        hoca: selectedTeacher,
-        tarih: formattedDate,
-        saat: selectedTime,
-        durum: 'İşlenmedi',
-        ayrinti:'',
-    });
-  
-
-    
-   
-    // KalanDers'i azaltma işlemi
-const updatedKalanDers = packageInfo.KalanDers - 1;
-
-// Eğer packageInfo bir nesne ise, doğrudan arama yapın.
-const packageToUpdate = packageInfo.belgeId;
-// Eğer paket bulunduysa ve güncelleme yapılacaksa
-try {
-  // Firebase Firestore veya başka bir yere güncelleme yapılacaksa burada işlemi gerçekleştirin.
-  await updateDoc(doc(firestore, 'PackagesSold', packageToUpdate), { KalanDers: updatedKalanDers });
-  updateStudentsLesson(selectedStudent)
- 
-} catch (error) {
-  console.error('Firestore güncelleme hatası:', error);
-  // Hata durumunda uygun bir şekilde işlem yapabilirsiniz.
-}
-      // Modalı kapat
-      handleCloseAddModal();
-
-   
-
-    
-};
+    addLesson(
+      selectedDate,
+      selectedStudent,
+      selectedTeacher,
+      selectedTime,
+      packageInfo,
+    );
+    handleCloseAddModal();
+  };
 
   return (
     <Modal
@@ -90,65 +63,76 @@ try {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.headerText}>Ders Ekle</Text>
-            <View style={styles.input}>
-            <DateTimePicker
-  style={styles.datePicker}
-  value={selectedDate}
-  mode="date"
-  display="default"
-  onChange={(event, date) => handleDateChange(date)}
-  locale="tr"
-  minuteInterval={60}
-/>
-<ModalDropdown
-        options={timeItems}
-        defaultValue="Saat Seçiniz"
-        onSelect={(index, value) => setSelectedTime(value)}
-        style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 20,width:100 }}
-        textStyle={{ fontSize: 16 }}
-        initialScrollIndex={19}
-        dropdownStyle={{ width: 150, marginTop: 10 }}
-        renderRow={(option, index, isSelected) => (
-          <Text
-            style={{
-              padding: 10,
-              fontSize: 16, 
-              color: isSelected ? '#ffdf00' : 'black', 
-            }}
-          >
-            {option}
-          </Text>
-        )}
-      />
-            </View>
-            <ModalDropdown
-        options={teachers.map(teacher => teacher.name)}
-        defaultValue="Hoca Seçiniz"
-        onSelect={(index, value) => setSelectedTeacher(value)}
-        style={{ padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 20,width:200,marginTop:10 }}
-        textStyle={{ fontSize: 16 }} 
-        
-        dropdownStyle={{ width: 150, marginTop: 10 }}
-        renderRow={(option, index, isSelected) => (
-          <Text
-            style={{
-              padding: 10,
-              fontSize: 16, 
-              color: isSelected ? '#ffdf00' : 'black',
-            }}
-          >
-            {option}
-          </Text>
-        )}
-      />
-        
-          <TouchableOpacity  onPress={handleAddLesson}>
-            <Text  style={buttonStyle.contentButton}>Ders Ekle</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleCloseAddModal} >
-              <Text  style={buttonStyle.contentButton}>Kapat</Text>
+          <View style={styles.input}>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <Text style={styles.dateText}>
+                {selectedDate.toLocaleDateString("tr")}
+              </Text>
             </TouchableOpacity>
-          
+            {showDatePicker && (
+              <View style={styles.inputView}>
+                <DateTimePicker
+                  value={selectedDate}
+                  mode="date"
+                  display="compact"
+                  onChange={handleDateChange}
+                  locale="tr"
+                  minuteInterval={60}
+                  style={styles.dateTimePicker}
+                />
+              </View>
+            )}
+            <View style={styles.inputView}>
+              <ModalDropdown
+                options={timeItems}
+                defaultValue={selectedTime}
+                onSelect={(index, value) => setSelectedTime(value)}
+                style={styles.dropdown}
+                textStyle={styles.dropdownText}
+                dropdownStyle={styles.dropdownStyle}
+                renderRow={(option, index, isSelected) => (
+                  <Text
+                    style={{
+                      padding: 10,
+                      fontSize: 16,
+                      color: isSelected ? "#ffdf00" : "black",
+                    }}
+                  >
+                    {option}
+                  </Text>
+                )}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <ModalDropdown
+                options={teachers.map((teacher) => teacher.name)}
+                defaultValue={selectedTeacher || "Hoca Seçiniz"}
+                onSelect={(index, value) => setSelectedTeacher(value)}
+                style={styles.dropdown}
+                textStyle={styles.dropdownText}
+                dropdownStyle={styles.dropdownStyle}
+                renderRow={(option, index, isSelected) => (
+                  <Text
+                    style={{
+                      padding: 10,
+                      fontSize: 16,
+                      color: isSelected ? "#ffdf00" : "black",
+                    }}
+                  >
+                    {option}
+                  </Text>
+                )}
+              />
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", height: "auto" }}>
+            <TouchableOpacity onPress={handleAddLesson}>
+              <Text style={buttonStyle.contentButtonLesson}>Ders Ekle</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleCloseAddModal}>
+              <Text style={buttonStyle.contentButtonLesson}>Kapat</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -158,45 +142,60 @@ try {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin:5,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 5,
   },
-  input:{
-    flexDirection:'row',
-    alignItems:'center',
-  
+  inputView: {
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    margin: 5,
+  },
+  dateTimePicker: {
+    alignItems: "center",
+    width: "auto",
+    marginEnd: 10,
+  },
+  dateText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  input: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "90%",
 
+    height: "50%",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "#E8E8D1",
     padding: 5,
-    margin:5,
+    margin: 5,
     borderWidth: 2,
-    borderColor: '#ffdf00',
+    borderColor: "#ffdf00",
     borderRadius: 10,
-    alignItems:'center',
-    width: '80%',
-    maxHeight: '80%',
+    alignItems: "center",
+    width: "70%",
+    maxHeight: "50%",
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   datePicker: {
-    width: 100,
-    marginRight:20
-    
+    width: 120,
+    marginRight: 20,
   },
   addButton: {
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
 });

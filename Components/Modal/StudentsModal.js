@@ -1,41 +1,38 @@
 import { StyleSheet, Text, View, Modal, TouchableOpacity } from "react-native";
-import React, { useState, useEffect,  } from "react";
+import React, { useState, useEffect } from "react";
 import AddPackModel from "./AddPackModel";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import AddLessonModal from "./AddLessonModal";
-import ButtonStyle from  "../../Styles/ButtonStyle"
+import ButtonStyle from "../../Styles/ButtonStyle";
 import { fetchUserPackage } from "../../firebase";
 
 export default function StudentsModal({
   selectedStudent,
   firestore,
   isVisible,
- 
+
   handleCloseModal,
 }) {
   const [addPackageModalVisible, setAddPackageModalVisible] = useState(false);
-  const [lessonModalVisible,setLessonModalVisible] = useState(false);
-  const [packageInfo, setPackageInfo] = useState(null)
+  const [lessonModalVisible, setLessonModalVisible] = useState(false);
+  const [packageInfo, setPackageInfo] = useState(null);
 
+  useEffect(() => {
+    fetchUserPackage(selectedStudent, setPackageInfo);
+  }, [selectedStudent, setPackageInfo]);
 
- 
-
-  useEffect(()=>{
-    fetchUserPackage(selectedStudent,setPackageInfo)
-  },[selectedStudent,setPackageInfo])
-
-    const handleOpenLessonModal = () =>{
-      if(packageInfo === null)
-      {
-        Toast.show({
-          type:'error',
-          text1:'Hata',
-          text2:'Bu Öğrenciye Ait Bir Paket bulunmamakta Ders eklemek için önce bir paket Girilmeli.'
-        });
-        return;
-      }
-        setLessonModalVisible(true);
+  const handleOpenLessonModal = () => {
+    if (packageInfo === null) {
+      Toast.show({
+        type: "error",
+        text1: "Hata",
+        text2:
+          "Bu Öğrenciye Ait Bir Paket bulunmamakta Ders eklemek için önce bir paket Girilmeli.",
+      });
+      return;
     }
+    setLessonModalVisible(true);
+  };
 
   const handleCloseAddModal = () => {
     setAddPackageModalVisible(false);
@@ -45,9 +42,9 @@ export default function StudentsModal({
     // Paket bilgisi varsa uyarı göster
     if (packageInfo !== null) {
       Toast.show({
-        type: 'error',
-        text1: 'Hata',
-        text2: 'Bu öğrenciye ait zaten bir paket tanımlı',
+        type: "error",
+        text1: "Hata",
+        text2: "Bu öğrenciye ait zaten bir paket tanımlı",
       });
       return;
     }
@@ -55,9 +52,7 @@ export default function StudentsModal({
     // Paket bilgisi null ise modal'ı aç
     setAddPackageModalVisible(true);
   };
-  
-  
-   
+
   return (
     <Modal
       transparent={true}
@@ -68,7 +63,9 @@ export default function StudentsModal({
       <View style={[styles.modalContainer, { height: 600 }]}>
         <View style={styles.modalContent}>
           <View style={styles.nameContainer}>
-            <Text style={{ fontWeight: "bold", fontSize: 20, color: "#ffdf00" }}>
+            <Text
+              style={{ fontWeight: "bold", fontSize: 20, color: "#ffdf00" }}
+            >
               {selectedStudent?.name}
             </Text>
           </View>
@@ -112,8 +109,10 @@ export default function StudentsModal({
             </View>
 
             <View style={styles.paket}>
-              <Text style={{ fontWeight: "bold", fontSize: 13 ,color:'#ffdf00' }}>
-                Toplam Ders Sayısı:{selectedStudent.toplamDers}
+              <Text
+                style={{ fontWeight: "bold", fontSize: 13, color: "#ffdf00" }}
+              >
+                Toplam Ders Sayısı: {selectedStudent.toplamDers}
               </Text>
             </View>
 
@@ -133,35 +132,18 @@ export default function StudentsModal({
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={handleOpenModal}>
-              <Text
-                style={ButtonStyle.contentButton}
-              >
-                Paket Ekle
-              </Text>
+              <Text style={ButtonStyle.contentButton}>Paket Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleOpenLessonModal}>
-              <Text
-                style={ButtonStyle.contentButton}
-              >
-                Ders Ekle
-              </Text>
+              <Text style={ButtonStyle.contentButton}>Ders Ekle</Text>
             </TouchableOpacity>
-           
+
             <TouchableOpacity onPress={handleCloseModal}>
-              <Text
-               style={ButtonStyle.contentButton}
-              >
-                Detay
-              </Text>
+              <Text style={ButtonStyle.contentButton}>Detay</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleCloseModal}>
-              <Text
-               style={ButtonStyle.contentButton}
-              >
-                Kapat
-              </Text>
+              <Text style={ButtonStyle.contentButton}>Kapat</Text>
             </TouchableOpacity>
-            
           </View>
           <AddPackModel
             isVisible={addPackageModalVisible}
@@ -170,13 +152,12 @@ export default function StudentsModal({
             handleCloseModal={handleCloseAddModal}
           />
           <AddLessonModal
-          isVisible={lessonModalVisible}
-          selectedStudent={selectedStudent}
-          firestore={firestore}
-          handleCloseAddModal={handleCloseAddModal}
-          packageInfo={packageInfo}
+            isVisible={lessonModalVisible}
+            selectedStudent={selectedStudent}
+            firestore={firestore}
+            handleCloseAddModal={handleCloseAddModal}
+            packageInfo={packageInfo}
           />
-          
         </View>
       </View>
       <Toast ref={(ref) => Toast.setRef(ref)} />
@@ -206,7 +187,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 13,
     color: "#ffdf00",
-    marginTop:5
+    marginTop: 5,
   },
   Studentİnfo: {
     alignItems: "center",
@@ -232,4 +213,3 @@ const styles = StyleSheet.create({
     maxHeight: "80%", // Modal'ın maksimum yüksekliği
   },
 });
-

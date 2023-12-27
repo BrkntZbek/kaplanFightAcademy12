@@ -1,29 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { auth, firestore } from '../firebase';
-import { fetchPackageInfo } from '../firebase';
-import Bmı from '../Components/StudentScreen/Bmı';
-import LoadingData from '../Components/Loading/LoadingData';
-import ButtonContainer from '../Components/StudentScreen/ButtonContainer';
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { auth, firestore } from "../firebase";
+import { fetchPackageInfo } from "../firebase";
+import Account from "../Components/StudentScreen/Account/Account";
+import LoadingData from "../Components/Loading/LoadingData";
+import ButtonContainer from "../Components/StudentScreen/Account/ButtonContainer";
+import ILesson from "../Components/StudentScreen//Derslerim/ILesson";
+
+import { useNavigation } from "@react-navigation/native";
+import Ayarlar from "../Components/StudentScreen/Ayarlar";
+import Gelisim from "../Components/StudentScreen/Gelisim";
+import Rezerv from "../Components/StudentScreen/Rezerv";
 
 const UserProfile = () => {
   const [userData, setUserData] = useState(null);
   const [packageInfo, setPackageInfo] = useState(null);
- 
 
+  const [showSetting, setshowSetting] = useState(false);
+  const [showDerslerim, setShowDerslerim] = useState(false);
+  const [showAccount, setshowAccount] = useState(true);
+  const [gelisim, setGelisim] = useState(false);
+  const [rezerv, setRezerv] = useState(false);
+
+  const navigation = useNavigation();
+  const user = auth.currentUser;
+  const userId = user.uid;
+  console.log("ID:", userId);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const user = auth.currentUser;
-        if (user) {
-          const userId = user.uid;
-       
-
-          const userRef = firestore.collection('userss').doc(userId);
-          const selectedStudentSnapshot = await firestore.collection('userss').where('id', '==', userId).get();
+        if (userId) {
+          const userRef = firestore.collection("userss").doc(userId);
+          const selectedStudentSnapshot = await firestore
+            .collection("userss")
+            .where("id", "==", userId)
+            .get();
 
           if (selectedStudentSnapshot.docs.length === 0) {
-            console.log('Öğrencinin belgesi bulunmamaktadır.');
+            console.log("Öğrencinin belgesi bulunmamaktadır.");
             setUserData(null);
             setPackageInfo(null);
             return;
@@ -36,7 +50,7 @@ const UserProfile = () => {
           if (doc.exists) {
             setUserData(doc.data());
           } else {
-            console.log('Firestore belgesi bulunamadı');
+            console.log("Firestore belgesi bulunamadı");
           }
 
           // packageInfo'yu ayarla
@@ -46,44 +60,84 @@ const UserProfile = () => {
           setPackageInfo(null);
         }
       } catch (error) {
-        console.error('Hata oluştu:', error);
+        console.error("Hata oluştu:", error);
         setUserData(null);
         setPackageInfo(null);
       }
     };
 
     fetchData();
+  }, [setUserData, setPackageInfo]);
 
-  }, []);
-
-  if (!userData || !packageInfo) {
+  if (!userData) {
     return <LoadingData />;
+  }
+  if (packageInfo === null) {
+    // Package bilgisi yüklenmediyse gerekli durumları burada ele alabilirsiniz.
   }
 
   return (
     <View style={styles.KullaniciContainer}>
-    
-        <ButtonContainer/>
-      
-    <View style={styles.infoContainer}>
-      <View style={styles.textContainer}>
-        <View style={styles.nameContainer}>
-      <Text style={styles.nameText}>{userData.name}</Text>
+      <View style={styles.leftContainer}>
+        <ButtonContainer
+          showSetting={showSetting}
+          showDerslerim={showDerslerim}
+          showAccount={showAccount}
+          gelisim={gelisim}
+          rezerv={rezerv}
+          navigation={navigation}
+          setShowDerslerim={() => {
+            setshowAccount(false);
+            setShowDerslerim(true);
+            setshowSetting(false);
+            setGelisim(false);
+            setRezerv(false);
+          }}
+          setshowAccount={() => {
+            setshowAccount(true);
+            setShowDerslerim(false);
+            setshowSetting(false);
+            setGelisim(false);
+            setRezerv(false);
+          }}
+          setshowSetting={() => {
+            setshowAccount(false);
+            setShowDerslerim(false);
+            setshowSetting(true);
+            setGelisim(false);
+            setRezerv(false);
+          }}
+          setGelisim={() => {
+            setshowAccount(false);
+            setShowDerslerim(false);
+            setshowSetting(false);
+            setGelisim(true);
+            setRezerv(false);
+          }}
+          setRezerv={() => {
+            setshowAccount(false);
+            setShowDerslerim(false);
+            setshowSetting(false);
+            setGelisim(false);
+            setRezerv(true);
+          }}
+        />
       </View>
-        <View style={styles.info}>
-            <Text style={{fontSize:20,fontWeight:'bold', textDecorationLine: 'underline'}}>Paket Bilgileri</Text>
-            <Text style={{fontSize:15}}>{packageInfo.SatilanPaket}</Text>
-            <Text style={{fontSize:15}}>Kalan Ders: {packageInfo.KalanDers}</Text>
-            <Text style={{fontSize:15}}>Son kullanım tarihi: {packageInfo.paketBitisTarihi}</Text>
-        </View>
-       
-        </View>
-        <View style={styles.endeksCont}>
-            <Bmı height={userData.boy} weight={userData.kilo}/>
-        </View>
-       
+      <View style={styles.rightContainer}>
+        {showAccount && (
+          <Account
+            userData={userData}
+            satilanPaket={packageInfo ? packageInfo.SatilanPaket : null}
+            kalanDers={packageInfo ? packageInfo.KalanDers : null}
+            bitisTarihi={packageInfo ? packageInfo.paketBitisTarihi : null}
+          />
+        )}
+        {showDerslerim && <ILesson id={userId} />}
+        {showSetting && <Ayarlar />}
+        {gelisim && <Gelisim />}
+        {rezerv && <Rezerv />}
+      </View>
     </View>
-  </View>
   );
 };
 
@@ -92,60 +146,16 @@ export default UserProfile;
 const styles = StyleSheet.create({
   KullaniciContainer: {
     flex: 1,
-    backgroundColor: '#DFE8D1',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    flexDirection: "row",
   },
-  
- 
-  nameContainer:{
-    borderBottomWidth:2,
-    width:'100%',
-    alignItems:'center',
-    
-    borderBottomEndRadius:30
+  leftContainer: {
+    flex: 1,
+    backgroundColor: "#1a1a1a",
+    justifyContent: "center",
   },
-  nameText:{
-      fontWeight:'bold',
-      fontSize:30,
-      
+  rightContainer: {
+    flex: 2,
+    backgroundColor: "#1a1a1a",
+    justifyContent: "center",
   },
-  info:{
-    height:'65%',
-    width:'100%',
-    justifyContent:'start',
-    marginTop:10,
-    alignItems:'center',
-    borderBottomWidth:2,
-    borderColor:'black',
-  },
-  textContainer: {
-   height:'30%',
-   padding:30,
-   
-   borderTopLeftRadius:90,
-   alignItems:'center',
-   justifyContent:'start',
-   
-  },
-  kkText: {
-    color: 'black',
-    fontSize:15,
-    margin:10,
-    padding:10,
-    borderWidth:2,
-    borderColor:'black',
-    borderRadius:20,
-    
-  },
-  infoContainer:{
-    backgroundColor: '#FFDF00',
-    width:'70%',
-    height:'95%',
-    borderTopLeftRadius:90,
-    borderBottomLeftRadius:50,
-    borderWidth:1,
-    borderColor:'black',
-      justifyContent:'flex-start',
-  }
 });

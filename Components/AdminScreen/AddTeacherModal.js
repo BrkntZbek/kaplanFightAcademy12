@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput } from 'react-native';
-import Header from '../Header/Header';
-import { fetchStudents } from '../../firebase';
-import { updateStudentTeacher } from '../../firebase';
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
+} from "react-native";
+import Header from "../Header/Header";
+import { fetchStudents } from "../../firebase";
+import { updateStudentTeacher } from "../../firebase";
 
 export default function AddTeacherModal({ firestore }) {
   const [students, setStudents] = useState([]);
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
@@ -16,22 +23,21 @@ export default function AddTeacherModal({ firestore }) {
 
   const handleStudentPress = (student) => {
     setSelectedStudent(student);
-    console.log('Seçilen: ',selectedStudent)
+    console.log("Seçilen: ", selectedStudent);
   };
 
- 
   const handleActionButtonPress = (action) => {
     if (action === "Hoca Ekle") {
       updateStudentTeacher(selectedStudent);
-      console.log('günclle')
+      console.log("günclle");
     } else {
-      console.log('Lütfen bir öğrenci seçin.');
+      console.log("Lütfen bir öğrenci seçin.");
     }
   };
 
   const filterStudents = () => {
     return students.filter((student) =>
-      student.name.toLowerCase().includes(searchText.toLowerCase())
+      student.name.toLowerCase().includes(searchText.toLowerCase()),
     );
   };
 
@@ -40,7 +46,7 @@ export default function AddTeacherModal({ firestore }) {
       <Header />
       <View style={styles.functionContainer}>
         <TouchableOpacity
-          onPress={() => handleActionButtonPress('Hoca Ekle')}
+          onPress={() => handleActionButtonPress("Hoca Ekle")}
           disabled={!selectedStudent}
           style={[
             styles.button,
@@ -51,7 +57,7 @@ export default function AddTeacherModal({ firestore }) {
           <Text style={styles.buttonText}>Hoca Ekle</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => handleActionButtonPress('Güncelle')}
+          onPress={() => handleActionButtonPress("Güncelle")}
           disabled={!selectedStudent}
           style={[
             styles.button,
@@ -62,7 +68,7 @@ export default function AddTeacherModal({ firestore }) {
           <Text style={styles.buttonText}>Güncelle</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => handleActionButtonPress('Sil')}
+          onPress={() => handleActionButtonPress("Sil")}
           disabled={!selectedStudent}
           style={[
             styles.button,
@@ -92,7 +98,9 @@ export default function AddTeacherModal({ firestore }) {
               onPress={() => handleStudentPress(item)}
               style={[
                 styles.touchableContainer,
-                selectedStudent && selectedStudent.id === item.id && styles.selectedStudent,
+                selectedStudent &&
+                  selectedStudent.id === item.id &&
+                  styles.selectedStudent,
               ]}
             >
               <View style={styles.FlatList}>
@@ -108,10 +116,10 @@ export default function AddTeacherModal({ firestore }) {
 
 const styles = StyleSheet.create({
   Container: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   button: {
@@ -119,28 +127,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   activeButton: {
-    backgroundColor: '#ffdf00',
-    borderColor: '#ffdf00',
+    backgroundColor: "#ffdf00",
+    borderColor: "#ffdf00",
   },
 
   disabledButton: {
-    backgroundColor: 'gray',
-    borderColor: 'gray',
+    backgroundColor: "gray",
+    borderColor: "gray",
   },
 
   buttonText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
-    color: 'black', // Buton içindeki metin rengi
+    color: "black", // Buton içindeki metin rengi
   },
 
   functionContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
   },
 
@@ -148,31 +156,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 50,
     paddingHorizontal: 10,
-    borderColor: '#ffdf00',
-    width: '30%',
-    color: '#ffdf00',
+    borderColor: "#ffdf00",
+    width: "30%",
+    color: "#ffdf00",
   },
   FlatList: {
     borderWidth: 2,
     borderRadius: 10,
     margin: 2,
-    borderColor: 'black',
-    backgroundColor: '#ffdf00',
-    width: '95%',
+    borderColor: "black",
+    backgroundColor: "#ffdf00",
+    width: "95%",
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 0, 0.7)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 0, 0.7)",
   },
   studentsContainer: {
-    marginTop:10,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginLeft:15,
-    width:'95%',
-    alignItems:'center',
-   
-    backgroundColor: 'black',
+    marginTop: 10,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginLeft: 15,
+    width: "95%",
+    alignItems: "center",
+
+    backgroundColor: "black",
   },
 
   touchableContainer: {
@@ -180,12 +188,12 @@ const styles = StyleSheet.create({
   },
 
   selectedStudent: {
-    backgroundColor: 'lightblue', // Seçilen öğrencinin arkaplan rengini değiştirin
-    alignItems:'center',
-    width:'95%',
-    borderRadius:10
+    backgroundColor: "lightblue", // Seçilen öğrencinin arkaplan rengini değiştirin
+    alignItems: "center",
+    width: "95%",
+    borderRadius: 10,
   },
   text: {
-    color: 'black',
+    color: "black",
   },
 });

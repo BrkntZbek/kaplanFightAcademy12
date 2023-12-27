@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, Easing ,Text} from 'react-native';
+import React, { useEffect, useRef } from "react";
+import { View, Animated, Easing, Text } from "react-native";
 
 const LoadingData = () => {
   const spinValue = useRef(new Animated.Value(0)).current;
@@ -11,7 +11,7 @@ const LoadingData = () => {
         duration: 5000, // Dönme süresini artırın
         easing: Easing.linear,
         useNativeDriver: true,
-      })
+      }),
     );
 
     spinAnimation.start();
@@ -28,14 +28,14 @@ const LoadingData = () => {
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
     <View style={styles.loading}>
       <View style={styles.logoContainer}>
         <Animated.Image
-          source={require('../../img/kaplanLogo.png')}
+          source={require("../../img/kaplanLogo.png")}
           style={[styles.logo, { transform: [{ rotate: spin }] }]}
           resizeMode="contain"
         />
@@ -48,12 +48,12 @@ const LoadingData = () => {
 const styles = {
   loading: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor:'black'
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   logo: {
     width: 300,

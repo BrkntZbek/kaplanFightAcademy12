@@ -1,86 +1,120 @@
-import { StyleSheet, Text, View,FlatList,TouchableOpacity } from 'react-native'
-import React from 'react'
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 
-export default function LessonsList({lessons,handleLessonPress}) {
-  
+export default function LessonsList({ lessons, handleLessonPress }) {
+  // Tarih formatını düzenleyen yardımcı bir fonksiyon
+  const formatLessonDate = (lesson) => {
+    const lessonDate = lesson.tarih.toDate(); // Firebase Timestamp'ını JavaScript Date objesine çevir
+    const options = { day: "numeric", month: "long", year: "numeric" }; // Tarih formatı seçenekleri
+    const formattedDate = lessonDate.toLocaleDateString("tr-TR", options);
+    return formattedDate;
+  };
+
   return (
     <View style={styles.lessons}>
-        <FlatList
-    style={{ flex: 1 }}
-    data={lessons}
-    keyExtractor={(item, index) => index.toString()}
-    numColumns={1}
-    
-    renderItem={({ item, index }) => (
-      <TouchableOpacity
-        onPress={() => handleLessonPress(item)}
-        style={styles.touchableContainer}
-      >
-        <View style={styles.FlatList}>
-          <View style={styles.container}>
-          <View style={{alignItems:'center'}}>
-          <Text style={{fontSize:20,fontWeight:'bold',color:'#1A1A1A'}}>{` ${item.ogrenci}`}</Text>
-       </View>
-          
-          <View style={styles.lessonsContent}>
-             <Text style={{width:'45%'}}>{` ${item.hoca}`}</Text>
-             <Text style={styles.text}>{` ${item.tarih}`}</Text>
-             <Text style={styles.text}>{` ${item.saat}`}</Text>
-           
-            
-          </View>
-          </View>
-      
-          <View style={{alignItems:'flex-start',justifyContent:'center',borderLeftWidth:2,width:'26%'}}>
-              <Text style={{marginLeft:-20, color: item.durum === "İşlenmedi" ? '#BF3624' : item.durum === "İptal" ? 'black' : item.durum === "İşlendi" ? "green":"black", marginLeft: 20 }}>{` ${item.durum}`}</Text>
-        </View>
-        </View>
-       
-      </TouchableOpacity>
-    )}
-  />
-        </View>
-  )
+      <FlatList
+        style={{ flex: 1 }}
+        data={lessons}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={1}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            onPress={() => handleLessonPress(item)}
+            style={styles.touchableContainer}
+          >
+            <View style={styles.FlatList}>
+              <View style={styles.container}>
+                <View style={{ alignItems: "center" }}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "#1A1A1A",
+                    }}
+                  >{` ${item.ogrenci}`}</Text>
+                </View>
+
+                <View style={styles.lessonsContent}>
+                  <Text style={{ width: "45%" }}>{` ${item.hoca}`}</Text>
+                  <Text style={styles.text}>{` ${formatLessonDate(
+                    item,
+                  )}`}</Text>
+                  <Text style={styles.text}>{` ${item.saat}`}</Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  borderLeftWidth: 2,
+                  width: "26%",
+                }}
+              >
+                <Text
+                  style={{
+                    marginLeft: -20,
+                    color:
+                      item.durum === "İşlenmedi"
+                        ? "#BF3624"
+                        : item.durum === "İptal"
+                          ? "black"
+                          : item.durum === "İşlendi"
+                            ? "green"
+                            : "black",
+                    marginLeft: 20,
+                  }}
+                >{` ${item.durum}`}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    lessons:{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal:10,
-        backgroundColor:'black',
-        paddingTop:15
-      },
-      container:{
-       width:'70%',
+  lessons: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+    backgroundColor: "black",
+    paddingTop: 15,
+  },
+  container: {
+    width: "75%",
+    height: "100%",
+  },
 
-      },
-       
-  FlatList:{
+  FlatList: {
     borderWidth: 2,
     borderRadius: 10,
-    margin:2,
-    borderWidth:1,
-    borderColor:'#67BA46',
-    backgroundColor:'#E8E8D1',
-    width: '100%', // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
-    height: 'auto',
-     flexDirection: 'row', // Öğeleri yatayda sırala
-    justifyContent: 'center', // Yatayda ortala
-    alignItems: 'center', // Dikeyde ortal
+    margin: 2,
+    borderWidth: 1,
+    borderColor: "#67BA46",
+    backgroundColor: "#E8E8D1",
+    width: "100%", // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
+    height: "auto",
+    flexDirection: "row", // Öğeleri yatayda sırala
+    justifyContent: "center", // Yatayda ortala
+    alignItems: "center", // Dikeyde ortal
   },
-  lessonsContent:{
-    flexDirection:'row',
-    padding:3,
-    paddingRight:5,
-    
-    paddingTop:10,
-    
-
+  lessonsContent: {
+    flexDirection: "row",
+    padding: 3,
+    paddingRight: 5,
+    paddingTop: 10,
   },
-  text:{
-    width:'40%'
+  text: {
+    width: "40%",
   },
-})
+});

@@ -1,31 +1,42 @@
-import { StyleSheet, Text, View, TouchableOpacity, Modal, FlatList } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import buttonStyle from '../../Styles/ButtonStyle';
-import IncomeModal from '../Modal/IncomeModal';
-import ExpenseModal from '../Modal/ExpenseModall';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import buttonStyle from "../../Styles/ButtonStyle";
+import IncomeModal from "../Modal/IncomeModal";
+import ExpenseModal from "../Modal/ExpenseModall";
 
-export default function Top({totalFiyat}) {
+export default function Top({ totalFiyat }) {
   const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
-  const [expenseModalVisible,setExpenseModalVisible] = useState(false);
+  const [expenseModalVisible, setExpenseModalVisible] = useState(false);
 
   const toggleIncomeModal = () => {
     setIncomeModalVisible(!isIncomeModalVisible);
   };
-  const toggleExpenseModal = () =>{
-    setExpenseModalVisible(!expenseModalVisible)
-  }
- 
-  const formattedTotalFiyat = new Intl.NumberFormat('tr-TR', {
-    style: 'currency',
-    currency: 'TRY',
+  const toggleExpenseModal = () => {
+    setExpenseModalVisible(!expenseModalVisible);
+  };
+
+  const formattedTotalFiyat = new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
   }).format(totalFiyat);
-  
+
   // formattedTotalFiyat'ı sadece ondalık kısmındaki sıfırları ve sonundaki virgülü atarak alın
-  const formattedTotalFiyatWithoutDecimalZeros = formattedTotalFiyat.replace(/\.?0+$/, '').replace(/,/, '');
+  const formattedTotalFiyatWithoutDecimalZeros = formattedTotalFiyat
+    .replace(/\.?0+$/, "")
+    .replace(/,/, "");
   return (
     <View style={styles.container}>
       <View style={styles.top}>
-        <Text style={{ fontSize: 20 }}>{formattedTotalFiyatWithoutDecimalZeros}</Text>
+        <Text style={{ fontSize: 20 }}>
+          {formattedTotalFiyatWithoutDecimalZeros}
+        </Text>
       </View>
       <View style={styles.bottom}>
         <TouchableOpacity onPress={toggleIncomeModal} style={styles.button}>
@@ -36,36 +47,43 @@ export default function Top({totalFiyat}) {
         </TouchableOpacity>
       </View>
 
-    
-
-      <IncomeModal isVisible={isIncomeModalVisible} handleCloseAddModal={toggleIncomeModal} />
-      <ExpenseModal isVisible={expenseModalVisible} handleCloseAddModal={toggleExpenseModal}/>
+      <IncomeModal
+        isVisible={isIncomeModalVisible}
+        handleCloseAddModal={toggleIncomeModal}
+      />
+      <ExpenseModal
+        isVisible={expenseModalVisible}
+        handleCloseAddModal={toggleExpenseModal}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#DFE8D1',
-    borderRadius:10,
-    marginTop:5,
-    height: '15%',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#DFE8D1",
+    borderRadius: 20,
+    marginTop: 5,
+    height: "15%",
+    width: "auto",
   },
   top: {
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    width: '100%',
-    height: '40%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "20%",
     borderBottomWidth: 0.5,
+    marginBottom: 5,
   },
   bottom: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '40%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "auto",
+    height: "40%",
+    borderTopWidth: 0.4,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -75,11 +93,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    height:'80%',
+    height: "80%",
     marginHorizontal: 20,
     borderWidth: 0.5,
     borderRadius: 10,
     marginTop: 15,
-    
   },
 });

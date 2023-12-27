@@ -1,18 +1,15 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { updateDoc } from 'firebase/firestore'; // Değişiklik burada
-import 'firebase/compat/firestore'; // Bu satırı ekleyin
-import 'firebase/compat/storage'; // Bu satırı ekleyin
-import { Timestamp, doc, setDoc } from '@firebase/firestore';
-
-
-
+import { updateDoc } from "firebase/firestore"; // Değişiklik burada
+import "firebase/compat/firestore"; // Bu satırı ekleyin
+import "firebase/compat/storage"; // Bu satırı ekleyin
+import { Timestamp, doc, setDoc } from "@firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZbSRis4NANiJQxqwg-Z5sMQQyhZveSw0",
@@ -20,35 +17,38 @@ const firebaseConfig = {
   projectId: "kaplanfightacademy-86b8e",
   storageBucket: "kaplanfightacademy-86b8e.appspot.com",
   messagingSenderId: "120319904391",
-  appId: "1:120319904391:web:5eb488d55c936eb6668622"
+  appId: "1:120319904391:web:5eb488d55c936eb6668622",
 };
 const fetchStudents = async (setStudents) => {
   try {
-    const studentsCollection = await firestore.collection('userss').get();
-    const studentsData = studentsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const studentsCollection = await firestore.collection("userss").get();
+    const studentsData = studentsCollection.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     setStudents(studentsData);
   } catch (error) {
-    console.error('Error fetching students:', error);
+    console.error("Error fetching students:", error);
   }
 };
 
-const fetchIncome = async(setIncome) =>{
-
+const fetchIncome = async (setIncome) => {
   try {
-    const IncomeCollection = await firestore.collection('Muhasebe').get();
-    const incomeData = IncomeCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-setIncome(incomeData);
+    const IncomeCollection = await firestore.collection("Muhasebe").get();
+    const incomeData = IncomeCollection.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setIncome(incomeData);
   } catch (error) {
-    console.error('Error fetching students:', error);
+    console.error("Error fetching students:", error);
   }
-
-}
-
-
+};
 
 const cancelledLesson = async (lesson) => {
   try {
-    const fetchPackageOwner = await firestore.collection('userss')
+    const fetchPackageOwner = await firestore
+      .collection("userss")
       .where("id", "==", lesson.ogrenciId)
       .get();
 
@@ -56,36 +56,89 @@ const cancelledLesson = async (lesson) => {
       const userDoc = fetchPackageOwner.docs[0];
       const totalLesson = userDoc.data().toplamDers || 0; // Mevcut değeri alır (varsayılan olarak 0)
 
-      await updateDoc(doc(firestore, 'Lessons', lesson.id), { durum: "İptal" });
-      await updateDoc(doc(firestore, 'userss', userDoc.id), { toplamDers: totalLesson + 1 });
+      await updateDoc(doc(firestore, "Lessons", lesson.id), { durum: "İptal" });
+      await updateDoc(doc(firestore, "userss", userDoc.id), {
+        toplamDers: totalLesson + 1,
+      });
     } else {
-      console.error('User not found with id:', lesson.ogrenciId);
-     
+      console.error("User not found with id:", lesson.ogrenciId);
     }
   } catch (error) {
-    console.error('Error in cancelledLesson:', error);
-   
+    console.error("Error in cancelledLesson:", error);
   }
 };
 
 const fetchLessons = async (setLessons) => {
   try {
-    const lessonsCollection = await firestore.collection('Lessons').get();
-    const lessonData = lessonsCollection.docs.map(doc => ({id:doc.id,...doc.data()}))
-    setLessons(lessonData)
+    const lessonsCollection = await firestore.collection("Lessons").get();
+    const lessonData = lessonsCollection.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setLessons(lessonData);
   } catch (error) {
-    console.error('Error fetching lessons:', error);
+    console.error("Error fetching lessons:", error);
     throw error; // Hata durumunda hatayı yukarı iletebilirsiniz
   }
 };
 
+const addLesson = async (
+  selectedDate,
+  selectedStudent,
+  selectedTeacher,
+  selectedTime,
+  packageInfo,
+) => {
+  const Lessons = firestore.collection("Lessons");
+  const Muhasebe = firestore.collection("Muhasebe");
+  // datetimepicker'dan seçilen tarihi al
+  // Bu örnekte, dateObject değişkeni datetimepicker'dan gelen değeri temsil eder.
+  // datetimepicker'dan gelen değer ne olursa, onu uygun şekilde işlemeniz gerekiyor.
+  const dateObject = selectedDate; // Bu kısmı datetimepicker'dan gelen değere göre değiştirin
 
+  // dateObject bir Date objesi mi kontrol et
+  const formattedDate =
+    dateObject instanceof Date ? dateObject : dateObject.toDate(); // değilse Firebase Timestamp objesini Date objesine çevir
+  const muhasebeRef = doc(Muhasebe);
+  await setDoc(muhasebeRef, {
+    id: muhasebeRef.id,
+    aciklama: `${selectedTeacher} Ders Ödemesi`,
+    durum: "Gider",
+    fiyat: 200,
+    tarih: selectedDate,
+  });
+
+  const lessonRef = doc(Lessons);
+  await setDoc(lessonRef, {
+    dersId: lessonRef.id,
+    ogrenciId: selectedStudent.id,
+    ogrenci: selectedStudent.name,
+    hoca: selectedTeacher,
+    tarih: formattedDate,
+    saat: selectedTime,
+    durum: "İşlenmedi",
+    ayrinti: "",
+    calisilanBolge:"",
+  });
+
+  const updatedKalanDers = packageInfo.KalanDers - 1;
+  const packageToUpdate = packageInfo.belgeId;
+
+  try {
+    await updateDoc(doc(firestore, "PackagesSold", packageToUpdate), {
+      KalanDers: updatedKalanDers,
+    });
+    updateStudentsLesson(selectedStudent);
+  } catch (error) {
+    console.error("Firestore güncelleme hatası:", error);
+  }
+};
 const fetchUserPackage = async (selectedStudent, setPackageInfo) => {
   if (selectedStudent) {
     const querySnapshot = await firestore
-      .collection('PackagesSold')
-      .where('SatilanKisiID', '==', selectedStudent.id)
-      .where('aktif', '==', 'Aktif')
+      .collection("PackagesSold")
+      .where("SatilanKisiID", "==", selectedStudent.id)
+      .where("aktif", "==", "Aktif")
       .get();
 
     // Veri var mı kontrolü
@@ -101,14 +154,35 @@ const fetchUserPackage = async (selectedStudent, setPackageInfo) => {
     }
   }
 };
+
+const fetchUserLesson = async (userId, setLesson) => {
+  if (userId) {
+    try {
+      const lessonCollection = await firestore
+        .collection("Lessons")
+        .where("ogrenciId", "==", userId)
+        .get();
+
+      const lessonData = lessonCollection.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setLesson(lessonData);
+    } catch (error) {
+      console.error("Fetch User Lesson Error:", error);
+    }
+  }
+};
+
 const fetchPackageInfo = async (selectedStudent, setPackageInfo) => {
   try {
     if (!selectedStudent.data || !selectedStudent.data().paketId) {
-      console.log('Öğrencinin paket bilgisi bulunmamaktadır.');
+      console.log("Öğrencinin paket bilgisi bulunmamaktadır.");
       setPackageInfo(null);
       return;
     }
-    
+
     const packageSnapshot = await firestore
       .collection("PackagesSold")
       .where("belgeId", "==", selectedStudent.data().paketId)
@@ -126,67 +200,82 @@ const fetchPackageInfo = async (selectedStudent, setPackageInfo) => {
   }
 };
 
-const updateStudentsLesson = async (selectedStudent) =>{
-  const numberOfLesson = selectedStudent.ToplamDers + 1;
-  await updateDoc(doc(firestore, 'userss', selectedStudent.id), { ToplamDers: numberOfLesson });
-}
+const updateStudentsLesson = async (selectedStudent) => {
+  const numberOfLesson = selectedStudent.toplamDers + 1;
+  await updateDoc(doc(firestore, "userss", selectedStudent.id), {
+    toplamDers: numberOfLesson,
+  });
+  console.log("ders eklendi:", numberOfLesson);
+};
 
 const updateStudentTeacher = async (selectedStudent) => {
   try {
     if (selectedStudent.yetki !== "Hoca") {
-      await firestore.collection('userss').doc(selectedStudent.id).update({ yetki: 'Hoca' });
-      const teachersCollection = firestore.collection('Teachers');
-      await setDoc(doc(teachersCollection,selectedStudent.id),{
-        id:selectedStudent.id,
-        name:selectedStudent.name,
-        telefon:selectedStudent.telefon,
-        email:selectedStudent.email,
-        boy:selectedStudent.boy,
-        kilo:selectedStudent.kilo,
+      await firestore
+        .collection("userss")
+        .doc(selectedStudent.id)
+        .update({ yetki: "Hoca" });
+      const teachersCollection = firestore.collection("Teachers");
+      await setDoc(doc(teachersCollection, selectedStudent.id), {
+        id: selectedStudent.id,
+        name: selectedStudent.name,
+        telefon: selectedStudent.telefon,
+        email: selectedStudent.email,
+        boy: selectedStudent.boy,
+        kilo: selectedStudent.kilo,
 
-        toplamDers:0,
-        toplamGider:0,
-        toplamOgrenci:0,
-        yetki:"Hoca",
-        egitimAlani:"",
-
+        toplamDers: 0,
+        toplamGider: 0,
+        toplamOgrenci: 0,
+        yetki: "Hoca",
+        egitimAlani: "",
       });
     } else {
-      console.log("Seçtiğiniz Kullanıcının Hocalık Yetkisi zaten bulunmaktadır.");
+      console.log(
+        "Seçtiğiniz Kullanıcının Hocalık Yetkisi zaten bulunmaktadır.",
+      );
     }
   } catch (error) {
-    console.error('Firestore güncelleme hatası:', error);
+    console.error("Firestore güncelleme hatası:", error);
   }
 };
 
- const fetchTeacher =  async (setTeachers) =>{
-  const teacherList=[];
+const fetchTeacher = async (setTeachers) => {
+  const teacherList = [];
   try {
-    const teachersCollection = await firestore.collection('Teachers').get();
-    const teachersData = teachersCollection.docs.map(doc => ({id:doc.id, ...doc.data()}));
-    setTeachers(teachersData)
+    const teachersCollection = await firestore.collection("Teachers").get();
+    const teachersData = teachersCollection.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setTeachers(teachersData);
   } catch (error) {
-    console.error('Error Teacher students:', error);
+    console.error("Error Teacher students:", error);
   }
- }
+};
 
- const teachALesson = async (lesson, lessonDetail) => {
- 
+const teachALesson = async (lesson, lessonDetail,areaChartString) => {
+
+
   if (lesson && lessonDetail) {
-    await updateDoc(doc(firestore, 'Lessons', lesson.id), { durum: "İşlendi", ayrinti: lessonDetail });
+    await updateDoc(doc(firestore, "Lessons", lesson.id), {
+      durum: "İşlendi",
+      ayrinti: lessonDetail,
+      calisilanBolge:areaChartString
+    });
   } else {
-    console.error('Invalid lesson or lessonDetail:', lesson, lessonDetail);
+  
   }
 };
 
 const addBlog = async (title, contents, image) => {
-  const blogCollection = firestore.collection('Blog');
+  const blogCollection = firestore.collection("Blog");
 
   // Sadece koleksiyon referansını kullanarak otomatik bir doküman ID'si oluşturulur
   const blogDoc = doc(blogCollection);
 
   await setDoc(blogDoc, {
-    id:blogDoc.id,
+    id: blogDoc.id,
     icerik: contents,
     baslik: title,
     photoUrl: image,
@@ -199,7 +288,7 @@ const addIncome = async (aciklama, fiyat, durum) => {
 
     console.log(aciklama, fiyat, durum);
 
-    const incomeCollection = firestore.collection('Muhasebe');
+    const incomeCollection = firestore.collection("Muhasebe");
     const incomeDoc = doc(incomeCollection);
 
     await setDoc(incomeDoc, {
@@ -210,19 +299,22 @@ const addIncome = async (aciklama, fiyat, durum) => {
       durum: durum,
     });
 
-    console.log('Yeni eklenen gelirin ID:',incomeDoc.id);
+    console.log("Yeni eklenen gelirin ID:", incomeDoc.id);
   } catch (error) {
-    console.error('Error adding income:', error);
+    console.error("Error adding income:", error);
   }
 };
 
 const listFiles = async (setFiles) => {
   try {
-    const blogCollection = await firestore.collection('Blog').get();
-    const blogData = blogCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const blogCollection = await firestore.collection("Blog").get();
+    const blogData = blogCollection.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     setFiles(blogData);
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
   }
 };
 
@@ -239,7 +331,8 @@ const uploadToFirebase = async (uri, name, onProgress) => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           onProgress && onProgress(progress);
         },
         (error) => {
@@ -257,7 +350,7 @@ const uploadToFirebase = async (uri, name, onProgress) => {
             console.error("Download URL error:", error);
             reject(error);
           }
-        }
+        },
       );
     });
   } catch (error) {
@@ -270,57 +363,58 @@ const uploadImage = async (imageUri, setImage, setUploading) => {
     setUploading(true);
 
     // imageUri'den "file://" kısmını kaldır
-    const uri = imageUri.replace('file://', '');
+    const uri = imageUri.replace("file://", "");
 
     const fileName = uri.split("/").pop();
-    const uploadResp = await uploadToFirebase(uri, fileName, (v) => console.log(v));
+    const uploadResp = await uploadToFirebase(uri, fileName, (v) =>
+      console.log(v),
+    );
     const downloadUrl = await uploadResp.downloadUrl;
-    console.log('Dosya URL:', downloadUrl);
+    console.log("Dosya URL:", downloadUrl);
 
     // setImage(downloadUrl); // Eğer bu URL'yi bir nesne içinde saklamak istiyorsanız bu satırı kullanın
     // Eğer sadece URL'yi bir string olarak saklamak istiyorsanız aşağıdaki satırı kullanın:
     setImage(downloadUrl.toString());
   } catch (error) {
-    console.error('Hata oluştu:', error);
+    console.error("Hata oluştu:", error);
   } finally {
     setUploading(false);
   }
 };
 
-
 const todaysLessons = async (setLessons) => {
   try {
     const currentDate = new Date();
-    const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentYear = currentDate.getFullYear();
+    const startOfDay = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+    );
+    const endOfDay = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate() + 1,
+    );
 
-    // Tarihi belirli bir formatta oluştur
-    const formattedDate = `${currentDay}.${currentMonth}.${currentYear}`;
+    const lessonsCollection = firestore.collection("Lessons");
+    const todaysLessonsSnapsShot = await lessonsCollection
+      .where("tarih", ">=", startOfDay)
+      .where("tarih", "<", endOfDay)
+      .get();
 
-    if (formattedDate) {
-      const lessonsCollection = firestore.collection("Lessons");
-      const todaysLessonsSnapsShot = await lessonsCollection
-        .where("tarih", "==", formattedDate)
-        .get();
-
-      if (!todaysLessonsSnapsShot.empty) {
-        const lessons = todaysLessonsSnapsShot.docs.map(doc => doc.data());
-        setLessons(lessons);
-      } else {
-        console.log('Paket bulunamadı');
-        setLessons([]);
-      }
+    if (!todaysLessonsSnapsShot.empty) {
+      const lessons = todaysLessonsSnapsShot.docs.map((doc) => doc.data());
+      setLessons(lessons);
     } else {
-      console.log('formattedDate değeri undefined veya null.');
+      console.log("Bugün ders bulunamadı");
       setLessons([]);
     }
   } catch (error) {
-    console.error('Hata oluştu:', error);
+    console.error("Hata oluştu:", error);
 
     // Hatanın içeriğini daha detaylı kontrol etmek için
-    if (error.code === 'invalid-argument') {
-      console.error('Geçersiz argüman hatası:', error.message);
+    if (error.code === "invalid-argument") {
+      console.error("Geçersiz argüman hatası:", error.message);
     }
 
     setLessons(null);
@@ -337,10 +431,44 @@ const getWeekRange = (date) => {
 };
 
 const getFormattedDate = (date) => {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
   const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+
+  // Firestore'da saklanan tarih formatına uygun olarak ayarlayın (örneğin, "YYYY-MM-DD")
+  return `${year}-${month < 10 ? "0" + month : month}-${
+    day < 10 ? "0" + day : day
+  }`;
+};
+const getMonthRange = (date) => {
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  return { startOfMonth, endOfMonth };
+};
+
+const monthlyLessons = async (setLessons) => {
+  try {
+    const currentDate = new Date();
+    const { startOfMonth, endOfMonth } = getMonthRange(currentDate);
+
+    const monthlyLessonsSnapshot = await firestore
+      .collection("Lessons")
+      .where("tarih", ">=", startOfMonth)
+      .where("tarih", "<=", endOfMonth)
+      .get();
+
+    if (!monthlyLessonsSnapshot.empty) {
+      const lessons = monthlyLessonsSnapshot.docs.map((doc) => doc.data());
+      setLessons(lessons);
+    } else {
+      setLessons([]);
+    }
+  } catch (error) {
+    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
+    console.error("Hata:", error);
+    setLessons(null);
+  }
 };
 
 const weeklyLessons = async (setLessons) => {
@@ -348,60 +476,23 @@ const weeklyLessons = async (setLessons) => {
     const currentDate = new Date();
     const { startOfWeek, endOfWeek } = getWeekRange(currentDate);
 
-    // Firestore tarih damgasını alınan tarih formatına çevirin
-    const formattedStartOfWeek = getFormattedDate(startOfWeek);
-    const formattedEndOfWeek = getFormattedDate(endOfWeek);
-
     const weeklyLessonsSnapshot = await firestore
       .collection("Lessons")
-      .where("tarih", ">=", formattedStartOfWeek)
-      .where("tarih", "<=", formattedEndOfWeek)
+      .where("tarih", ">=", startOfWeek)
+      .where("tarih", "<=", endOfWeek)
       .get();
 
     if (!weeklyLessonsSnapshot.empty) {
-      // Belge varsa
-      const lessons = weeklyLessonsSnapshot.docs.map(doc => doc.data());
+      const lessons = weeklyLessonsSnapshot.docs.map((doc) => doc.data());
       setLessons(lessons);
     } else {
       setLessons([]);
     }
   } catch (error) {
-    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
-    console.error('Hata:', error);
+    console.error("Hata:", error);
     setLessons(null);
   }
 };
-const monthlyLessons = async (setLessons) => {
-  try {
-    const currentDate = new Date();
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-
-    // Firestore tarih damgasını alınan tarih formatına çevirin
-    const formattedStartOfMonth = getFormattedDate(startOfMonth);
-    const formattedEndOfMonth = getFormattedDate(endOfMonth);
-
-    const monthlyLessonsSnapshot = await firestore
-      .collection("Lessons")
-      .where("tarih", ">=", formattedStartOfMonth)
-      .where("tarih", "<=", formattedEndOfMonth)
-      .get();
-
-    if (!monthlyLessonsSnapshot.empty) {
-      // Belge varsa
-      const lessons = monthlyLessonsSnapshot.docs.map(doc => doc.data());
-      setLessons(lessons);
-    } else {
-      setLessons([]);
-    }
-  } catch (error) {
-    // Hata durumunu daha ayrıntılı bir şekilde ele alabilirsiniz
-    console.error('Hata:', error);
-    setLessons(null);
-  }
-};
-
-
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -410,4 +501,28 @@ const storage = getStorage();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { auth, firestore,storage,fetchTeacher,fetchIncome,addIncome,monthlyLessons,weeklyLessons,addBlog,todaysLessons,fetchUserPackage,teachALesson,fetchLessons,updateStudentsLesson,fetchStudents,updateStudentTeacher,fetchPackageInfo,cancelledLesson, uploadToFirebase, listFiles, uploadImage };
+export {
+  auth,
+  firestore,
+  storage,
+  fetchTeacher,
+  fetchUserLesson,
+  fetchIncome,
+  addLesson,
+  addIncome,
+  monthlyLessons,
+  weeklyLessons,
+  addBlog,
+  todaysLessons,
+  fetchUserPackage,
+  teachALesson,
+  fetchLessons,
+  updateStudentsLesson,
+  fetchStudents,
+  updateStudentTeacher,
+  fetchPackageInfo,
+  cancelledLesson,
+  uploadToFirebase,
+  listFiles,
+  uploadImage,
+};
