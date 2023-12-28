@@ -7,6 +7,7 @@ const inputStyle = {
     borderRadius: 20,
     color: "black",
     fontWeight: "bold",
+    width:300
   },
   sizeAndWeightİnput: {
     backgroundColor: "yellow",

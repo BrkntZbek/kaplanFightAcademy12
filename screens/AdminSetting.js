@@ -66,7 +66,7 @@ export default function AdminSetting() {
     <View style={styles.AdminSetting}>
       <View style={styles.paketler}>
         <TouchableOpacity onPress={paketSistemi}>
-          <Text style={buttonstyle.contentButton}>Paket Sistemi</Text>
+          <Text style={buttonstyle.contentButton}>Paketler Ve Ücretler</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={muhasebe}>
           <Text style={buttonstyle.contentButton}>Muhasebe</Text>

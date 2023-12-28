@@ -18,17 +18,18 @@ export default function HandleLessons({
   handleLessonsVisible,
   handleCloseModal,
 }) {
-  const [lessonDetail, setLessonDetail] = useState(null);
+  const [lessonDetail, setLessonDetail] = useState("Açıklama Yok");
   const [AreaChart, setArea] = useState([]);
   const [visible, setVisible] = useState(true);
 
   const TextInputRef = useRef(null);
+  console.log('ders: ' ,selectLesson)
   const cancel = () => {
     cancelledLesson(selectLesson);
     handleCloseModal();
   };
   const areaChartString = AreaChart.join(', ');
-  console.log('AREA',areaChartString)
+
   const handleBlur = () => {
     if (TextInputRef.current) {
       TextInputRef.current.blur();
@@ -42,11 +43,13 @@ export default function HandleLessons({
   };
 
   const teachALessonPress = () => {
-    if(areaChartString)
-   
- { console.log(areaChartString)}
+    console.log('press Girildi')
+    console.log('TeachA Lessonsa gönderilenler: ',selectLesson,lessonDetail,areaChartString)
     teachALesson(selectLesson, lessonDetail,areaChartString);
-    handleCloseModal();
+    console.log('teachALesson çıkıldı')
+    handleCloseModal()
+  
+  
   };
 
   useEffect(() => {

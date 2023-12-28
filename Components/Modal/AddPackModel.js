@@ -9,7 +9,8 @@ import {
 import React, { useState, useEffect } from "react";
 import { doc, setDoc, updateDoc, Timestamp } from "@firebase/firestore";
 import { firestore } from "../../firebase";
-import buttonStyle from "../../Styles/ButtonStyle";
+
+import Toast from "react-native-toast-message";
 export default function AddPackModel({
   isVisible,
   handleCloseModal,
@@ -92,7 +93,16 @@ export default function AddPackModel({
     } catch (error) {
       console.error("Hata:", error);
     }
+
+    Toast.show({
+      type: "error",
+      text1: "Paket Eklendi",
+      text2: `${selectedStudent.name} adlı öğrenciye Paket Eklendi`,
+    });
   };
+   
+     
+    
 
   const handlePackagePress = (selectedPackageId) => {
     setSelectedPackageId(selectedPackageId);

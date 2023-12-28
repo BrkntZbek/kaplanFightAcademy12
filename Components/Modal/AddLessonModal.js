@@ -7,6 +7,7 @@ import ModalDropdown from "react-native-modal-dropdown";
 import { fetchTeacher } from "../../firebase";
 import buttonStyle from "../../Styles/ButtonStyle";
 import { Timestamp } from "@firebase/firestore";
+import Toast from "react-native-toast-message";
 export default function AddLessonModal({
   isVisible,
   selectedStudent,
@@ -51,6 +52,11 @@ export default function AddLessonModal({
       packageInfo,
     );
     handleCloseAddModal();
+    Toast.show({
+      type: "error",
+      text1: "Paket Eklendi",
+      text2: `${selectedStudent.name} adlı öğrenciye Ders Eklendi`,
+    });
   };
 
   return (
@@ -110,6 +116,7 @@ export default function AddLessonModal({
                 onSelect={(index, value) => setSelectedTeacher(value)}
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
+                initialScrollIndex={0}
                 dropdownStyle={styles.dropdownStyle}
                 renderRow={(option, index, isSelected) => (
                   <Text

@@ -10,7 +10,6 @@ export default function StudentsModal({
   selectedStudent,
   firestore,
   isVisible,
-
   handleCloseModal,
 }) {
   const [addPackageModalVisible, setAddPackageModalVisible] = useState(false);
@@ -19,7 +18,7 @@ export default function StudentsModal({
 
   useEffect(() => {
     fetchUserPackage(selectedStudent, setPackageInfo);
-  }, [selectedStudent, setPackageInfo]);
+  }, [selectedStudent, setPackageInfo,fetchUserPackage]);
 
   const handleOpenLessonModal = () => {
     if (packageInfo === null) {
@@ -108,27 +107,8 @@ export default function StudentsModal({
               )}
             </View>
 
-            <View style={styles.paket}>
-              <Text
-                style={{ fontWeight: "bold", fontSize: 13, color: "#ffdf00" }}
-              >
-                Toplam Ders Sayısı: {selectedStudent.toplamDers}
-              </Text>
-            </View>
-
-            <View style={styles.paket}>
-              <Text
-                style={{ fontWeight: "bold", fontSize: 20, color: "#ffdf00" }}
-              >
-                Geçmiş Dersler
-              </Text>
-              <Text style={styles.textModal}>ss</Text>
-              <Text style={styles.textModal}>Tüm Dersler</Text>
-            </View>
-
-            <View></View>
           </View>
-          {/* Diğer öğrenci bilgilerini buraya ekleyebilirsiniz */}
+      
 
           <View style={styles.buttons}>
             <TouchableOpacity onPress={handleOpenModal}>

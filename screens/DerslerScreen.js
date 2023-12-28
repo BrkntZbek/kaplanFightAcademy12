@@ -19,11 +19,12 @@ export default function DerslerScreen() {
   useEffect(() => {
     SetLessons([]);
     fetchLessons(SetLessons);
-    console.log(lessons);
+ 
   }, [SetLessons]);
-  console.log(lessons);
+
   const handleCloseModal = () => {
-    setHandleLessonsVisible(false);
+    setHandleLessonsVisible(false)
+ 
   };
   const handleLessonPress = (item) => {
     setSelectLesson(item);

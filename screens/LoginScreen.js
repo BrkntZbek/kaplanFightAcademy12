@@ -225,10 +225,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
+    width:'100%'
   },
 
   inputContainer: {
-    width: "80%",
+    width: "100%",
+    alignItems:'center'
   },
   sizeAndWeight: {
     alignItems: "center",

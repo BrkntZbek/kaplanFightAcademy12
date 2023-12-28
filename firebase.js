@@ -10,7 +10,7 @@ import { updateDoc } from "firebase/firestore"; // Değişiklik burada
 import "firebase/compat/firestore"; // Bu satırı ekleyin
 import "firebase/compat/storage"; // Bu satırı ekleyin
 import { Timestamp, doc, setDoc } from "@firebase/firestore";
-
+const { serverTimestamp } = require("firebase/firestore");
 const firebaseConfig = {
   apiKey: "AIzaSyCZbSRis4NANiJQxqwg-Z5sMQQyhZveSw0",
   authDomain: "kaplanfightacademy-86b8e.firebaseapp.com",
@@ -90,7 +90,7 @@ const addLesson = async (
   packageInfo,
 ) => {
   const Lessons = firestore.collection("Lessons");
-  const Muhasebe = firestore.collection("Muhasebe");
+  
   // datetimepicker'dan seçilen tarihi al
   // Bu örnekte, dateObject değişkeni datetimepicker'dan gelen değeri temsil eder.
   // datetimepicker'dan gelen değer ne olursa, onu uygun şekilde işlemeniz gerekiyor.
@@ -99,14 +99,7 @@ const addLesson = async (
   // dateObject bir Date objesi mi kontrol et
   const formattedDate =
     dateObject instanceof Date ? dateObject : dateObject.toDate(); // değilse Firebase Timestamp objesini Date objesine çevir
-  const muhasebeRef = doc(Muhasebe);
-  await setDoc(muhasebeRef, {
-    id: muhasebeRef.id,
-    aciklama: `${selectedTeacher} Ders Ödemesi`,
-    durum: "Gider",
-    fiyat: 200,
-    tarih: selectedDate,
-  });
+  
 
   const lessonRef = doc(Lessons);
   await setDoc(lessonRef, {
@@ -133,6 +126,45 @@ const addLesson = async (
     console.error("Firestore güncelleme hatası:", error);
   }
 };
+const addIncome = async (aciklama, fiyat, durum) => {
+  try {
+    const formattedDate = Timestamp.fromDate(new Date());
+
+    console.log(aciklama, fiyat, durum);
+
+    const incomeCollection = firestore.collection("Muhasebe");
+    const incomeDoc = doc(incomeCollection);
+
+    await setDoc(incomeDoc, {
+      id: incomeDoc.id,
+      aciklama: aciklama,
+      fiyat: fiyat,
+      tarih: formattedDate,
+      durum: durum,
+    });
+
+    console.log("Yeni eklenen gelirin ID:", incomeDoc.id);
+  } catch (error) {
+    console.error("Error adding income:", error);
+  }
+};
+const addLessonPackage = async (paketIsmi, paketFiyati, paketSuresi, dersSayisi) => {
+  try {
+    const packageCollection = firestore.collection('LessonPackage');
+    const packageDoc = doc(packageCollection);
+    
+     await setDoc(packageDoc, {
+      dersSayisi: dersSayisi,
+      paketFiyati: paketFiyati,
+      paketSuresi: paketSuresi,
+      paketTuru: paketIsmi,
+    });
+
+    console.log("Paket başarıyla eklendi. Belge ID:", packageDoc.id);
+  } catch (error) {
+    console.error("Hata addLessonPackage:", error);
+  }
+}
 const fetchUserPackage = async (selectedStudent, setPackageInfo) => {
   if (selectedStudent) {
     const querySnapshot = await firestore
@@ -253,18 +285,109 @@ const fetchTeacher = async (setTeachers) => {
     console.error("Error Teacher students:", error);
   }
 };
+const fetchWage = async (setWage) => {
+  try {
+    // Firestore koleksiyonunu referans al
+    const wageCollection = await firestore.collection('ucret').get();
 
-const teachALesson = async (lesson, lessonDetail,areaChartString) => {
+    // İlk belgeyi al ve veriyi şekillendir
+    const firstWageDoc = wageCollection.docs[0];
+    const firstWageData = firstWageDoc ? { id: firstWageDoc.id, ...firstWageDoc.data() } : null;
 
+   
+    setWage(firstWageData);
+  } catch (error) {
+    console.error("Error FetchWage:", error);
+  }
+}
+const updateWage = async ( hocaDersUcreti, duetUcreti) => {
+  try {
+    const wageCollection = await firestore.collection('ucret').get();
+    const firstWageDoc = wageCollection.docs[0];
 
-  if (lesson && lessonDetail) {
-    await updateDoc(doc(firestore, "Lessons", lesson.id), {
-      durum: "İşlendi",
-      ayrinti: lessonDetail,
-      calisilanBolge:areaChartString
-    });
-  } else {
+   
+    if (hocaDersUcreti === null && duetUcreti === null ) {
+      console.log("dersUcreti veya duetUcreti boş. İşlem yapılmayacak.");
+      return;
+    }
+    else{
+
+      if(hocaDersUcreti !== null && duetUcreti === null  ){
+        if (firstWageDoc) {
+          const wageRef = doc(firestore, 'ucret', firstWageDoc.id);
+          await updateDoc(wageRef, {
+            dersUcreti: hocaDersUcreti,
+           
+          });
+          console.log("Ders Ücreti başarıyla güncellendi.");
+        } else {
+          console.error("Ücret belgesi bulunamadı.");
+        }
+      }
   
+      else if(hocaDersUcreti === null && duetUcreti !== null){
+        if (firstWageDoc) {
+          const wageRef = doc(firestore, 'ucret', firstWageDoc.id);
+          await updateDoc(wageRef, {
+            duetUcreti: duetUcreti,
+           
+          });
+          console.log("hoca ücreti başarıyla güncellendi.");
+        } else {
+          console.error("Ücret belgesi bulunamadı.");
+        }
+      }
+      else {
+        if (firstWageDoc) {
+          const wageRef = doc(firestore, 'ucret', firstWageDoc.id);
+          await updateDoc(wageRef, {
+            duetUcreti: duetUcreti,
+            dersUcreti: hocaDersUcreti,
+          });
+          console.log("Tüm ücretler  başarıyla güncellendi.");
+        } else {
+          console.error("Ücret belgesi bulunamadı.");
+        }
+      }
+    }
+    
+    
+    
+    
+  } catch (error) {
+    console.error("Hata updateWage:", error);
+  }
+};
+
+
+
+
+const teachALesson = async (lesson, lessonDetail, areaChartString) => {
+  try {
+    console.log('TeachALesson Girildi')
+    if (lesson && lessonDetail) {
+      const lessonRef = doc(firestore, "Lessons", lesson.id);
+      await updateDoc(lessonRef, {
+        durum: "İşlendi",
+        ayrinti: lessonDetail,
+        calisilanBolge: areaChartString,
+      });
+
+      const Muhasebe = firestore.collection("Muhasebe");
+      const muhasebeRef = doc(Muhasebe);
+      await setDoc(muhasebeRef, {
+        id: muhasebeRef.id,
+        aciklama: `${lesson.hoca} Ders Ödemesi`,
+        durum: "Gider",
+        fiyat: 200,
+        tarih: serverTimestamp(),
+      });
+      console.log('İşlem tamam')
+    } else {
+      // Eğer lesson ya da lessonDetail yoksa bir şey yapma
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -282,28 +405,7 @@ const addBlog = async (title, contents, image) => {
   });
 };
 
-const addIncome = async (aciklama, fiyat, durum) => {
-  try {
-    const formattedDate = Timestamp.fromDate(new Date());
 
-    console.log(aciklama, fiyat, durum);
-
-    const incomeCollection = firestore.collection("Muhasebe");
-    const incomeDoc = doc(incomeCollection);
-
-    await setDoc(incomeDoc, {
-      id: incomeDoc.id,
-      aciklama: aciklama,
-      fiyat: fiyat,
-      tarih: formattedDate,
-      durum: durum,
-    });
-
-    console.log("Yeni eklenen gelirin ID:", incomeDoc.id);
-  } catch (error) {
-    console.error("Error adding income:", error);
-  }
-};
 
 const listFiles = async (setFiles) => {
   try {
@@ -494,6 +596,8 @@ const weeklyLessons = async (setLessons) => {
   }
 };
 
+
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -525,4 +629,7 @@ export {
   uploadToFirebase,
   listFiles,
   uploadImage,
+  fetchWage,
+  updateWage,
+  addLessonPackage
 };
