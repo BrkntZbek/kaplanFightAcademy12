@@ -16,7 +16,7 @@ const inputStyle = {
     justifyContent: "center",
     marginBottom: 5,
     borderRadius: 20,
-    width: "30%",
+    width: "40%",
     margin: 5,
     color: "black",
   },

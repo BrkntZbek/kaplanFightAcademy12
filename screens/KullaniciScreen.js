@@ -9,7 +9,7 @@ import ILesson from "../Components/StudentScreen//Derslerim/ILesson";
 
 import { useNavigation } from "@react-navigation/native";
 import Ayarlar from "../Components/StudentScreen/Ayarlar";
-import Gelisim from "../Components/StudentScreen/Gelisim";
+import Gelisim from "../Components/StudentScreen/Gelisim/Gelisim";
 import Rezerv from "../Components/StudentScreen/Rezerv";
 
 const UserProfile = () => {
@@ -134,7 +134,7 @@ const UserProfile = () => {
         )}
         {showDerslerim && <ILesson id={userId} />}
         {showSetting && <Ayarlar />}
-        {gelisim && <Gelisim />}
+        {gelisim && <Gelisim id={userId} />}
         {rezerv && <Rezerv />}
       </View>
     </View>
@@ -157,5 +157,7 @@ const styles = StyleSheet.create({
     flex: 2,
     backgroundColor: "#1a1a1a",
     justifyContent: "center",
+    
+  
   },
 });

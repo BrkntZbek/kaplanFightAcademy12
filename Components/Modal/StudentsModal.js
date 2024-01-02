@@ -5,6 +5,7 @@ import Toast from "react-native-toast-message";
 import AddLessonModal from "./AddLessonModal";
 import ButtonStyle from "../../Styles/ButtonStyle";
 import { fetchUserPackage } from "../../firebase";
+import AddEvolution from "../DerslerScreen/Evolution/AddEvolution";
 
 export default function StudentsModal({
   selectedStudent,
@@ -15,7 +16,8 @@ export default function StudentsModal({
   const [addPackageModalVisible, setAddPackageModalVisible] = useState(false);
   const [lessonModalVisible, setLessonModalVisible] = useState(false);
   const [packageInfo, setPackageInfo] = useState(null);
-
+  const [evolutionModalVisible,setEvolutionModalVisible] = useState(false);
+  console.log('EVO',evolutionModalVisible)
   useEffect(() => {
     fetchUserPackage(selectedStudent, setPackageInfo);
   }, [selectedStudent, setPackageInfo,fetchUserPackage]);
@@ -36,6 +38,8 @@ export default function StudentsModal({
   const handleCloseAddModal = () => {
     setAddPackageModalVisible(false);
     setLessonModalVisible(false);
+    setEvolutionModalVisible(false);
+    console.log('MODELLER KAPATILIYOR',addPackageModalVisible,lessonModalVisible,evolutionModalVisible)
   };
   const handleOpenModal = () => {
     // Paket bilgisi varsa uyarı göster
@@ -47,11 +51,13 @@ export default function StudentsModal({
       });
       return;
     }
-
     // Paket bilgisi null ise modal'ı aç
     setAddPackageModalVisible(true);
   };
 
+  const handleEvolutionModal = () =>{
+    setEvolutionModalVisible(true);
+  }
   return (
     <Modal
       transparent={true}
@@ -117,7 +123,9 @@ export default function StudentsModal({
             <TouchableOpacity onPress={handleOpenLessonModal}>
               <Text style={ButtonStyle.contentButton}>Ders Ekle</Text>
             </TouchableOpacity>
-
+            <TouchableOpacity onPress={handleEvolutionModal}>
+              <Text style={ButtonStyle.contentButton}>Gelişim</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleCloseModal}>
               <Text style={ButtonStyle.contentButton}>Detay</Text>
             </TouchableOpacity>
@@ -137,6 +145,11 @@ export default function StudentsModal({
             firestore={firestore}
             handleCloseAddModal={handleCloseAddModal}
             packageInfo={packageInfo}
+          />
+          <AddEvolution 
+          isVisible={evolutionModalVisible}
+          handleCloseAddModal={handleCloseAddModal}
+          selectedStudent={selectedStudent}
           />
         </View>
       </View>

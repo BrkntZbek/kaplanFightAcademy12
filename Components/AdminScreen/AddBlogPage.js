@@ -39,34 +39,7 @@ export default function AddBlogPage() {
     setImage(null);
   };
 
-  const takePhoto = async () => {
-    try {
-      const cameraResp = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        quality: 1,
-      });
-
-      if (!cameraResp.canceled) {
-        const { uri } = cameraResp.assets[0];
-        const fileName = uri.split("/").pop();
-        const uploadResp = await uploadToFirebase(uri, fileName, (v) =>
-          console.log(v),
-        );
-        console.log(uploadResp);
-
-        listFiles().then((listResp) => {
-          const files = listResp.map((value) => {
-            return { name: value.fullPath };
-          });
-
-          setFiles(files);
-        });
-      }
-    } catch (e) {
-      Alert.alert("Error Uploading Image " + e.message);
-    }
-  };
+ 
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -120,9 +93,7 @@ export default function AddBlogPage() {
               style={{ width: 170, height: 200 }}
             />
           )}
-          <TouchableOpacity style={styles.button} onPress={takePhoto}>
-            <Text style={buttonStyle.contentButtonLesson}>Fotoğraf Çek</Text>
-          </TouchableOpacity>
+          
           <TouchableOpacity style={styles.button} onPress={pickImage}>
             <Text style={buttonStyle.contentButtonLesson}>Fotoğraf Seç</Text>
           </TouchableOpacity>
@@ -151,7 +122,8 @@ const styles = StyleSheet.create({
   addBlogContainer: {
     flex: 1,
     alignItems: "center",
-    marginBottom: 30,
+
+    backgroundColor:'#1A1A1A'
   },
   addBlogContent: {
     width: "80%",

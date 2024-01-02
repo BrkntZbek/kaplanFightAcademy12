@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Modal,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, Modal, TouchableOpacity, TextInput, Alert } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import buttonStyle from "../../Styles/ButtonStyle";
 import inputStyle from "../../Styles/İnputStyle";
@@ -13,6 +6,7 @@ import { cancelledLesson } from "../../firebase";
 import TextStyle from "../../Styles/TextStyle";
 import { teachALesson } from "../../firebase";
 import HandleArea from "../DerslerScreen/HandleArea";
+
 export default function HandleLessons({
   selectLesson,
   handleLessonsVisible,
@@ -21,39 +15,75 @@ export default function HandleLessons({
   const [lessonDetail, setLessonDetail] = useState("Açıklama Yok");
   const [AreaChart, setArea] = useState([]);
   const [visible, setVisible] = useState(true);
-
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
+  const [gecİptal,setGecİptal] = useState(false);
   const TextInputRef = useRef(null);
-  console.log('ders: ' ,selectLesson)
+
   const cancel = () => {
-    cancelledLesson(selectLesson);
-    handleCloseModal();
+    if (!confirmationVisible) {
+      Alert.alert(
+        "İptal Et",
+        "İptal etmek istediğinize emin misiniz?",
+        [
+          {
+            text: "Hayır",
+            onPress: () => {},
+            style: "cancel",
+          },
+          {
+            text: "Evet",
+            onPress: () => setConfirmationVisible(true),
+          },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      const durum = "İptal";
+      cancelledLesson(selectLesson,durum);
+      handleCloseModal();
+    }
   };
+  const lateCancellation = () =>{
+    if(!gecİptal){
+      Alert.alert('Gec İptal',"İptal etmek istediğinize emin misiniz?",[
+        {
+          text:"Hayır",
+          onPress: () => {},
+          style:"cancel",
+        },
+        {
+          text:"Evet",
+          onPress: ( ) =>  setGecİptal(true),
+        },
+      ],
+      {cancelable:false});
+    }
+    else{
+      const durum = "Geç İptal";
+      cancelledLesson(selectLesson,durum);
+    }
+
+  }
+
   const areaChartString = AreaChart.join(', ');
 
   const handleBlur = () => {
     if (TextInputRef.current) {
       TextInputRef.current.blur();
-      // TextInput'den çıkarken lessonDetail değerini sıfırlayabilirsiniz
     }
   };
 
   const handleLessonInput = (text) => {
     setLessonDetail(text);
-    // Gelen veriyi lessonDetails dizisine ekleyebilirsiniz
   };
 
   const teachALessonPress = () => {
-    console.log('press Girildi')
-    console.log('TeachA Lessonsa gönderilenler: ',selectLesson,lessonDetail,areaChartString)
-    teachALesson(selectLesson, lessonDetail,areaChartString);
-    console.log('teachALesson çıkıldı')
-    handleCloseModal()
-  
-  
+    teachALesson(selectLesson, lessonDetail, areaChartString);
+    handleCloseModal();
   };
 
   useEffect(() => {
-    if (selectLesson.durum === "İşlendi" || "İptal") {
+    if (selectLesson.durum === "İşlendi" || selectLesson.durum === "İptal") {
       setVisible(false);
     } else {
       setVisible(true);
@@ -92,8 +122,6 @@ export default function HandleLessons({
                       </TouchableOpacity>
                     )}
                     <HandleArea setArea={setArea} />
-
-                   
                   </View>
                 )}
 
@@ -103,7 +131,6 @@ export default function HandleLessons({
                     Ders İçeriği
                   </Text>
                   <View style={styles.contents}>
-
                     <Text style={{ fontSize: 15 }}>
                       {selectLesson.ayrinti}{" "}
                     </Text>
@@ -126,7 +153,8 @@ export default function HandleLessons({
                 <TouchableOpacity onPress={cancel}>
                   <Text style={buttonStyle.contentButtonLesson}>İptal</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleCloseModal}>
+
+                <TouchableOpacity onPress={lateCancellation}>
                   <Text style={buttonStyle.contentButtonLesson}>Geç İptal</Text>
                 </TouchableOpacity>
               </>

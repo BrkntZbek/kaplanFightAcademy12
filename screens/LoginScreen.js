@@ -108,6 +108,7 @@ export default function LoginScreen() {
           alignItems: "center",
           justifyContent: "center",
           marginTop: -40,
+          marginBottom:20
         }}
       >
         <Text

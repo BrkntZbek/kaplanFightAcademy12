@@ -18,6 +18,8 @@ export default function HandleArea({ setArea }) {
     "Quadriceps",
     "Hamstring",
     "Calf",
+   "boks",
+   "Muay Thai"
   ];
 
   const handleAreaPress = (area) => {
@@ -57,7 +59,10 @@ export default function HandleArea({ setArea }) {
                 { backgroundColor: isAreaSelected(area) ? "#FFDF00" : "white" },
               ]}
             >
+             
               <Text>{area}</Text>
+            
+             
             </TouchableOpacity>
           ))}
         </View>
@@ -87,8 +92,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     width:'44%',
+    maxWidth:'95%',
+    height:'50%',
     padding:5,
     justifyContent: "space-between",
+   
+  
   },
   area: {
     borderWidth: 1,

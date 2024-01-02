@@ -1,15 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import TextStyle from "../../Styles/TextStyle";
+import TextStyle from "../../../Styles/TextStyle";
+import GList from "./GList";
 export default function Gelisim({ id }) {
   return (
     <View style={styles.infoContainer}>
       <View style={styles.textContainer}>
         <View style={styles.nameContainer}>
-          <Text style={styles.nameText}>geliş</Text>
+          <Text style={styles.nameText}>Gelişim</Text>
         </View>
         <View style={styles.info}>
-          <Text style={TextStyle.normalText}>Email: </Text>
+         <GList id={id}/>
         </View>
       </View>
     </View>
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     backgroundColor: "#E8E8D1",
     width: "100%",
-    height: "95%",
+    height: "90%",
     borderTopLeftRadius: 90,
     borderBottomLeftRadius: 50,
     marginTop: 18,

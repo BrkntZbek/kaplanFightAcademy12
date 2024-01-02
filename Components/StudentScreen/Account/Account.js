@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     backgroundColor: "#E8E8D1",
     width: "100%",
-    height: "95%",
+    height: "90%",
     borderTopLeftRadius: 90,
     borderBottomLeftRadius: 50,
     marginTop: 18,

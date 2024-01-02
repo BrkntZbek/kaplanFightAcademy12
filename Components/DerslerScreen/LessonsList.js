@@ -64,11 +64,14 @@ export default function LessonsList({ lessons, handleLessonPress }) {
                       item.durum === "İşlenmedi"
                         ? "#BF3624"
                         : item.durum === "İptal"
-                          ? "black"
+                          ? "red"
                           : item.durum === "İşlendi"
                             ? "green"
-                            : "black",
+                            : item.durum === "Geç İptal"
+                            ? "black"
+                            :"black",
                     marginLeft: 20,
+                    fontWeight:'bold'
                   }}
                 >{` ${item.durum}`}</Text>
               </View>

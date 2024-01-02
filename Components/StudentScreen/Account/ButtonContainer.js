@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   activeButton: {
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: "#FFDF00",
     borderRadius: 10,
     marginTop: 10,

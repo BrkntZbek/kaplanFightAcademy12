@@ -45,7 +45,7 @@ const fetchIncome = async (setIncome) => {
   }
 };
 
-const cancelledLesson = async (lesson) => {
+const cancelledLesson = async (lesson,durum) => {
   try {
     const fetchPackageOwner = await firestore
       .collection("userss")
@@ -56,7 +56,7 @@ const cancelledLesson = async (lesson) => {
       const userDoc = fetchPackageOwner.docs[0];
       const totalLesson = userDoc.data().toplamDers || 0; // Mevcut değeri alır (varsayılan olarak 0)
 
-      await updateDoc(doc(firestore, "Lessons", lesson.id), { durum: "İptal" });
+      await updateDoc(doc(firestore, "Lessons", lesson.id), { durum: durum });
       await updateDoc(doc(firestore, "userss", userDoc.id), {
         toplamDers: totalLesson + 1,
       });
@@ -148,6 +148,8 @@ const addIncome = async (aciklama, fiyat, durum) => {
     console.error("Error adding income:", error);
   }
 };
+
+
 const addLessonPackage = async (paketIsmi, paketFiyati, paketSuresi, dersSayisi) => {
   try {
     const packageCollection = firestore.collection('LessonPackage');
@@ -283,6 +285,17 @@ const fetchTeacher = async (setTeachers) => {
     setTeachers(teachersData);
   } catch (error) {
     console.error("Error Teacher students:", error);
+  }
+};
+const muhasebe = async(setData) =>{
+  try {
+     const muhasebeCollection = await firestore.collection("Muhasebe").get();
+     const muhasebeData = muhasebeCollection.docs.map((doc) =>({
+      id: doc.id,...doc.data(),
+     }));
+     setData(muhasebeData);
+  } catch (error) {
+    console.error("Error muhaseebe fetch:", error);
   }
 };
 const fetchWage = async (setWage) => {
@@ -596,6 +609,49 @@ const weeklyLessons = async (setLessons) => {
   }
 };
 
+const fetchEvolution = async (userId,setEvolutions) =>{
+  if (userId) {
+    try {
+      const EvolutionsCollection = await firestore
+        .collection("Evolution")
+        .where("userid", "==", userId)
+        .get();
+
+      const EvolutionData = EvolutionsCollection.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setEvolutions(EvolutionData);
+    } catch (error) {
+      console.error("Fetch User Evolution Error:", error);
+    }
+  }
+};
+const uploadEvolution = async(userId,boy,kilo,kolCm,belCm,bacakCm,uploading) =>{
+  try {
+
+    const EvolutionsCollection = firestore.collection("Evolution");
+    const EvolutionDoc = doc(EvolutionsCollection);
+
+    await setDoc(EvolutionDoc, {
+      id: EvolutionDoc.id,
+      userid:userId,
+      photoUrl:uploading,
+      kilo: kilo,
+      boy:boy,
+      belCm:belCm,
+      kolCm:kolCm,
+      bacakCm,bacakCm,
+    
+    });
+
+    console.log("Yeni eklenen fotoURL:", photoUrl);
+  } catch (error) {
+    console.error("Error adding income:", error);
+  }
+}
+
 
 
 if (!firebase.apps.length) {
@@ -620,6 +676,7 @@ export {
   todaysLessons,
   fetchUserPackage,
   teachALesson,
+  uploadEvolution,
   fetchLessons,
   updateStudentsLesson,
   fetchStudents,
@@ -631,5 +688,7 @@ export {
   uploadImage,
   fetchWage,
   updateWage,
-  addLessonPackage
+  addLessonPackage,
+  muhasebe,
+  fetchEvolution
 };
