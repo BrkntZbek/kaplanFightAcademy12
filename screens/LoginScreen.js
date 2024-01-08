@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Switch,
 } from "react-native";
-import { auth } from "../firebase";
+import { auth, userTesting } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { firestore } from "../firebase";
 import inputStyle from "../Styles/İnputStyle";
@@ -17,22 +17,28 @@ import { doc, setDoc } from "@firebase/firestore";
 export default function LoginScreen() {
   const [showNameInput, setShowNameInput] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
-  const [email, setEmail] = useState("sertac@gmail.com");
+  const [email, setEmail] = useState("naber@gmail.com");
   const [password, setPassword] = useState("lm5bll88a");
   const [name, setName] = useState("");
   const [telefon, setTelefon] = useState("");
   const [size, setSize] = useState("");
   const [weight, setWeight] = useState("");
+  const [durum,setDurum] = useState(null);
   const navigation = useNavigation();
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        // Kullanıcı oturum açtı
+        const userId = user.uid;
+        await userTesting(userId, setDurum);
         const userProperties = { email: user.email, uid: user.uid }; // Sadece gerekli özellikleri içeren bir nesne
+  
         if (user.email === "admin@kaplanfight.com") {
           // Admin kontrolü
           navigation.replace("Admin", { loginUser: userProperties });
           console.log("Admin Giriş yaptı", user.email);
+        } else if (durum === "Hoca") {
+          navigation.replace("Hoca", { loginUser: userProperties });
+          console.log("Hoca Giriş yaptı", user.email);
         } else {
           // Diğer kullanıcılar
           navigation.replace("Home", { loginUser: userProperties });
@@ -40,11 +46,11 @@ export default function LoginScreen() {
         }
       }
     });
-
+  
     return () => {
       unsubscribe(); // useEffect temizleme fonksiyonu
     };
-  }, [navigation]);
+  }, [navigation, durum]); // durum'u useEffect bağımlılıklarına ekleyin
 
   const handleSwitchToggle = (value) => {
     setIsRegisterMode(value);

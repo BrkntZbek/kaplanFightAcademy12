@@ -16,6 +16,7 @@ import AddBlogPage from "./Components/AdminScreen/AddBlogPage";
 import BlogPages from "./Components/Home/BlogPages";
 import MuhasebeScreen from "./screens/MuhasebeScreen";
 import PaketSistemi from "./screens/PaketSistemi";
+import TeacherScreen from "./screens/TeacherScreen";
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -35,6 +36,11 @@ export default function App() {
           options={{ headerShown: false }}
           name="Admin"
           component={AdminScreen}
+        />
+          <Stack.Screen
+          options={{ headerShown: false }}
+          name="Hoca"
+          component={TeacherScreen}
         />
         <Stack.Screen
           options={{ headerShown: false }}

@@ -9,7 +9,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import Home from "../Home";
-import DerslerScreen from "./DerslerScreen";
+
 import KullaniciScreen from "./KullaniciScreen";
 
 const Tab = createBottomTabNavigator();

@@ -19,6 +19,33 @@ const firebaseConfig = {
   messagingSenderId: "120319904391",
   appId: "1:120319904391:web:5eb488d55c936eb6668622",
 };
+
+
+const userTesting = async (userId, setDurum) => {
+  try {
+    console.log(userId)
+    const userCollection = await firestore.collection("userss")
+      .where("id", "==", userId)
+      .where("yetki", "==", "Hoca")
+      .get();
+
+    const userData = userCollection.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+      console.log(userData.yetki)
+    if (userData.length > 0) {
+      // userCollection sorgusu sonuç veriyorsa
+      setDurum('Hoca');
+    } else {
+      // userCollection sorgusu sonuç vermiyorsa
+      setDurum(null);
+    }
+  } catch (error) {
+    console.error("Hata:", error);
+    // Hata durumunda setDurum(null) veya başka bir şey yapabilirsiniz.
+  }
+}
 const fetchStudents = async (setStudents) => {
   try {
     const studentsCollection = await firestore.collection("userss").get();
@@ -688,5 +715,6 @@ export {
   updateWage,
   addLessonPackage,
   muhasebe,
-  fetchEvolution
+  fetchEvolution,
+  userTesting
 };

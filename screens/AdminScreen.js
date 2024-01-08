@@ -24,7 +24,7 @@ export default function AdminScreen() {
           } else if (route.name === "Dersler") {
             iconName = focused ? "book" : "book-outline";
           } else if (route.name === "Admin Ayarları") {
-            iconName = focused ? "cash" : "cash-outline";
+            iconName = focused ? "settings" : "settings-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;

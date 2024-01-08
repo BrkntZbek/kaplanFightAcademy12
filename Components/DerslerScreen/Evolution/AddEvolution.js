@@ -14,7 +14,7 @@ import inputStyle from '../../../Styles/İnputStyle';
 import * as ImagePicker from "expo-image-picker";
 import { uploadImage } from '../../../firebase';
 import { uploadEvolution } from '../../../firebase';
-import buttonStyle from '../../../Styles/ButtonStyle';
+
 export default function AddEvolution({
   isVisible,
   selectedStudent,
