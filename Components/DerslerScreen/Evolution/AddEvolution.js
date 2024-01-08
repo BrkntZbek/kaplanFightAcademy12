@@ -67,24 +67,28 @@ export default function AddEvolution({
         <View style={styles.modalContainer}>
           <View style={styles.upload}>
             <TouchableOpacity onPress={pickImage}>
-              <Text style={{ color: 'white' }}>Fotoğraf seç</Text>
+              <Text style={{ color: 'white',fontSize:20 ,marginBottom:10}}>Fotoğraf seç</Text>
+              <View style={{width:240,height:250}}>
+
+             
               {image && (
                 <Image
                   source={{ uri: image }}
-                  style={{ width: 170, height: 200, borderRadius: 15, borderWidth: 3, borderColor: 'gray' }}
+                  style={{ width: 250, height: 250, borderRadius: 10, borderWidth: 3, borderColor: 'gray' }}
                 />
               )}
+               </View>
                   {!uploading ? (
             <TouchableOpacity
               style={styles.button}
               onPress={() => uploadImage(image, setImage, setUploading)}
             >
-              <Text style={{color:'red'}}>
+              <Text style={{color:'red',fontSize:20,marginTop:10}}>
                 Fotoğrafı Yükle
               </Text>
             </TouchableOpacity>
           ) : (
-            <ActivityIndicator size={"small"} color="black" />
+            <ActivityIndicator size={"small"} color="red" />
           )}
             </TouchableOpacity>
           </View>
@@ -117,10 +121,10 @@ export default function AddEvolution({
           </View>
         </View>
         <TouchableOpacity onPress={add}>
-          <Text style={{ color: 'white' }}>Ekle</Text>
+          <Text style={{ color: 'white',fontSize:25,marginBottom:20 }}>Ekle</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCloseAddModal}>
-          <Text style={{ color: 'white' }}>KAPAT</Text>
+          <Text style={{ color: 'white' ,fontSize:20}}>KAPAT</Text>
         </TouchableOpacity>
       </View>
     </Modal>
@@ -130,15 +134,29 @@ export default function AddEvolution({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width:'100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.9)',
   },
   input: {
+    marginTop:10,
     width: '50%',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    justifyContent:'center',
+    flexDirection:'row'
   },
   modalContainer: {
-    flexDirection: 'row',
+   width:'100%',
+   alignItems:'center'
   },
+  upload:{
+   borderWidth:1,
+   borderColor:'white',
+   borderRadius:10,
+    width:'100%',
+    height:'60%',
+    alignItems:'center',
+    justifyContent:'center'
+  }
 });
