@@ -66,31 +66,36 @@ export default function AddEvolution({
       <View style={styles.container}>
         <View style={styles.modalContainer}>
           <View style={styles.upload}>
+            <View style={styles.buttons}>
             <TouchableOpacity onPress={pickImage}>
-              <Text style={{ color: 'white',fontSize:20 ,marginBottom:10}}>Fotoğraf seç</Text>
-              <View style={{width:240,height:250}}>
+              <Text style={styles.buton}>Fotoğraf seç</Text>
+              </TouchableOpacity>
 
-             
-              {image && (
-                <Image
-                  source={{ uri: image }}
-                  style={{ width: 250, height: 250, borderRadius: 10, borderWidth: 3, borderColor: 'gray' }}
-                />
-              )}
-               </View>
-                  {!uploading ? (
+              {!uploading ? (
             <TouchableOpacity
-              style={styles.button}
+             
               onPress={() => uploadImage(image, setImage, setUploading)}
             >
-              <Text style={{color:'red',fontSize:20,marginTop:10}}>
+              <Text style={styles.buton}>
                 Fotoğrafı Yükle
               </Text>
             </TouchableOpacity>
           ) : (
             <ActivityIndicator size={"small"} color="red" />
           )}
-            </TouchableOpacity>
+            </View>
+           
+              <View style={{width:'80%',height:250,borderWidth:0.3,borderColor:'white',marginTop:10,borderRadius:10}}>
+              {image && (
+                <Image
+                  source={{ uri: image }}
+                  style={{ width:'100%',height:'100%', borderRadius: 10,borderWidth:1,marginTop:-0.5,marginLeft:-0.2}}
+                />
+              )}
+               </View>
+            
+           
+            
           </View>
           <View style={styles.input}>
          
@@ -151,12 +156,25 @@ const styles = StyleSheet.create({
    alignItems:'center'
   },
   upload:{
-   borderWidth:1,
+   borderWidth:0.3,
    borderColor:'white',
    borderRadius:10,
-    width:'100%',
+    width:'95%',
     height:'60%',
     alignItems:'center',
     justifyContent:'center'
+  },
+  buttons:{
+    flexDirection:'row'
+  },
+  buton:{
+    fontSize:15,
+    marginHorizontal:10,
+    color:'white',
+    borderWidth:1,
+    borderColor:'#999999',
+    borderRadius:10,
+    padding:5,
+    backgroundColor:'#1A1A1A'
   }
 });
