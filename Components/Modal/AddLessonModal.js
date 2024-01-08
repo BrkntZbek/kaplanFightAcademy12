@@ -99,9 +99,13 @@ export default function AddLessonModal({
                 renderRow={(option, index, isSelected) => (
                   <Text
                     style={{
-                      padding: 10,
+                      padding: 15,
                       fontSize: 16,
                       color: isSelected ? "#ffdf00" : "black",
+                      backgroundColor:'#FFFFFF',
+                      width:'100%',
+                    
+                      borderRadius:15
                     }}
                   >
                     {option}
@@ -121,9 +125,13 @@ export default function AddLessonModal({
                 renderRow={(option, index, isSelected) => (
                   <Text
                     style={{
-                      padding: 10,
+                      padding: 15,
                       fontSize: 16,
                       color: isSelected ? "#ffdf00" : "black",
+                      backgroundColor:'#FFFFFF',
+                      width:'100%',
+                    
+                      borderRadius:15
                     }}
                   >
                     {option}
@@ -190,6 +198,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    borderBottomWidth:1
   },
   datePicker: {
     width: 120,
@@ -205,4 +214,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  dropdownStyle:{
+    width:150,
+    alignItems:'center',
+    borderRadius:15,
+    backgroundColor:'#FFFFFF',
+    borderWidth:5
+  }
 });

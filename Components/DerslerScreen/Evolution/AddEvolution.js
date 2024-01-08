@@ -1,22 +1,32 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity, TextInput, StatusBar, Button, Image } from 'react-native';
+import { StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  Button,
+  Alert,
+  ActivityIndicator,
+  Modal,
+  Image,} from 'react-native';
 import React, { useState } from 'react';
 import inputStyle from '../../../Styles/İnputStyle';
 import * as ImagePicker from "expo-image-picker";
 import { uploadImage } from '../../../firebase';
 import { uploadEvolution } from '../../../firebase';
-
+import buttonStyle from '../../../Styles/ButtonStyle';
 export default function AddEvolution({
   isVisible,
   selectedStudent,
   handleCloseAddModal
 }) {
   const [image, setImage] = useState(null);
-  const [boy, setBoy] = useState('');
-  const [kilo, setKilo] = useState('');
-  const [kolCm, setKolCm] = useState('');
-  const [belCm, setBelCm] = useState('');
-  const [bacakCm, setBacakCm] = useState('');
 
+  const [kilo, setKilo] = useState(0);
+  const [kolCm, setKolCm] = useState(0);
+  const [belCm, setBelCm] = useState(0);
+  const [bacakCm, setBacakCm] = useState(0);
+  const [uploading, setUploading] = useState(false);
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
 
   const pickImage = async () => {
@@ -26,12 +36,11 @@ export default function AddEvolution({
       aspect: [4, 3],
       quality: 1,
     });
-
+    
     if (!result.canceled) {
-      setImage(result.uri);
+      setImage(result.assets[0].uri);
     }
   };
-
   if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
     return (
       <View style={{ marginTop: 50 }}>
@@ -44,9 +53,8 @@ export default function AddEvolution({
 
   const add = () => {
     const userId = selectedStudent.id;
-    uploadImage(image, setImage);
     console.log(image)
-    uploadEvolution(userId, boy, kilo, kolCm, belCm, bacakCm, image);
+    uploadEvolution(userId,  kilo, kolCm, belCm, bacakCm, image);
   };
 
   return (
@@ -66,15 +74,22 @@ export default function AddEvolution({
                   style={{ width: 170, height: 200, borderRadius: 15, borderWidth: 3, borderColor: 'gray' }}
                 />
               )}
+                  {!uploading ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => uploadImage(image, setImage, setUploading)}
+            >
+              <Text style={{color:'red'}}>
+                Fotoğrafı Yükle
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <ActivityIndicator size={"small"} color="black" />
+          )}
             </TouchableOpacity>
           </View>
           <View style={styles.input}>
-            <TextInput
-              placeholder='boy'
-              style={inputStyle.sizeAndWeightİnput}
-              value={boy}
-              onChangeText={text => setBoy(text)}
-            />
+         
             <TextInput
               placeholder='kilo'
               style={inputStyle.sizeAndWeightİnput}

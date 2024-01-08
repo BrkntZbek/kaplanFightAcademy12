@@ -75,7 +75,7 @@ export default function StudentsModal({
             </Text>
           </View>
           <View style={styles.Studentİnfo}>
-            <Text style={styles.textModal}>{selectedStudent?.email}</Text>
+       
             <Text style={styles.textModal}>{selectedStudent?.telefon}</Text>
 
             <View style={styles.paket}>
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#ffdf00",
     marginTop: 5,
+    marginBottom:5,
   },
   Studentİnfo: {
     alignItems: "center",
@@ -198,11 +199,11 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     padding: 40,
-    borderWidth: 2,
-    borderColor: "#ffdf00",
+    borderWidth: 15,
+    borderColor: "#1a1a1a",
     backgroundColor: "black",
     borderRadius: 10,
-    width: "80%", // Modal'ın genişliği
+    width: "90%", // Modal'ın genişliği
     maxHeight: "80%", // Modal'ın maksimum yüksekliği
   },
 });

@@ -609,12 +609,12 @@ const weeklyLessons = async (setLessons) => {
   }
 };
 
-const fetchEvolution = async (userId,setEvolutions) =>{
-  if (userId) {
+const fetchEvolution = async (id,setEvolutions) =>{
+  if (id) {
     try {
       const EvolutionsCollection = await firestore
         .collection("Evolution")
-        .where("userid", "==", userId)
+        .where("userid", "==", id)
         .get();
 
       const EvolutionData = EvolutionsCollection.docs.map((doc) => ({
@@ -628,25 +628,23 @@ const fetchEvolution = async (userId,setEvolutions) =>{
     }
   }
 };
-const uploadEvolution = async(userId,boy,kilo,kolCm,belCm,bacakCm,uploading) =>{
+const uploadEvolution = async(userId, kilo, kolCm, belCm, bacakCm, image) => {
   try {
-
     const EvolutionsCollection = firestore.collection("Evolution");
     const EvolutionDoc = doc(EvolutionsCollection);
-
+    const today = new Date();
     await setDoc(EvolutionDoc, {
       id: EvolutionDoc.id,
-      userid:userId,
-      photoUrl:uploading,
+      userid: userId,
+      photoUrl: image, // Doğrudan image değerini kullan
       kilo: kilo,
-      boy:boy,
-      belCm:belCm,
-      kolCm:kolCm,
-      bacakCm,bacakCm,
-    
+      belCm: belCm,
+      kolCm: kolCm,
+      bacakCm: bacakCm,
+      tarih: today,
     });
 
-    console.log("Yeni eklenen fotoURL:", photoUrl);
+    console.log("Yeni eklenen fotoURL:", image); // Burada image değerini kullan
   } catch (error) {
     console.error("Error adding income:", error);
   }

@@ -33,9 +33,9 @@ export default function LessonsList({ lessons, handleLessonPress }) {
                 <View style={{ alignItems: "center" }}>
                   <Text
                     style={{
-                      fontSize: 20,
-                      fontWeight: "bold",
+                      fontSize: 18,
                       color: "#1A1A1A",
+                      fontFamily: 'Impact'
                     }}
                   >{` ${item.ogrenci}`}</Text>
                 </View>
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 2,
     borderWidth: 1,
-    borderColor: "#67BA46",
-    backgroundColor: "#E8E8D1",
+    borderColor:'#999999',
+    backgroundColor: "white",
     width: "100%", // Genişliği daha küçük bir değerle ayarlayabilir veya flex ekleyebilirsiniz
     height: "auto",
     flexDirection: "row", // Öğeleri yatayda sırala

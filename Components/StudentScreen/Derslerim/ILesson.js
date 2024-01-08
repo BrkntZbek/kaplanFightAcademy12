@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   info: {
-    height: "70%",
+    height: "100%",
     width: "100%",
     justifyContent: "start",
     marginTop: 10,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   textContainer: {
     height: "100%",
     padding: 30,
-
+    backgroundColor:'red',
     borderTopLeftRadius: 90,
     alignItems: "center",
     justifyContent: "start",
