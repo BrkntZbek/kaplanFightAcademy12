@@ -35,24 +35,28 @@ const UserProfile = () => {
             .collection("userss")
             .where("id", "==", userId)
             .get();
-
+  
           if (selectedStudentSnapshot.docs.length === 0) {
             console.log("Öğrencinin belgesi bulunmamaktadır.");
             setUserData(null);
             setPackageInfo(null);
             return;
           }
-
+  
           const selectedStudent = selectedStudentSnapshot.docs[0];
-
+  
           // userData ayarla
           const doc = await userRef.get();
           if (doc.exists) {
-            setUserData(doc.data());
+            const newUserData = doc.data();
+  
+            // Manipülasyonlar burada yapılabilir
+  
+            setUserData(newUserData);
           } else {
             console.log("Firestore belgesi bulunamadı");
           }
-
+  
           // packageInfo'yu ayarla
           fetchPackageInfo(selectedStudent, setPackageInfo);
         } else {
@@ -65,9 +69,9 @@ const UserProfile = () => {
         setPackageInfo(null);
       }
     };
-
+  
     fetchData();
-  }, [setUserData, setPackageInfo]);
+  }, [userId, setUserData, setPackageInfo]);
 
   if (!userData) {
     return <LoadingData />;

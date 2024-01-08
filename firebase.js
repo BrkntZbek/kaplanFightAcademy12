@@ -72,6 +72,15 @@ const fetchIncome = async (setIncome) => {
   }
 };
 
+const updateWeight = async(selectedStudent,kilo) =>{
+
+  
+  await updateDoc(doc(firestore,"userss",selectedStudent.id),{
+    kilo:kilo,
+  });
+  console.log(selectedStudent.name,"Kilosu",kilo,"olarak güncellendi");
+}
+
 const cancelledLesson = async (lesson,durum) => {
   try {
     const fetchPackageOwner = await firestore
@@ -716,5 +725,6 @@ export {
   addLessonPackage,
   muhasebe,
   fetchEvolution,
-  userTesting
+  userTesting,
+  updateWeight
 };

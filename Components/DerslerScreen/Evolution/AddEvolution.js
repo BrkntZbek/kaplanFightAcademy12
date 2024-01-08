@@ -12,7 +12,7 @@ import { StyleSheet,
 import React, { useState } from 'react';
 import inputStyle from '../../../Styles/İnputStyle';
 import * as ImagePicker from "expo-image-picker";
-import { uploadImage } from '../../../firebase';
+import { updateWeight, uploadImage } from '../../../firebase';
 import { uploadEvolution } from '../../../firebase';
 
 export default function AddEvolution({
@@ -55,6 +55,7 @@ export default function AddEvolution({
     const userId = selectedStudent.id;
     console.log(image)
     uploadEvolution(userId,  kilo, kolCm, belCm, bacakCm, image);
+    updateWeight(selectedStudent,kilo);
   };
 
   return (

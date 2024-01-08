@@ -79,11 +79,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     padding: 10,
+
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    color:'#FFFFFF'
   },
   areasContainer: {
     paddingHorizontal: 10,

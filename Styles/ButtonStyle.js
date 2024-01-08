@@ -16,7 +16,7 @@ const buttonStyle = {
   },
   contentButtonLesson: {
     fontWeight: "bold",
-    color: "black",
+    color: "#FFFFFF",
     fontSize: 18,
     padding: 9,
   },

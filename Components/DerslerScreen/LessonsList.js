@@ -35,7 +35,7 @@ export default function LessonsList({ lessons, handleLessonPress }) {
                     style={{
                       fontSize: 18,
                       color: "#1A1A1A",
-                      fontFamily: 'Impact'
+                       fontWeight:'bold'
                     }}
                   >{` ${item.ogrenci}`}</Text>
                 </View>

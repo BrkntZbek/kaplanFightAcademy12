@@ -101,8 +101,8 @@ export default function HandleLessons({
         <Text style={TextStyle.nameStyle}>{selectLesson.ogrenci}</Text>
         <View style={styles.modalContent}>
           <View style={styles.LessonContent}>
-            <Text style={TextStyle.normalText}>{selectLesson.hoca}</Text>
-            <Text style={TextStyle.normalText}>{selectLesson.saat}</Text>
+            <Text style={styles.normalText}>{selectLesson.hoca}</Text>
+            <Text style={styles.normalText}>{selectLesson.saat}</Text>
             <View style={styles.inputContainer}>
               {selectLesson.durum !== "İşlendi" &&
                 selectLesson.durum !== "İptal" &&
@@ -118,7 +118,7 @@ export default function HandleLessons({
                     />
                     {lessonDetail !== null && (
                       <TouchableOpacity onPress={handleBlur}>
-                        <Text style={{fontSize:15,fontWeight:'bold',marginBottom:5}}>Onayla</Text>
+                        <Text style={{fontSize:15,fontWeight:'bold',marginBottom:5,color:'#FFFFFF'}}>Onayla</Text>
                       </TouchableOpacity>
                     )}
                     <HandleArea setArea={setArea} />
@@ -127,15 +127,15 @@ export default function HandleLessons({
 
               {selectLesson.durum !== "İşlenmedi" && (
                 <View style={styles.contentsContainer}>
-                  <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                  <Text style={{ fontWeight: "bold", fontSize: 17 ,color:'#FFFFFF'}}>
                     Ders İçeriği
                   </Text>
                   <View style={styles.contents}>
-                    <Text style={{ fontSize: 15 }}>
+                    <Text style={{ fontSize: 15,color:'#FFFFFF' }}>
                       {selectLesson.ayrinti}{" "}
                     </Text>
-                    <Text style={{fontSize:15,fontWeight:'bold',marginTop:5}}>-Çalışılan Bölgeler-</Text>
-                    <Text style={{marginTop:10}}>{selectLesson.calisilanBolge}</Text>
+                    <Text style={{fontSize:15,fontWeight:'bold',marginTop:5,color:'#FFFFFF'}}>-Çalışılan Bölgeler-</Text>
+                    <Text style={{marginTop:10,color:'#FFFFFF'}}>{selectLesson.calisilanBolge}</Text>
                   </View>
                 </View>
               )}
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: "center",
     borderColor: "white",
-    backgroundColor: "#E8E5D1",
+    backgroundColor: "#1A1A1A",
     borderRadius: 10,
     width: "90%",
     height: "60%",
@@ -219,4 +219,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "red",
   },
+  normalText:{
+    fontSize: 15,
+    fontWeight: "bold",
+    margin: 3,
+    marginHorizontal: 5,
+    alignItems: "center",
+    color:'#FFFFFF'
+  }
 });
