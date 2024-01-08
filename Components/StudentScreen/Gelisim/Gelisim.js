@@ -67,7 +67,8 @@ export default function Gelisim({ id }) {
             <TouchableOpacity onPress={() => openDetailModal(item)}>
               <View style={styles.flatList}>
                  <View style={styles.fotograf}>
-                    <Image source={{ uri: item.photoUrl }} style={styles.image} resizeMode="cover"></Image>
+                  
+                    <Image source={{ uri: item.photoUrl }} style={styles.image}  resizeMode='stretch'></Image>
                   
                  </View>
                  <View style={styles.icerik}>
@@ -205,6 +206,7 @@ const styles = StyleSheet.create({
     flex:1,
     height:180,
     width:'100%',
+    marginTop:5,
     
   },
   fotograf:{

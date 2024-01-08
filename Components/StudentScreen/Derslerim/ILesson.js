@@ -118,9 +118,9 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
   textContainer: {
-    height: "100%",
+    height: "70%",
     padding: 30,
-    backgroundColor:'red',
+
     borderTopLeftRadius: 90,
     alignItems: "center",
     justifyContent: "start",

@@ -8,7 +8,7 @@ export default function DetailModal({selectedItem,closeDetailModal}) {
       <View style={styles.modalContainer2}>
         {selectedItem && (
           <>
-            <Image source={{ uri: selectedItem.photoUrl }} style={{ width: '100%', height: '40%', borderRadius: 10, borderWidth: 5, borderColor: '#E8E8D1', marginTop: 30, marginBottom: 10, alignItems:'flex-start'}} />
+            <Image source={{ uri: selectedItem.photoUrl }} resizeMode='stretch' style={{ width: '100%', height: '40%', borderRadius: 10, borderWidth: 5, borderColor: '#E8E8D1', marginTop: 30, marginBottom: 10, alignItems:'flex-start'}} />
             <TouchableOpacity style={styles.closeButton} onPress={closeDetailModal}>
               <Text style={styles.closeButtonText}>Kapat</Text>
             </TouchableOpacity>
